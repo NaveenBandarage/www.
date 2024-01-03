@@ -86,7 +86,7 @@ export default function BlogPost() {
                 get inspired. Every time I come back from a trip, I feel more
                 motivated to just get some shit done. I look forward to
                 travelling some more in 2024 and exploring more of this
-                beautiful world. I think life is too short to not do so. Managed
+                beautiful world. I think life is too short to not do so. Another cool tidbit is that I managed
                 to fly business class for the first time as well.
               </p>
               <p>Growth:</p>
