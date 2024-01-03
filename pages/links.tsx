@@ -76,6 +76,13 @@ export default function Links() {
                 </LinkExternal>
                 <time className="time">@naveenbandarage</time>
               </div>
+
+              <div>
+                <LinkExternal href="//naveenbandarage.substack.com/">
+                  Substack
+                </LinkExternal>
+                <time className="time">@naveenbandarage</time>
+              </div>
             </div>
           </dd>
         </dl>
