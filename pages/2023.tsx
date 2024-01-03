@@ -121,18 +121,22 @@ export default function BlogPost() {
                 going from an Associate Engineer to a Software Engineer at Xero.
                 I was able to pass my AWS Certified Solutions Architect –
                 Associate exam and I was able to buddy and mentor a grad for the
-                course of their rotation in my team. On a fitness front, I had a
-                mixed bag as my year started well and I felt dialled in.
-                However, halfway through the year around the same time some
-                other personal issues reared their head in and on top of that
-                Xero was going through layoffs. During that same period, I tore
-                my meniscus playing football. I can vividly remember going to
-                the physio to get my diagnosis and as I was waiting, my slack
-                was blowing up, I was waiting in anticipation for an email that
-                would indicate whether my time at the company was up. That was
-                not a pleasant day, to say the least. I’ve been able to recover
-                and make decent progress on my fitness-related goals but I
-                wouldn’t say I accomplished them.
+                course of their rotation in my team.
+              </p>
+              <p>
+                {" "}
+                On a fitness front, I had a mixed bag as my year started well
+                and I felt dialled in. However, halfway through the year
+                multiple issues compounded at once. I had some other personal
+                issues come up, Xero was going through layoffs. And during that
+                same period, I tore my meniscus playing football. I can vividly
+                remember going to the physio to get my diagnosis and as I was
+                waiting, my slack was blowing up. I was waiting in anticipation
+                for both my diagnosis as well as an email that would indicate
+                whether my time at the company was up. That was not a pleasant
+                day, to say the least. I’ve been able to recover and make decent
+                progress on my fitness-related goals but I wouldn’t say I
+                accomplished them.
               </p>
               <p>Consumerism:</p>
               <p>
@@ -152,12 +156,13 @@ export default function BlogPost() {
               </ul>
               <p>
                 Lastly, I finally purchased a new laptop! The base model Intel
-                2017 Macbook I had that was by my side in university and which
-                got me internships, and helped eventually get me my gig at Xero
+                2017 Macbook I had that was by my side all this time. Which got
+                me through university and through the door for multiple
+                internships, and which helped eventually get me my gig at Xero
                 was on its last legs. So I decided to finally join the M series
-                of chips picking up a pretty beefy (and very expensive) M3 pro.
-                I really should’ve done this sooner as it’s a night and day
-                difference between them.
+                of chips. I ended up picking a pretty beefy (and very expensive)
+                M3 pro. I really should’ve done this sooner as it has made a
+                world of difference.
               </p>
               <p>The year ahead:</p>
               <p>
@@ -168,8 +173,9 @@ export default function BlogPost() {
                 just middling or meandering around. In a way it feels like 2023
                 was Avengers: Infinity War. A movie that had its’ ups and downs
                 but it was more so a movie to build suspense and set up a grand
-                finale. That’s how 2024 feels for me at least. I’m excited
-                though to see what happens.
+                finale. That’s how 2024 feels for me at least it's going to be
+                my EndGame in a lot of ways. I’m excited though to see what
+                happens.
               </p>
               <p>Naveen</p>
             </div>
