@@ -37,7 +37,7 @@ export default function BlogPost() {
               <p>Intro:</p>
               <p>
                 Amongst the endless amounts of reflective year-in-review
-                content, I add another such post. That comes in the form of my
+                content, I add another such post. This comes in the form of my
                 first blog post of 2024.{" "}
               </p>
               <blockquote>
