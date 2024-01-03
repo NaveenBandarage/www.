@@ -9,7 +9,7 @@ export default function Consuming() {
       <dd className="list-content">
         <div>
           <LinkExternal href="//literal.club/book/gergely-orosz-the-software-engineers-guidebook-yo7o5">
-            The Software Engineer's Guidebook
+            The Software Engineer&#39;s Guidebook
           </LinkExternal>{" "}
           by Gergely Orosz
         </div>
