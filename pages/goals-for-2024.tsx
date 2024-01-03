@@ -36,7 +36,7 @@ export default function BlogPost() {
               <p>Intro:</p>
               <p>
                 It's scary and I'm not used to doing it but I'm going to put my
-                goals out there into the ether that is the internet. Lets see
+                goals out there into the ether that is the internet. Let's see
                 what happens. Some of them are too personal and I don't feel
                 comfortable putting them out there just yet so I've redacted
                 them.{" "}
@@ -49,24 +49,23 @@ export default function BlogPost() {
                 Chamath Palihapitiya{" "}
               </blockquote>
               <p>
-                I’m actually not the biggest fan of just setting goals for the
-                entirety of the year and working towards them. 1 because a year
-                is so far away and things change, 2 I tend to forget them, and 3
-                because I find it easier to work in a kanban style approach. By
-                that I mean I pull in goals and work on them in shorter periods.
-                So this list will definitely ebb and flow as the year goes on.
-                But here goes:
+                I’m not the biggest fan of setting goals for the entirety of the
+                year and working towards them. 1 because a year is so far away
+                and things change, 2 I tend to forget them, and 3 because I find
+                it easier to work in a kanban style approach. By that I mean I
+                pull in goals and work on them in shorter periods. So this list
+                will ebb and flow as the year goes on. But here goes:
               </p>
               <ol>
                 <li>
-                  <i>
-                    Redacted career releated - will unredact if I accomplish it
-                  </i>
+                  [Redacted career related] -{" "}
+                  <i> will unredact if I accomplish it</i>
                 </li>
                 <li>
-                  <i>
-                    Redacted health releated - will unredact if I accomplish it
-                  </i>
+                  <li>
+                    [Redacted health related] -{" "}
+                    <i> will unredact if I accomplish it</i>
+                  </li>
                 </li>
                 <li>
                   Cut down on useless spending and keep my investments and
@@ -74,20 +73,18 @@ export default function BlogPost() {
                   will keep them on the dlow{" "}
                 </li>
                 <li>
-                  Have more consistent wake-up and bed times. Aim for 7-8 hours
+                  Have more consistent wake-up and bedtimes. Aim for 7-8 hours
                   of sleep
                 </li>
                 <li>Stop using devices be it my phone or computer in bed</li>
                 <li>Get my RHR (resting heart rate) to 55</li>
                 <li>
-                  <i>
-                    Redacted personal releated - will unredact if I accomplish
-                    it
-                  </i>
+                  [Redacted personal related] -{" "}
+                  <i> will unredact if I accomplish it</i>
                 </li>
                 <li>
-                  Get back to uploading youtube videos after completing{" "}
-                  <i>redacted career goal</i>, and aim to get 1000 subscribers
+                  Get back to uploading YouTube videos after completing{" "}
+                  [Redacted career goal], and aim to get 1000 subscribers
                 </li>
                 <li>
                   Keep a regular habit of journalling either via computer-based
