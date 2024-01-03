@@ -71,7 +71,7 @@ export default function BlogPost() {
                 <li>Japan x2</li>
                 <li>Korea</li>
                 <li>Canada</li>
-                <li>Australia</li>
+                <li>Australia x2</li>
                 <li>Canada</li>
                 <li>
                   New Zealand (Travelling to Auckland as I'm based in
