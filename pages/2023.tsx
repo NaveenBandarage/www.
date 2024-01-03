@@ -47,7 +47,7 @@ export default function BlogPost() {
               <p>
                 2023 was an eventful year for me, filled with twists and turns,
                 ups and downs and everything in between. Leading into 2023, 2022
-                was a tough year with mixed success I succeeded on a
+                was a tough year with mixed success. I succeeded on a
                 professional front but on an emotional and personal level, it
                 was a year filled with immense loss, anger and struggle. 2023
                 began with me carrying over those feelings. However, as the year
