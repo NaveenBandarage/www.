@@ -30,12 +30,12 @@ export default function Colophon() {
             <div>
               Currently, I work as a Software Engineer at{" "}
               <LinkExternal href="//xero.com">Xero</LinkExternal>, a leading
-              innovator in cloud-based accounting sofware for SMB's.
+              innovator in cloud-based accounting sofware for SMB&#39;s.
             </div>
             <br />
             <div className="text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
               I am apart of the team that helps speed up development within
-              Xero. We're solving complex problems around creating services,
+              Xero. We&#39;re solving complex problems around creating services,
               provisioning infrastructure, and providing the boilerplate code .
               Instead of having to start from scratch we enable teams within
               Xero to focus on building awesome new products.{" "}

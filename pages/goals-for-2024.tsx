@@ -35,26 +35,26 @@ export default function BlogPost() {
             <div className="prose-custom">
               <p>Intro:</p>
               <p>
-                It's scary and I'm not used to doing it but I'm going to put my
-                goals out there into the ether that is the internet. Let's see
-                what happens. Some of them are too personal and I don't feel
-                comfortable putting them out there just yet so I've redacted
-                them.{" "}
+                It&#39;s scary and I&#39;m not used to doing it but I&#39;m
+                going to put my goals out there into the ether that is the
+                internet. Let&#39;s see what happens. Some of them are too
+                personal and I don&#39;t feel comfortable putting them out there
+                just yet so I&#39;ve redacted them.{" "}
               </p>
               <blockquote>
                 <p>
-                  I'm in the arena trying stuff. Some will work, some won't. But
-                  always learning.{" "}
+                  I&#39;m in the arena trying stuff. Some will work, some
+                  won&#39;t. But always learning.{" "}
                 </p>
                 Chamath Palihapitiya{" "}
               </blockquote>
               <p>
-                I’m not the biggest fan of setting goals for the entirety of the
-                year and working towards them. 1 because a year is so far away
-                and things change, 2 I tend to forget them, and 3 because I find
-                it easier to work in a kanban style approach. By that I mean I
-                pull in goals and work on them in shorter periods. So this list
-                will ebb and flow as the year goes on. But here goes:
+                I&#39;m not the biggest fan of setting goals for the entirety of
+                the year and working towards them. 1 because a year is so far
+                away and things change, 2 I tend to forget them, and 3 because I
+                find it easier to work in a kanban style approach. By that I
+                mean I pull in goals and work on them in shorter periods. So
+                this list will ebb and flow as the year goes on. But here goes:
               </p>
               <ol>
                 <li>
@@ -99,8 +99,8 @@ export default function BlogPost() {
                 <li>Say yes to more stuff (within reason)</li>
               </ol>
               <p>
-                If you have any goals that you're working towards please let me
-                know. I love to hear about what people are working on and
+                If you have any goals that you&#39;re working towards please let
+                me know. I love to hear about what people are working on and
                 thinking about doing.
               </p>
               <p>Naveen</p>

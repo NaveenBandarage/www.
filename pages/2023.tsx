@@ -73,7 +73,7 @@ export default function BlogPost() {
                 <li>Canada</li>
                 <li>Australia x2</li>
                 <li>
-                  New Zealand (Travelling to Auckland as I'm based in
+                  New Zealand (Travelling to Auckland as I&#39;m based in
                   Wellington) x2
                 </li>
               </ul>
@@ -82,12 +82,13 @@ export default function BlogPost() {
                 favourites that I visited were Melbourne, Yokohama, Tokyo, and
                 Toronto. Each of these cities had an amazing vibe, and I would
                 love to go back and visit them again. For me, travelling is not
-                just an escape, but it's also a way to recharge my energy and
-                get inspired. Every time I come back from a trip, I feel more
-                motivated to just get some shit done. I look forward to
+                just an escape, but it&#39;s also a way to recharge my energy
+                and get inspired. Every time I come back from a trip, I feel
+                more motivated to just get some shit done. I look forward to
                 travelling some more in 2024 and exploring more of this
-                beautiful world. I think life is too short to not do so. Another cool tidbit is that I managed
-                to fly business class for the first time as well.
+                beautiful world. I think life is too short to not do so. Another
+                cool tidbit is that I managed to fly business class for the
+                first time as well.
               </p>
               <p>Growth:</p>
               <p>
@@ -96,16 +97,16 @@ export default function BlogPost() {
                 expressed, and I am still in the process of understanding them
                 myself. Nevertheless, I can confidently say that I am not the
                 same person I was at the beginning of 2023. Of course, I am not
-                perfect, and there is still a lot I need to work on, but that's
-                just a part of life.
+                perfect, and there is still a lot I need to work on, but
+                that&#39;s just a part of life.
               </p>
               <blockquote>
-                <p>I’M THE ELDEST BOY!!</p>
+                <p>I&#39;M THE ELDEST BOY!!</p>
                 Kendall Roy{" "}
               </blockquote>
               <p>Goals:</p>
               <p>
-                I am not one to declare my goals in public I'm a build in
+                I am not one to declare my goals in public I&#39;m a build in
                 silence rather than in public kinda guy. Or to be more honest I
                 just have a deep-seated fear of putting my goals out there and
                 being laughed at. I find it challenging to deal with the added
@@ -169,13 +170,13 @@ export default function BlogPost() {
                 I feel quite deeply about this but for me at least 2023 was
                 kinda of a filler year, a warmup, a precursor, however, you want
                 to phrase it. I made some deep inroads and great progress,
-                however, it still felt like I didn’t really do anything and I
-                just middling or meandering around. In a way it feels like 2023
-                was Avengers: Infinity War. A movie that had its’ ups and downs
-                but it was more so a movie to build suspense and set up a grand
-                finale. That’s how 2024 feels for me at least it's going to be
-                my EndGame in a lot of ways. I’m excited though to see what
-                happens.
+                however, it still felt like I didn&#39;t really do anything and
+                I just middling or meandering around. In a way it feels like
+                2023 was Avengers: Infinity War. A movie that had its&#39; ups
+                and downs but it was more so a movie to build suspense and set
+                up a grand finale. That&#39;s how 2024 feels for me at least
+                it&#39;s going to be my EndGame in a lot of ways. I&#39;m
+                excited though to see what happens.
               </p>
               <p>Naveen</p>
             </div>
