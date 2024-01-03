@@ -34,12 +34,11 @@ export default function Colophon() {
             </div>
             <br />
             <div className="text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
-              I am apart of the team that helps accelerate development within
+              I am apart of the team that helps speed up development within
               Xero. We're solving complex problems around creating services,
-              provisioning infrastructure, and providing the boilerplate code
-              needed for teams to go ahead and providing value to our customers.
+              provisioning infrastructure, and providing the boilerplate code .
               Instead of having to start from scratch we enable teams within
-              Xero to focus on building awesome new products.
+              Xero to focus on building awesome new products.{" "}
             </div>
           </dd>
         </dl>

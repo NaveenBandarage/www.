@@ -147,6 +147,7 @@ export default function BlogPost() {
                 <li>Asics Novablast 3</li>
                 <li>Uniqlo socks and underwear</li>
                 <li>LIFX smart light</li>
+                <li>Arcteryx Granville 25 backpack</li>
                 <li>More Chrome Heart rings</li>
                 <li>Travelling</li>
               </ul>
