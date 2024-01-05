@@ -75,6 +75,7 @@ export default function Links() {
                   Literal
                 </LinkExternal>
                 <time className="time">@naveenbandarage</time>
+                <br />
               </div>
 
               <div>
