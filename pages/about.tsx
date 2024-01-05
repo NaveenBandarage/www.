@@ -66,10 +66,22 @@ export default function Colophon() {
             </div>
           </dd>
           <dt className="list-title mt-4 border-none pt-0 sm:mt-0">
+            <h3 className="text-neutral-500 dark:text-silver-dark">2023</h3>
+          </dt>
+          <dd className="list-content border-none pt-0">
+            <div>Associate Software Engineer</div>
+            <div>
+              <LinkExternal href="//xero.com">Xero</LinkExternal>
+            </div>
+            <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
+              Wellington, NZ
+            </div>
+          </dd>
+          <dt className="list-title mt-4 border-none pt-0 sm:mt-0">
             <h3 className="text-neutral-500 dark:text-silver-dark">2022</h3>
           </dt>
           <dd className="list-content border-none pt-0">
-            <div>Graduate Engineer</div>
+            <div>Graduate Software Engineer</div>
             <div>
               <LinkExternal href="//xero.com">Xero</LinkExternal>
             </div>
