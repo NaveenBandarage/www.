@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://naveenbandarage.com
+
+# Sitemaps
+Sitemap: https://naveenbandarage.com/sitemap.xml
