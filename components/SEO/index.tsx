@@ -15,7 +15,7 @@ export const defaultSEO = {
     site_name: "Naveen Bandarage",
     images: [
       {
-        url: `${baseUrl}/social.png`,
+        url: `${baseUrl}/logo.png`,
         alt: "Naveen Bandarage",
       },
     ],
@@ -40,7 +40,25 @@ export function SEO({ seo }: { seo?: SEOProps }) {
       <DefaultSeo {...{ ...defaultSEO, ...seo }} />
       <Head>
         <meta name="googlebot" content="index,follow" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+
         {/* Need to see if its worth having an svg version */}
         {/* <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" /> */}
         {seo.path ? (
@@ -95,7 +113,7 @@ export function SEO({ seo }: { seo?: SEOProps }) {
         />
         <meta
           name="google-site-verification"
-          content="Oh4RDwXU307Z8ZofFyLQcqmin4Zuv309dats9oWWeHU"
+          content="xISZxUJo1e-8oVJhupfam7uFwrDyn6H2kzS_dfqv7f0"
         />
         <link
           rel="alternate"
