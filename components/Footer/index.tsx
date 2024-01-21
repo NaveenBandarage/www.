@@ -17,10 +17,10 @@ export default function Footer() {
   }, []); // Run this effect only once on component mount
 
   return (
-    <footer className="m:px-0 flex w-full justify-center pt-10 sm:pt-20">
+    <footer className="m:px-0 flex justify-center px-6 pt-8 sm:pt-32">
       <div className="max-w-main flex-1">
         <div className="flex h-full w-full items-end justify-between border-t border-solid border-neutral-500/10 pt-8 dark:border-neutral-900">
-          <div className="flex-1">
+          <div className="flex-2">
             <ul className="flex gap-4 pb-6">
               <li>
                 <Link href="/" className="link-fade">
@@ -38,15 +38,9 @@ export default function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
-          <div className="flex-2 flex items-start">
-            {/* {" "} */}
-            {/* Added align-items */}
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col">
               <li className="link-fade">
                 <p>Wellington, NZ</p>
-              </li>
-              <li className="link-fade">
                 <p>{currentTime}</p>
               </li>
             </ul>
