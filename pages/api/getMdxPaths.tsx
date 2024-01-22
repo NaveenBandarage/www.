@@ -14,17 +14,21 @@ export const getMdxPaths = async (): Promise<GetMdxPathsResult[]> => {
   try {
     const mdxFiles = await fs.readdir(PostsDirectory);
 
-    const posts = mdxFiles.map(async (file) => {
-      const filePath = path.join(PostsDirectory, file);
-      const content = await fs.readFile(filePath, "utf-8");
-      const { data } = matter(content);
+    const posts = await Promise.all(
+      mdxFiles.map(async (file) => {
+        const filePath = path.join(PostsDirectory, file);
+        const content = await fs.readFile(filePath, "utf-8");
+        const { data } = matter(content);
 
-      return {
-        slug: file.replace(/\.mdx$/, ""),
-        title: data.title || "Untitled",
-        date: data.date || "Untitled",
-      };
-    });
+        return {
+          slug: file.replace(/\.mdx$/, ""),
+          title: data.title || "Untitled",
+          date: data.date || "0",
+        };
+      }),
+    );
+
+    posts.sort((a, b) => b.date.localeCompare(a.date));
 
     return Promise.all(posts);
   } catch (error) {
