@@ -18,9 +18,10 @@ export default function Writing() {
               <div className="opacity-20 dark:opacity-30">
                 <NoteIcon size={16} />
               </div>
-              Tbd<Badge>WIP</Badge>
+              TBD<Badge>WIP</Badge>
             </Link>
           </div>
+          {/* Other links... */}
           <div>
             <Link
               href="/goals-for-2024"

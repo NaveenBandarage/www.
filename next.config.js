@@ -1,3 +1,7 @@
+const withMDX = require("@next/mdx")({
+  extension: /\.mdx?$/,
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -30,19 +34,10 @@ const nextConfig = {
 
     return config;
   },
-  async redirects() {
-    return [
-      {
-        source: "/projects/:path*",
-        destination: "https://fabe.github.io/projects/:path*",
-        permanent: false,
-      },
-    ];
-  },
 };
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-module.exports = withBundleAnalyzer(nextConfig);
+module.exports = withMDX(nextConfig);
