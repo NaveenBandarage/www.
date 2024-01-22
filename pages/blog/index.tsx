@@ -42,7 +42,7 @@ export default BlogIndex;
 
 export async function getStaticProps() {
   const posts = await getMdxPaths();
-    
+
   return {
     props: {
       posts,

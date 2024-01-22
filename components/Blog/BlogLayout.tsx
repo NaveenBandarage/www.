@@ -37,6 +37,8 @@ const BlogLayout = ({ meta, source }) => {
                 {formatDate(meta.date, false)}
               </time>
             </p>
+            <h3>Description</h3>
+            <p className="time">{meta.description}</p>
             <h3>Tl;dr</h3>
             <p className="time">{meta.tldr}</p>
             <h3>Meta</h3>
