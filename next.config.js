@@ -1,3 +1,7 @@
+const withMDX = require("@next/mdx")({
+  extension: /\.mdx?$/,
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -25,19 +29,11 @@ const nextConfig = {
     ],
   },
   webpack: (config, { webpack }) => {
-    /* Hide error "Critical dependency: the request of a dependency is an expression" from remark-textr */
+    /* Hide error "Critical dependency: the request of a dependency is an
+     * expression" from remark-textr */
     config.plugins.push(new webpack.ContextReplacementPlugin(/remark-textr/));
 
     return config;
-  },
-  async redirects() {
-    return [
-      {
-        source: "/projects/:path*",
-        destination: "https://fabe.github.io/projects/:path*",
-        permanent: false,
-      },
-    ];
   },
 };
 
@@ -45,4 +41,4 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-module.exports = withBundleAnalyzer(nextConfig);
+module.exports = withMDX(nextConfig);

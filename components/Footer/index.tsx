@@ -37,6 +37,11 @@ export default function Footer() {
                   Links
                 </Link>
               </li>
+              <li>
+                <Link href="/blog" className="link-fade">
+                  Blog
+                </Link>
+              </li>
             </ul>
             <ul className="flex flex-col">
               <li className="link-fade">

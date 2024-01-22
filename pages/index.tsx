@@ -5,8 +5,9 @@ import Writing from "../components/Home/Writing";
 import Link from "next/link";
 import { LinkExternal } from "../components/Links";
 import Consuming from "../components/Home/Consuming";
+import { getMdxPaths } from "./api/getMdxPaths";
 
-export default function Home() {
+export default function Home({ latestPosts }) {
   return (
     <>
       <SEO
@@ -45,9 +46,21 @@ export default function Home() {
             </div>
           </dd>
         </dl>
-        <Writing />
+        <Writing latestPosts={latestPosts} />
         <Consuming />
       </Main>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const allPosts = await getMdxPaths();
+
+  const latestPosts = allPosts.slice(0, 2);
+
+  return {
+    props: {
+      latestPosts,
+    },
+  };
 }

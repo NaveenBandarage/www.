@@ -1,11 +1,10 @@
 import React from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
-import Writing from "../components/Home/Writing";
 import { LinkExternal } from "../components/Links";
 import Badge from "../components/Badge";
 
-export default function Colophon() {
+export default function About() {
   return (
     <>
       <SEO

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { NoteIcon } from "../Icons";
 import Badge from "../../components/Badge";
 
-export default function Writing() {
+export default function Writing({ latestPosts }) {
   return (
     <dl className="list-container">
       <dt className="list-title">
@@ -18,27 +18,29 @@ export default function Writing() {
               <div className="opacity-20 dark:opacity-30">
                 <NoteIcon size={16} />
               </div>
-              Tbd<Badge>WIP</Badge>
+              TBD<Badge>WIP</Badge>
             </Link>
           </div>
+          {latestPosts.map((post) => (
+            <div key={post.slug}>
+              <Link
+                href={`/blog/${post.slug}`}
+                className="link inline-flex items-center gap-1"
+              >
+                <div className="opacity-20 dark:opacity-30">
+                  <NoteIcon size={16} />
+                </div>
+                {post.title}
+              </Link>
+            </div>
+          ))}
           <div>
-            <Link
-              href="/goals-for-2024"
-              className="link inline-flex items-center gap-1"
-            >
-              <div className="opacity-20 dark:opacity-30">
-                <NoteIcon size={16} />
-              </div>
-              Goals for 2024
+            <br></br>
+            More writing{" "}
+            <Link href="/blog" className="link inline-flex items-center gap-1">
+              here
             </Link>
-          </div>
-          <div>
-            <Link href="/2023" className="link inline-flex items-center gap-1">
-              <div className="opacity-20 dark:opacity-30">
-                <NoteIcon size={16} />
-              </div>
-              2023
-            </Link>
+            .
           </div>
         </div>
       </dd>
