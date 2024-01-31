@@ -8,14 +8,14 @@ export default function Consuming() {
       </dt>
       <dd className="list-content">
         <div>
-          <LinkExternal href="//literal.club/book/gergely-orosz-the-software-engineers-guidebook-yo7o5">
-            The Software Engineer&#39;s Guidebook
+          <LinkExternal href="//literal.club/book/annie-lawson-stoic-at-work-yjulh">
+            Stoic at Work
           </LinkExternal>{" "}
-          by Gergely Orosz
+          by Annie Lawson
         </div>
         <div>
           <LinkExternal href="//literal.club/book/peter-attia-bill-gifford-outlive-n6oby">
-            Outlive The Science and Art of Longevity
+            Outlive: The Science and Art of Longevity
           </LinkExternal>{" "}
           by Peter Attia
         </div>
