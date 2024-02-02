@@ -61,7 +61,6 @@ export default function Links() {
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>
-
               <div>
                 <LinkExternal href="//open.spotify.com/user/naveen.bandarage?si=c56b9826f9294134">
                   Spotify
@@ -69,7 +68,6 @@ export default function Links() {
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>
-
               <div>
                 <LinkExternal href="//literal.club/naveenbandarage">
                   Literal
@@ -77,12 +75,17 @@ export default function Links() {
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>
-
               <div>
                 <LinkExternal href="//naveenbandarage.substack.com/">
                   Substack
                 </LinkExternal>
                 <time className="time">@naveenbandarage</time>
+                <br />
+              </div>
+              <div>
+                <LinkExternal href="//cosmos.so/naveenb/">Cosmos</LinkExternal>
+                <time className="time">@naveenb</time>
+                <br />
               </div>
             </div>
           </dd>
