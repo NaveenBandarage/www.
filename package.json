@@ -54,7 +54,7 @@
   "devDependencies": {
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
     "@graphql-codegen/add": "^3.2.3",
-    "@graphql-codegen/cli": "2.16.5",
+    "@graphql-codegen/cli": "5.0.2",
     "@graphql-codegen/typescript": "2.8.8",
     "@graphql-codegen/typescript-operations": "2.5.13",
     "@graphql-codegen/typescript-react-apollo": "3.3.7",
