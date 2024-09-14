@@ -61,7 +61,7 @@ export default function About() {
               <LinkExternal href="//xero.com">Xero</LinkExternal>
             </div>
             <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
-              Wellington, NZ
+              Melbourne, AU
             </div>
           </dd>
           <dt className="list-title mt-4 border-none pt-0 sm:mt-0">
