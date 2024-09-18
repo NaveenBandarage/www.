@@ -87,6 +87,13 @@ export default function Links() {
                 <time className="time">@naveenb</time>
                 <br />
               </div>
+              <div>
+                <LinkExternal href="//youtube.com/naveenbandarage/">
+                  Youtube
+                </LinkExternal>
+                <time className="time">@naveenb</time>
+                <br />
+              </div>
             </div>
           </dd>
         </dl>
