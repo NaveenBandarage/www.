@@ -88,10 +88,10 @@ export default function Links() {
                 <br />
               </div>
               <div>
-                <LinkExternal href="//youtube.com/naveenbandarage/">
+                <LinkExternal href="//youtube.com/@naveenbandarage/">
                   Youtube
                 </LinkExternal>
-                <time className="time">@naveenb</time>
+                <time className="time">@naveenbandarage</time>
                 <br />
               </div>
             </div>
