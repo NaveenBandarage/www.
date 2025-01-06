@@ -8,16 +8,16 @@ export default function Consuming() {
       </dt>
       <dd className="list-content">
         <div>
-          <LinkExternal href="//literal.club/book/annie-lawson-stoic-at-work-yjulh">
-            Stoic at Work
+          <LinkExternal href="//literal.club/book/alain-stephen-this-book-will-make-you-think-arqv6">
+            This Book Will Make You Think
           </LinkExternal>{" "}
-          by Annie Lawson
+          by Alain Stephen
         </div>
         <div>
-          <LinkExternal href="//literal.club/book/peter-attia-bill-gifford-outlive-n6oby">
-            Outlive: The Science and Art of Longevity
+          <LinkExternal href="//literal.club/book/software-engineering-at-google-2yflu">
+            Software Engineering at Google
           </LinkExternal>{" "}
-          by Peter Attia
+          by Hyrum Wright, Titus Winters and Tom Manshreck
         </div>
       </dd>
     </dl>
