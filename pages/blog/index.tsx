@@ -56,8 +56,6 @@ export async function getStaticProps() {
   // For each post, calculate reading time from content
   const postsWithReadingTime = await Promise.all(
     posts.map(async (post) => {
-      // You'll need to modify getMdxPaths to include the content
-      // or fetch the content here
       if (post.content) {
         return {
           ...post,

@@ -6,6 +6,7 @@ export interface GetMdxPathsResult {
   slug: string;
   title: string;
   date: string;
+  content?: string;
 }
 
 const PostsDirectory = path.join(process.cwd(), "posts");
@@ -18,12 +19,13 @@ export const getMdxPaths = async (): Promise<GetMdxPathsResult[]> => {
       mdxFiles.map(async (file) => {
         const filePath = path.join(PostsDirectory, file);
         const content = await fs.readFile(filePath, "utf-8");
-        const { data } = matter(content);
+        const { data, content: mdxContent } = matter(content);
 
         return {
           slug: file.replace(/\.mdx$/, ""),
           title: data.title || "Untitled",
           date: data.date || "0",
+          content: mdxContent,
         };
       }),
     );
