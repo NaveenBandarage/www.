@@ -125,3 +125,13 @@ export function GlobeIcon({ size }) {
     />
   );
 }
+
+export function ClockIcon({ size }) {
+  return (
+    <PhosphorIcon
+      label="Reading time"
+      size={size}
+      path="M128 40c-48.6 0-88 39.4-88 88s39.4 88 88 88 88-39.4 88-88-39.4-88-88-88zm0 160c-39.7 0-72-32.3-72-72s32.3-72 72-72 72 32.3 72 72-32.3 72-72 72zm4-104v-16a8 8 0 00-16 0v32c0 2.1.8 4.2 2.3 5.7l21.3 21.3a8 8 0 0011.3-11.3L132 96z"
+    />
+  );
+}

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Main } from "../../components/Layouts";
 import { SEO } from "../../components/SEO";
 import { getMdxPaths } from "../api/getMdxPaths";
+import { ClockIcon } from "../../components/Icons";
+import calculateReadingTime from "../../lib/readingTime";
 
 const BlogIndex = ({ posts }) => {
   return (
@@ -25,7 +27,15 @@ const BlogIndex = ({ posts }) => {
                         {post.title}
                       </h3>
                     </Link>
-                    <time className="time">{post.date}</time>
+                    <div className="flex items-center gap-4">
+                      <time className="time">{post.date}</time>
+                      {post.readingTime && (
+                        <span className="time flex items-center gap-1">
+                          <ClockIcon size={14} />
+                          {post.readingTime}
+                        </span>
+                      )}
+                    </div>
                     <br />
                   </div>
                 </li>
@@ -43,9 +53,22 @@ export default BlogIndex;
 export async function getStaticProps() {
   const posts = await getMdxPaths();
 
+  // For each post, calculate reading time from content
+  const postsWithReadingTime = await Promise.all(
+    posts.map(async (post) => {
+      if (post.content) {
+        return {
+          ...post,
+          readingTime: calculateReadingTime(post.content),
+        };
+      }
+      return post;
+    }),
+  );
+
   return {
     props: {
-      posts,
+      posts: postsWithReadingTime,
     },
   };
 }

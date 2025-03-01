@@ -4,6 +4,9 @@ import { ApolloCache, ApolloProvider } from "@apollo/client";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import localFont from "next/font/local";
+import { AnimatePresence } from "framer-motion";
+import { useRouter } from "next/router";
+import PageTransition from "../components/PageTransition";
 
 const sansFont = localFont({
   src: "../public/inter.roman.var.woff2",
@@ -23,6 +26,8 @@ export default function MyApp({
   Component,
   pageProps,
 }: AppProps<CustomPageProps>) {
+  const router = useRouter();
+
   return (
     <>
       <style jsx global>
@@ -32,7 +37,11 @@ export default function MyApp({
           }
         `}
       </style>
-      <Component {...pageProps} />
+      <AnimatePresence mode="wait">
+        <PageTransition key={router.asPath}>
+          <Component {...pageProps} />
+        </PageTransition>
+      </AnimatePresence>
     </>
   );
 }
