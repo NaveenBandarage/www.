@@ -51,7 +51,8 @@
     "react-tweet": "^3.2.0",
     "rss-parser": "^3.13.0",
     "sharp": "^0.33.2",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "sanitize-html": "^2.14.0"
   },
   "devDependencies": {
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",

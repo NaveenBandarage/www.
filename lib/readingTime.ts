@@ -1,3 +1,5 @@
+import sanitizeHtml from 'sanitize-html';
+
 /**
  * Calculate estimated reading time for a given text
  * @param text The content to calculate reading time for
@@ -8,13 +10,11 @@ export default function calculateReadingTime(
   text: string,
   wordsPerMinute: number = 200,
 ): string {
-  // Remove all HTML tags and markdown syntax
-  const cleanText = text
-    .replace(/<[^>]*>/g, "")
-    .replace(/#+\s/g, "")
-    .replace(/!\[.*\]\(.*\)/g, "")
-    .replace(/\[.*\]\(.*\)/g, "")
-    .replace(/(\*\*|\*|__|_|~~|`)/g, "");
+  // Sanitize the input text to remove all HTML tags and markdown syntax
+  const cleanText = sanitizeHtml(text, {
+    allowedTags: [],
+    allowedAttributes: {},
+  });
 
   // Count words by splitting on whitespace
   const words = cleanText.trim().split(/\s+/).length;
