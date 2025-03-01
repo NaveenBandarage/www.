@@ -8,6 +8,11 @@ import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import PageTransition from "../components/PageTransition";
 
+// Import CustomCursor with dynamic loading (no SSR)
+const CustomCursor = dynamic(() => import("../components/CustomCursor"), {
+  ssr: false,
+});
+
 const sansFont = localFont({
   src: "../public/inter.roman.var.woff2",
   weight: "100 900",
@@ -42,6 +47,7 @@ export default function MyApp({
           <Component {...pageProps} />
         </PageTransition>
       </AnimatePresence>
+      <CustomCursor />
     </>
   );
 }
