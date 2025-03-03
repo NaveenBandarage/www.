@@ -29,7 +29,7 @@ export default function About() {
             <div>
               Currently, I work as a Software Engineer at{" "}
               <LinkExternal href="//xero.com">Xero</LinkExternal>, a leading
-              innovator in cloud-based accounting sofware for SMB&#39;s.
+              innovator in cloud-based accounting software for SMB&#39;s.
             </div>
             <br />
             <div className="text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
