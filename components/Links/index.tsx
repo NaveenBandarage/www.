@@ -13,7 +13,6 @@ export function LinkExternal({ href, children }) {
       rel="noopener noreferrer"
     >
       {children}
-
       <ExternalIcon size={16} />
     </a>
   );

@@ -24,6 +24,7 @@
     "@next/mdx": "^14.1.0",
     "@react-hook/copy": "^2.0.1",
     "@types/mdx": "^2.0.10",
+    "@types/sanitize-html": "^2.13.0",
     "@vercel/analytics": "^1.1.2",
     "@vercel/speed-insights": "^1.0.5",
     "cmdk": "^0.2.0",
@@ -50,9 +51,9 @@
     "react-transition-group": "4.4.5",
     "react-tweet": "^3.2.0",
     "rss-parser": "^3.13.0",
+    "sanitize-html": "^2.14.0",
     "sharp": "^0.33.2",
-    "uuid": "^9.0.1",
-    "sanitize-html": "^2.14.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
