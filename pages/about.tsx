@@ -33,7 +33,7 @@ export default function About() {
             </div>
             <br />
             <div className="text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
-              I am apart of the team that helps speed up development within
+              I am a part of the team that helps speed up development within
               Xero. We&#39;re solving complex problems around creating services,
               provisioning infrastructure, and providing the boilerplate code .
               Instead of having to start from scratch we enable teams within
