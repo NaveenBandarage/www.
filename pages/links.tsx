@@ -25,10 +25,12 @@ export default function Links() {
           <dd className="list-content">
             <div className="pb-2 last-of-type:pb-0">
               <div>
-                <LinkExternal href="mailto:im@naveenbandarage.com">
+                <LinkExternal href="mailto:bandaragenaveen@gmail.com">
                   Email
                 </LinkExternal>
-                <time className="time">im@naveenbandarage.com</time>
+                <time className="time email-blur">
+                  bandaragenaveen@gmail.com
+                </time>
                 <br />
               </div>
               <div>

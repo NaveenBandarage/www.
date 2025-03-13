@@ -50,8 +50,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          <div className="flex items-center">
-          </div>
+          <div className="flex items-center"></div>
         </div>
       </div>
     </footer>
