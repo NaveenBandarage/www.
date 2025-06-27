@@ -76,7 +76,6 @@ dist
 
 # Gatsby files
 .cache/
-public
 
 # Vuepress build output
 .vuepress/dist
@@ -121,7 +120,6 @@ Thumbs.db
 
 # Log files
 logs
-*.log
 
 # TypeScript cache
 *.tsbuildinfo
