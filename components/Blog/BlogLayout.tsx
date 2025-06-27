@@ -6,11 +6,11 @@ import calculateReadingTime from "../../lib/readingTime";
 import { SEO } from "../SEO";
 import { ClockIcon } from "../Icons";
 
-const BlogLayout = ({ meta, source }) => {
+const BlogLayout = ({ meta, source, rawContent }) => {
   const router = useRouter();
 
-  // Calculate reading time from the MDX content
-  const readingTime = calculateReadingTime(source.compiledSource);
+  // Calculate reading time from the raw content for consistency with blog listing
+  const readingTime = calculateReadingTime(rawContent);
 
   return (
     <>
