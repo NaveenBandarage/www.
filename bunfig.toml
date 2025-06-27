@@ -1,0 +1,17 @@
+[install]
+# Enable exact versions for more predictable builds
+exact = true
+
+# Use the npm registry (default)
+registry = "https://registry.npmjs.org/"
+
+# Enable auto-install for missing dependencies
+auto = true
+
+[install.cache]
+# Use system cache directory
+dir = "~/.bun/install/cache"
+
+[run]
+# Use bun for running scripts when possible
+bun = true 
