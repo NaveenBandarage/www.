@@ -37,16 +37,34 @@ export default function GlobalClickSound() {
         audio.preload = "auto";
         audio.volume = 0.3; // Set default volume
 
-        // Wait for audio to be ready
-        audio.addEventListener("canplaythrough", () => {
+        // Store references to event handlers for proper cleanup
+        const handleCanPlayThrough = () => {
           setIsLoaded(true);
-        });
+        };
 
-        audio.addEventListener("error", (e) => {
+        const handleError = (e: Event) => {
           console.error("Audio loading error:", e);
-        });
+        };
+
+        // Wait for audio to be ready
+        audio.addEventListener("canplaythrough", handleCanPlayThrough);
+        audio.addEventListener("error", handleError);
 
         audioRef.current = audio;
+
+        // Store cleanup function that uses the same function references
+        const cleanup = () => {
+          if (audioRef.current) {
+            audioRef.current.removeEventListener(
+              "canplaythrough",
+              handleCanPlayThrough,
+            );
+            audioRef.current.removeEventListener("error", handleError);
+          }
+        };
+
+        // Store cleanup function on the audio element for access in useEffect cleanup
+        (audio as any)._cleanup = cleanup;
       } catch (error) {
         console.error("Failed to load sound configuration:", error);
       }
@@ -55,9 +73,8 @@ export default function GlobalClickSound() {
     loadSoundConfig();
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.removeEventListener("canplaythrough", () => {});
-        audioRef.current.removeEventListener("error", () => {});
+      if (audioRef.current && (audioRef.current as any)._cleanup) {
+        (audioRef.current as any)._cleanup();
       }
     };
   }, []);
