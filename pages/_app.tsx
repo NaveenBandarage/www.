@@ -13,6 +13,14 @@ const CustomCursor = dynamic(() => import("../components/CustomCursor"), {
   ssr: false,
 });
 
+// Import GlobalClickSound with dynamic loading (no SSR)
+const GlobalClickSound = dynamic(
+  () => import("../components/GlobalClickSound"),
+  {
+    ssr: false,
+  },
+);
+
 const sansFont = localFont({
   src: "../public/inter.roman.var.woff2",
   weight: "100 900",
@@ -48,6 +56,7 @@ export default function MyApp({
         </PageTransition>
       </AnimatePresence>
       <CustomCursor />
+      <GlobalClickSound />
     </>
   );
 }
