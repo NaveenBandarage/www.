@@ -90,6 +90,11 @@ export default function CustomCursor() {
 
   const scale = linkHovered ? 1.1 : clicked ? 0.95 : 1;
 
+  // Calculate cursor hotspot offsets
+  const arrowOffset = { x: -2, y: -2 }; // Arrow tip is at (2,2) in the SVG
+  const handOffset = { x: -10, y: -10 }; // Center the hand cursor
+  const offset = linkHovered ? handOffset : arrowOffset;
+
   return (
     <>
       {/* Vintage macOS Arrow Cursor */}
@@ -98,7 +103,7 @@ export default function CustomCursor() {
           hidden ? "opacity-0" : "opacity-100"
         }`}
         style={{
-          transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+          transform: `translate(${position.x + offset.x}px, ${position.y + offset.y}px) scale(${scale})`,
           left: "0px",
           top: "0px",
           transition: "transform 0.15s ease-out",
