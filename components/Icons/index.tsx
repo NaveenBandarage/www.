@@ -126,6 +126,57 @@ export function GlobeIcon({ size }) {
   );
 }
 
+export function PixelatedMacIcon({ size = 32, className = "" }) {
+  return (
+    <svg
+      aria-label="Naveen Bandarage"
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 32 32"
+      className={`pixelated-mac-icon ${className}`}
+      style={{
+        imageRendering: "pixelated",
+        shapeRendering: "crispEdges",
+      }}
+      fill="currentColor"
+    >
+      {/* Outer border - Computer frame */}
+      <rect x="2" y="2" width="28" height="26" fill="currentColor" />
+      <rect x="3" y="3" width="26" height="24" fill="white" />
+
+      {/* Inner border */}
+      <rect x="5" y="5" width="22" height="20" fill="currentColor" />
+      <rect x="6" y="6" width="20" height="18" fill="white" />
+
+      {/* Screen border */}
+      <rect x="8" y="8" width="16" height="14" fill="currentColor" />
+      <rect x="9" y="9" width="14" height="12" fill="white" />
+
+      {/* Happy face - Eyes */}
+      <rect x="11" y="12" width="2" height="2" fill="currentColor" />
+      <rect x="19" y="12" width="2" height="2" fill="currentColor" />
+
+      {/* Nose */}
+      <rect x="15" y="15" width="2" height="3" fill="currentColor" />
+
+      {/* Smile */}
+      <rect x="12" y="18" width="2" height="1" fill="currentColor" />
+      <rect x="14" y="19" width="4" height="1" fill="currentColor" />
+      <rect x="18" y="18" width="2" height="1" fill="currentColor" />
+
+      {/* Computer base/stand */}
+      <rect x="8" y="24" width="16" height="2" fill="currentColor" />
+      <rect x="9" y="26" width="14" height="1" fill="currentColor" />
+
+      {/* Stand feet */}
+      <rect x="6" y="28" width="2" height="2" fill="currentColor" />
+      <rect x="24" y="28" width="2" height="2" fill="currentColor" />
+      <rect x="14" y="29" width="4" height="1" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function ClockIcon({ size }) {
   return (
     <PhosphorIcon
