@@ -19,6 +19,19 @@ body {
   font-variation-settings: "opsz" 15;
 }
 
+/* Pixelated Mac Icon Styles */
+.pixelated-mac-icon {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  shape-rendering: crispEdges;
+  color: #000;
+}
+
+.dark .pixelated-mac-icon {
+  color: #fff;
+}
+
 p {
   @apply mb-6;
   @apply last-of-type:mb-0;
