@@ -25,10 +25,15 @@ export default function Links() {
           <dd className="list-content">
             <div className="pb-2 last-of-type:pb-0">
               <div>
-                <LinkExternal href="mailto:im@naveenbandarage.com">
+                <LinkExternal href="mailto:bandaragenaveen@gmail.com">
                   Email
                 </LinkExternal>
-                <time className="time">im@naveenbandarage.com</time>
+                <time className="time blur-sm hover:blur-none transition-all duration-300 select-none">
+                  bandaragenaveen@gmail.com
+                </time>
+                <span className="text-xs text-neutral-400 dark:text-neutral-600 ml-2">
+                  blurred to be less easily be available to scrapers :)
+                </span>
                 <br />
               </div>
               <div>
