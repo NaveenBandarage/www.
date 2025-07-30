@@ -1,0 +1,8 @@
+---
+description: Testing and Running Bun
+globs:
+alwaysApply: True
+---
+
+- When running commands on this project use bun run dev instead of npm
+- Ensure that everything is working as expected.
