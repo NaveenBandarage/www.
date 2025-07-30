@@ -79,16 +79,34 @@ export default function GlobalClickSound() {
     };
   }, []);
 
-  // Enable audio on first user interaction
+  // Enable audio on first user interaction - Safari-compatible
   useEffect(() => {
     const enableAudio = async () => {
       if (!audioRef.current || isAudioEnabled) return;
 
       try {
-        // Try to play and immediately pause to unlock audio context
-        await audioRef.current.play();
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+        // Safari-specific audio context unlock
+        const audio = audioRef.current;
+
+        // Check if we're on Safari
+        const isSafari = /^((?!chrome|android).)*safari/i.test(
+          navigator.userAgent,
+        );
+
+        if (isSafari) {
+          // Safari requires more explicit user interaction
+          audio.muted = true;
+          await audio.play();
+          audio.pause();
+          audio.muted = false;
+          audio.currentTime = 0;
+        } else {
+          // Standard unlock for other browsers
+          await audio.play();
+          audio.pause();
+          audio.currentTime = 0;
+        }
+
         setIsAudioEnabled(true);
       } catch (error) {
         console.log(
@@ -134,26 +152,54 @@ export default function GlobalClickSound() {
       const durationSeconds = duration / 1000;
 
       try {
-        // Clone the audio to allow multiple concurrent sounds
-        const audioClone = audioRef.current.cloneNode() as HTMLAudioElement;
-        audioClone.currentTime = startTimeSeconds;
-        audioClone.volume = 0.3; // Keep it subtle
+        // Safari-compatible audio playback
+        const isSafari = /^((?!chrome|android).)*safari/i.test(
+          navigator.userAgent,
+        );
 
-        // Stop the sound after the specified duration
-        const stopTimeout = setTimeout(() => {
-          audioClone.pause();
-          audioClone.currentTime = 0;
-        }, duration);
+        if (isSafari) {
+          // Use the original audio element for Safari for better compatibility
+          const audio = audioRef.current;
+          audio.currentTime = startTimeSeconds;
+          audio.volume = 0.3;
 
-        audioClone.play().catch((error) => {
-          console.error("Failed to play sound:", error);
-          clearTimeout(stopTimeout);
-        });
+          const stopTimeout = setTimeout(() => {
+            audio.pause();
+            audio.currentTime = 0;
+          }, duration);
 
-        // Clean up timeout if audio ends naturally
-        audioClone.addEventListener("ended", () => {
-          clearTimeout(stopTimeout);
-        });
+          audio.play().catch((error) => {
+            console.log("Safari audio play failed:", error);
+            clearTimeout(stopTimeout);
+          });
+
+          audio.addEventListener(
+            "ended",
+            () => {
+              clearTimeout(stopTimeout);
+            },
+            { once: true },
+          );
+        } else {
+          // Clone the audio for other browsers to allow concurrent sounds
+          const audioClone = audioRef.current.cloneNode() as HTMLAudioElement;
+          audioClone.currentTime = startTimeSeconds;
+          audioClone.volume = 0.3;
+
+          const stopTimeout = setTimeout(() => {
+            audioClone.pause();
+            audioClone.currentTime = 0;
+          }, duration);
+
+          audioClone.play().catch((error) => {
+            console.error("Failed to play sound:", error);
+            clearTimeout(stopTimeout);
+          });
+
+          audioClone.addEventListener("ended", () => {
+            clearTimeout(stopTimeout);
+          });
+        }
       } catch (error) {
         console.error("Error playing sound:", error);
       }

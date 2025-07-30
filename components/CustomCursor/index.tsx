@@ -9,6 +9,22 @@ export default function CustomCursor() {
   const [linkHovered, setLinkHovered] = useState(false);
 
   useEffect(() => {
+    // Check if we should disable custom cursor first
+    if (typeof navigator !== "undefined") {
+      const isSafari = /^((?!chrome|android).)*safari/i.test(
+        navigator.userAgent,
+      );
+      const isTouchDevice =
+        navigator.maxTouchPoints > 0 ||
+        "ontouchstart" in window ||
+        /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+      // Don't set up custom cursor if we're going to disable it
+      if (isSafari || isTouchDevice) {
+        return;
+      }
+    }
+
     // Hide default cursor
     document.body.style.cursor = "none";
     // Add the custom-cursor-active class to the body
@@ -28,10 +44,22 @@ export default function CustomCursor() {
     };
 
     const updateLinkHoverStatus = () => {
+      // Safari-compatible hover detection using document.elementFromPoint
       const hoveredElements = document.querySelectorAll(
         "a:hover, button:hover, [role=button]:hover, input[type=button]:hover, input[type=submit]:hover, .cursor-pointer:hover",
       );
       setLinkHovered(hoveredElements.length > 0);
+    };
+
+    // Alternative Safari-compatible hover detection using mouse position
+    const checkHoverAtPosition = (x: number, y: number) => {
+      const elementAtPoint = document.elementFromPoint(x, y);
+      if (elementAtPoint) {
+        const isHoverable = elementAtPoint.closest(
+          "a, button, [role=button], input[type=button], input[type=submit], .cursor-pointer",
+        );
+        setLinkHovered(!!isHoverable);
+      }
     };
 
     const handleMouseDown = () => setClicked(true);
@@ -54,8 +82,13 @@ export default function CustomCursor() {
         y: current.y,
       });
 
-      // Check if hovering over links
-      updateLinkHoverStatus();
+      // Use Safari-compatible hover detection
+      try {
+        checkHoverAtPosition(current.x, current.y);
+      } catch {
+        // Fallback to original method if elementFromPoint fails
+        updateLinkHoverStatus();
+      }
 
       // Continue animation loop
       animationFrameId = requestAnimationFrame(render);
@@ -83,9 +116,21 @@ export default function CustomCursor() {
     };
   }, []);
 
-  // Don't render cursor on touch devices
-  if (typeof navigator !== "undefined" && navigator.maxTouchPoints > 0) {
-    return null;
+  // Don't render cursor on touch devices or Safari
+  if (typeof navigator !== "undefined") {
+    // Check for Safari (any version - desktop or mobile)
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    // More comprehensive touch device detection
+    const isTouchDevice =
+      navigator.maxTouchPoints > 0 ||
+      "ontouchstart" in window ||
+      /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    // Disable custom cursor on Safari or touch devices
+    if (isSafari || isTouchDevice) {
+      return null;
+    }
   }
 
   const scale = linkHovered ? 1.1 : clicked ? 0.95 : 1;
