@@ -4,6 +4,8 @@ import { ExternalIcon, ShareIcon } from "../Icons";
 import { Tooltip } from "../Tooltip";
 import useCopy from "@react-hook/copy";
 
+export { AnimatedLink } from "./AnimatedLink";
+
 export function LinkExternal({ href, children }) {
   return (
     <a

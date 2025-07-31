@@ -1,7 +1,7 @@
 import React from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
-import { LinkExternal } from "../components/Links";
+import { AnimatedLink } from "../components/Links";
 
 export default function Links() {
   return (
@@ -25,21 +25,22 @@ export default function Links() {
           <dd className="list-content">
             <div className="pb-2 last-of-type:pb-0">
               <div>
-                <LinkExternal href="mailto:bandaragenaveen@gmail.com">
+                <AnimatedLink href="mailto:bandaragenaveen@gmail.com">
                   Email
-                </LinkExternal>
+                </AnimatedLink>
+                <br />
                 <time className="time blur-sm hover:blur-none transition-all duration-300 select-none">
                   bandaragenaveen@gmail.com
                 </time>
-                <span className="text-xs text-neutral-400 dark:text-neutral-600 ml-2">
+                <span className="text-xs text-neutral-400 dark:text-neutral-600">
                   blurred to be less easily be available to scrapers :)
                 </span>
                 <br />
               </div>
               <div>
-                <LinkExternal href="//linkedin.com/in/naveenbandarage/">
+                <AnimatedLink href="//linkedin.com/in/naveenbandarage/">
                   LinkedIn
-                </LinkExternal>
+                </AnimatedLink>
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>
@@ -53,49 +54,49 @@ export default function Links() {
           <dd className="list-content">
             <div className="pb-2 last-of-type:pb-0">
               <div>
-                <LinkExternal href="//twitter.com/naveenbandarage">
-                  Twitter
-                </LinkExternal>
+                <AnimatedLink href="//x.com/naveenbandarage">
+                  X/Twitter
+                </AnimatedLink>
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>
               <div>
-                <LinkExternal href="//instagram.com/naveenbandarage">
+                <AnimatedLink href="//instagram.com/naveenbandarage">
                   Instagram
-                </LinkExternal>
+                </AnimatedLink>
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>
               <div>
-                <LinkExternal href="//open.spotify.com/user/naveen.bandarage?si=c56b9826f9294134">
+                <AnimatedLink href="//open.spotify.com/user/naveen.bandarage?si=c56b9826f9294134">
                   Spotify
-                </LinkExternal>
+                </AnimatedLink>
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>
               <div>
-                <LinkExternal href="//literal.club/naveenbandarage">
+                <AnimatedLink href="//literal.club/naveenbandarage">
                   Literal
-                </LinkExternal>
+                </AnimatedLink>
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>
               <div>
-                <LinkExternal href="//naveenbandarage.substack.com/">
+                <AnimatedLink href="//naveenbandarage.substack.com/">
                   Substack
-                </LinkExternal>
+                </AnimatedLink>
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>
               <div>
-                <LinkExternal href="//cosmos.so/naveenb/">Cosmos</LinkExternal>
+                <AnimatedLink href="//cosmos.so/naveenb/">Cosmos</AnimatedLink>
                 <time className="time">@naveenb</time>
                 <br />
               </div>
               <div>
-                <LinkExternal href="//youtube.com/@naveenbandarage/">
+                <AnimatedLink href="//youtube.com/@naveenbandarage/">
                   Youtube
-                </LinkExternal>
+                </AnimatedLink>
                 <time className="time">@naveenbandarage</time>
                 <br />
               </div>

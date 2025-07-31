@@ -400,68 +400,6 @@ a[href^="mailto:"] {
     mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 1) 90%);
   }
 
-  /* Hide default cursor when custom cursor is active */
-  .custom-cursor-active {
-    cursor: none !important;
-  }
-
-  /* Safari-specific cursor fixes */
-  @supports (-webkit-appearance: none) {
-    .custom-cursor-active {
-      cursor: none !important;
-      -webkit-user-select: none;
-    }
-  }
-
-  /* Don't apply custom cursor on touch devices */
-  @media (hover: none) {
-    .custom-cursor-active {
-      cursor: auto !important;
-    }
-  }
-
-  /* Ensure normal cursor behavior when custom cursor is not active */
-  body:not(.custom-cursor-active) {
-    cursor: auto !important;
-  }
-
-  body:not(.custom-cursor-active) *:not(a):not(button):not([role="button"]) {
-    cursor: auto !important;
-  }
-
-  /* Safari and iOS specific fixes - ensure normal cursor */
-  @supports (-webkit-touch-callout: none) {
-    body {
-      cursor: auto !important;
-    }
-  }
-
-  /* Add hover styles for interactive elements */
-  .custom-cursor-active a,
-  .custom-cursor-active button,
-  .custom-cursor-active [role="button"],
-  .custom-cursor-active input[type="submit"],
-  .custom-cursor-active .interactive {
-    cursor: none !important;
-  }
-
-  /* Safari-specific performance optimizations */
-  @supports (-webkit-appearance: none) {
-    /* Improve animation performance on Safari */
-    .custom-cursor-active * {
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-    }
-
-    /* Reduce motion blur on Safari */
-    @media (prefers-reduced-motion: no-preference) {
-      * {
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-      }
-    }
-  }
-
   /* Safari font rendering improvements */
   @supports (-webkit-appearance: none) {
     body {
