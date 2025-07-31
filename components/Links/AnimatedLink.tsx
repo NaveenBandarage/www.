@@ -21,17 +21,30 @@ interface AnimatedLinkProps {
 
 // Map URLs to their corresponding icons
 const getIconForUrl = (href: string) => {
-  const url = href.toLowerCase();
+  // Handle mailto: links
+  if (href.toLowerCase().startsWith("mailto:")) return EmailIcon;
 
-  if (url.includes("mailto:")) return EmailIcon;
-  if (url.includes("twitter.com") || url.includes("x.com")) return XIcon;
-  if (url.includes("linkedin.com")) return LinkedInIcon;
-  if (url.includes("instagram.com")) return InstagramIcon;
-  if (url.includes("spotify.com")) return SpotifyIcon;
-  if (url.includes("literal.club")) return BookIcon;
-  if (url.includes("substack.com")) return NewsletterIcon;
-  if (url.includes("youtube.com")) return YoutubeIcon;
-  if (url.includes("cosmos.so")) return CosmosIcon;
+  let host = "";
+  try {
+    // Parse the URL, fallback to empty host if invalid
+    host = new URL(href).host.toLowerCase();
+  } catch (e) {
+    // If parsing fails, fallback to default icon
+    return GlobeIcon;
+  }
+
+  // Helper to match exact domain or subdomain
+  const matchesDomain = (domain: string) =>
+    host === domain || host.endsWith("." + domain);
+
+  if (matchesDomain("twitter.com") || matchesDomain("x.com")) return XIcon;
+  if (matchesDomain("linkedin.com")) return LinkedInIcon;
+  if (matchesDomain("instagram.com")) return InstagramIcon;
+  if (matchesDomain("spotify.com")) return SpotifyIcon;
+  if (matchesDomain("literal.club")) return BookIcon;
+  if (matchesDomain("substack.com")) return NewsletterIcon;
+  if (matchesDomain("youtube.com")) return YoutubeIcon;
+  if (matchesDomain("cosmos.so")) return CosmosIcon;
 
   // Default icon for any other external links
   return GlobeIcon;
