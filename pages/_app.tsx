@@ -8,11 +8,6 @@ import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import PageTransition from "../components/PageTransition";
 
-// Import CustomCursor with dynamic loading (no SSR)
-const CustomCursor = dynamic(() => import("../components/CustomCursor"), {
-  ssr: false,
-});
-
 // Import GlobalClickSound with dynamic loading (no SSR)
 const GlobalClickSound = dynamic(
   () => import("../components/GlobalClickSound"),
@@ -55,7 +50,7 @@ export default function MyApp({
           <Component {...pageProps} />
         </PageTransition>
       </AnimatePresence>
-      <CustomCursor />
+
       <GlobalClickSound />
     </>
   );

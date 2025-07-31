@@ -26,8 +26,14 @@ const getIconForUrl = (href: string) => {
 
   let host = "";
   try {
+    // Handle protocol-relative URLs (starting with //)
+    let urlToParse = href;
+    if (href.startsWith("//")) {
+      urlToParse = "https:" + href;
+    }
+
     // Parse the URL, fallback to empty host if invalid
-    host = new URL(href).host.toLowerCase();
+    host = new URL(urlToParse).host.toLowerCase();
   } catch (e) {
     // If parsing fails, fallback to default icon
     return GlobeIcon;
