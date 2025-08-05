@@ -8,6 +8,7 @@ import {
   InstagramIcon,
   SpotifyIcon,
   BookIcon,
+  GoodreadsIcon,
   NewsletterIcon,
   YoutubeIcon,
   GlobeIcon,
@@ -48,6 +49,7 @@ const getIconForUrl = (href: string) => {
   if (matchesDomain("instagram.com")) return InstagramIcon;
   if (matchesDomain("spotify.com")) return SpotifyIcon;
   if (matchesDomain("literal.club")) return BookIcon;
+  if (matchesDomain("goodreads.com")) return GoodreadsIcon;
   if (matchesDomain("substack.com")) return NewsletterIcon;
   if (matchesDomain("youtube.com")) return YoutubeIcon;
   if (matchesDomain("cosmos.so")) return CosmosIcon;

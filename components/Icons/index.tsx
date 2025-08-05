@@ -297,3 +297,18 @@ export function YoutubeIcon({ size }) {
     />
   );
 }
+
+export function GoodreadsIcon({ size }) {
+  return (
+    <svg
+      aria-label="Goodreads logo"
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path d="M17.7 7.3c-1.2-1.8-3.1-2.8-5.4-2.8-3.5 0-6.8 3-6.8 8.1 0 4.8 2.9 8.1 7 8.1 2.2 0 4.1-1 5.3-2.8v2.3c0 2.5-1.3 3.8-3.8 3.8-1.9 0-3.1-.7-3.8-2.2l-1.4.6c.9 2.2 2.9 3.2 5.2 3.2 3.5 0 5.4-1.9 5.4-5.4V4.8h-1.7v2.5zM12.3 18.9c-3.2 0-5.3-2.5-5.3-6.5s2.1-6.5 5.3-6.5c3.2 0 5.3 2.5 5.3 6.5s-2.1 6.5-5.3 6.5z" />
+    </svg>
+  );
+}

@@ -82,6 +82,13 @@ export default function Links() {
                 <br />
               </div>
               <div>
+                <AnimatedLink href="//goodreads.com/naveenbandarage">
+                  Goodreads
+                </AnimatedLink>
+                <time className="time">@naveenbandarage</time>
+                <br />
+              </div>
+              <div>
                 <AnimatedLink href="//naveenbandarage.substack.com/">
                   Substack
                 </AnimatedLink>
