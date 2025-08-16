@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { LinkExternal } from "../Links";
-import { GithubIcon } from "../Icons";
 
 import { useEffect, useState } from "react";
 import moment from "moment-timezone";
@@ -9,11 +7,11 @@ export default function Footer() {
   const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
-    // Get the current local time in Melbourne, Australia
-    const melbourneTime = moment().tz("Australia/Melbourne").format("HH:mm:ss");
+    // Get the current local time in New York City, USA
+    const newYorkTime = moment().tz("America/New_York").format("HH:mm:ss");
 
     // Set the current local time
-    setCurrentTime(melbourneTime);
+    setCurrentTime(newYorkTime);
   }, []); // Run this effect only once on component mount
 
   return (
@@ -45,13 +43,12 @@ export default function Footer() {
             </ul>
             <ul className="flex flex-col">
               <li className="link-fade">
-                <p>Melbourne, AU</p>
+                <p>New York, NY</p>
                 <p>{currentTime}</p>
               </li>
             </ul>
           </div>
-          <div className="flex items-center">
-          </div>
+          <div className="flex items-center"></div>
         </div>
       </div>
     </footer>
