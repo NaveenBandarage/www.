@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { head, put } from "@vercel/blob";
 
 type LastVisitor = {
   city: string | null;
@@ -59,9 +60,19 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method === "GET") {
-    return res
-      .status(200)
-      .json({ lastVisitor: global.__LAST_VISITOR__ || null });
+    try {
+      const meta = await head("last-visitor.json", {
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
+      if (!meta?.url) {
+        return res.status(200).json({ lastVisitor: null });
+      }
+      const data = await fetch(meta.url).then((r) => r.json());
+      return res.status(200).json({ lastVisitor: data });
+    } catch {
+      // Not found or token missing
+      return res.status(200).json({ lastVisitor: null });
+    }
   }
 
   if (req.method === "POST") {
@@ -106,7 +117,11 @@ export default async function handler(
         timestamp: new Date().toISOString(),
       };
 
-      global.__LAST_VISITOR__ = record;
+      await put("last-visitor.json", JSON.stringify(record), {
+        access: "public",
+        contentType: "application/json",
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
 
       return res.status(200).json({ ok: true });
     } catch (error: any) {
