@@ -50,10 +50,22 @@ export default function About() {
           <dt className="list-title">
             <h3 className="text-neutral-500 dark:text-silver-dark">
               <div className="flex items-center gap-2">
-                2023
+                2025
                 <Badge>Present</Badge>
               </div>
             </h3>
+          </dt>
+          <dd className="list-content">
+            <div>Software Engineer (SRE)</div>
+            <div>
+              <LinkExternal href="//xero.com">Xero</LinkExternal>
+            </div>
+            <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
+              New York, USA
+            </div>
+          </dd>
+          <dt className="list-title mt-4 border-none pt-0 sm:mt-0">
+            <h3 className="text-neutral-500 dark:text-silver-dark">2023</h3>
           </dt>
           <dd className="list-content">
             <div>Software Engineer</div>
