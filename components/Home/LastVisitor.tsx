@@ -20,7 +20,13 @@ export default function LastVisitor({ variant = "card" }: Props) {
 
   useEffect(() => {
     // Record this visit and get the previous visitor in one request
-    fetch("/api/last-visitor", { method: "POST" })
+    fetch("/api/last-visitor", {
+      method: "POST",
+      headers: {
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+      },
+    })
       .then((r) => r.json())
       .then((data) => {
         // Use the previous visitor data returned from the POST
@@ -28,7 +34,12 @@ export default function LastVisitor({ variant = "card" }: Props) {
       })
       .catch(() => {
         // Fallback: fetch the current data if POST fails
-        fetch("/api/last-visitor")
+        fetch("/api/last-visitor", {
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        })
           .then((r) => r.json())
           .then((data) => setLastVisitor(data?.lastVisitor ?? null))
           .catch(() => setLastVisitor(null));
