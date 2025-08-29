@@ -220,6 +220,7 @@ export default async function handler(
             access: "public",
             contentType: "application/json",
             token: process.env.BLOB_READ_WRITE_TOKEN,
+            allowOverwrite: true,
           });
           console.log(
             "Successfully wrote visitor data to blob storage:",
