@@ -100,6 +100,22 @@ export default async function handler(
 
   if (req.method === "POST") {
     try {
+      // First, get the current last visitor before we update it
+      let previousVisitor: LastVisitor | null = null;
+
+      try {
+        const meta = await head("last-visitor.json", {
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+        });
+        if (meta?.url) {
+          previousVisitor = await fetch(meta.url).then((r) => r.json());
+        } else {
+          previousVisitor = global.__LAST_VISITOR__ ?? null;
+        }
+      } catch {
+        previousVisitor = global.__LAST_VISITOR__ ?? null;
+      }
+
       // Prefer Vercel geolocation headers (fast, reliable),
       // and only fall back to external lookup if missing.
       const headerGeo = getGeoFromHeaders(req);
@@ -167,7 +183,8 @@ export default async function handler(
       // Always keep an in-memory fallback for the current server instance
       global.__LAST_VISITOR__ = record;
 
-      return res.status(200).json({ ok: true });
+      // Return the previous visitor data so the client can use it immediately
+      return res.status(200).json({ ok: true, previousVisitor });
     } catch (error: any) {
       return res.status(500).json({ error: error?.message || "Unknown error" });
     }
