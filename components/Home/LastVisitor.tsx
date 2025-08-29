@@ -19,15 +19,21 @@ export default function LastVisitor({ variant = "card" }: Props) {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Fetch previously stored visitor first, then record this visit
-    fetch("/api/last-visitor")
+    // Record this visit and get the previous visitor in one request
+    fetch("/api/last-visitor", { method: "POST" })
       .then((r) => r.json())
-      .then((data) => setLastVisitor(data?.lastVisitor ?? null))
-      .catch(() => setLastVisitor(null))
+      .then((data) => {
+        // Use the previous visitor data returned from the POST
+        setLastVisitor(data?.previousVisitor ?? null);
+      })
+      .catch(() => {
+        // Fallback: fetch the current data if POST fails
+        fetch("/api/last-visitor")
+          .then((r) => r.json())
+          .then((data) => setLastVisitor(data?.lastVisitor ?? null))
+          .catch(() => setLastVisitor(null));
+      })
       .finally(() => setLoading(false));
-
-    // Fire-and-forget a POST to record this visit
-    fetch("/api/last-visitor", { method: "POST" }).catch(() => {});
   }, []);
 
   const renderLocation = () => {

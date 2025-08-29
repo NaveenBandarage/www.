@@ -30,6 +30,7 @@ export default async function handler(
   await put(key, JSON.stringify(event), {
     access: "public",
     contentType: "application/json",
+    token: process.env.BLOB_READ_WRITE_TOKEN,
   });
 
   return res.status(200).json({ ok: true });
