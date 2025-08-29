@@ -60,7 +60,9 @@ function getGeoFromHeaders(req: NextApiRequest) {
     (req.headers["x-vercel-ip-country"] as string | undefined) ?? null;
   const region =
     (req.headers["x-vercel-ip-country-region"] as string | undefined) ?? null;
-  const city = (req.headers["x-vercel-ip-city"] as string | undefined) ?? null;
+  // Decode URL-encoded city names from Vercel headers
+  const cityHeader = req.headers["x-vercel-ip-city"] as string | undefined;
+  const city = cityHeader ? decodeURIComponent(cityHeader) : null;
 
   const latHeader = req.headers["x-vercel-ip-latitude"] as string | undefined;
   const lonHeader = req.headers["x-vercel-ip-longitude"] as string | undefined;
@@ -82,16 +84,32 @@ export default async function handler(
       });
       if (!meta?.url) {
         // Fallback to in-memory cache if blob doesn't exist
+        res.setHeader(
+          "Cache-Control",
+          "no-store, no-cache, must-revalidate, max-age=0",
+        );
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
         return res
           .status(200)
           .json({ lastVisitor: global.__LAST_VISITOR__ ?? null });
       }
       const data = await fetch(meta.url).then((r) => r.json());
-      res.setHeader("Cache-Control", "no-store, max-age=0");
+      res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, max-age=0",
+      );
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", "0");
       return res.status(200).json({ lastVisitor: data });
     } catch {
       // Not found or token missing — fall back to in-memory cache
-      res.setHeader("Cache-Control", "no-store, max-age=0");
+      res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, max-age=0",
+      );
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", "0");
       return res
         .status(200)
         .json({ lastVisitor: global.__LAST_VISITOR__ ?? null });
@@ -103,16 +121,27 @@ export default async function handler(
       // First, get the current last visitor before we update it
       let previousVisitor: LastVisitor | null = null;
 
-      try {
-        const meta = await head("last-visitor.json", {
-          token: process.env.BLOB_READ_WRITE_TOKEN,
-        });
-        if (meta?.url) {
-          previousVisitor = await fetch(meta.url).then((r) => r.json());
-        } else {
+      if (process.env.BLOB_READ_WRITE_TOKEN) {
+        try {
+          const meta = await head("last-visitor.json", {
+            token: process.env.BLOB_READ_WRITE_TOKEN,
+          });
+          if (meta?.url) {
+            previousVisitor = await fetch(meta.url).then((r) => r.json());
+            console.log(
+              "Retrieved previous visitor from blob:",
+              previousVisitor,
+            );
+          } else {
+            console.log("No blob found, using in-memory fallback");
+            previousVisitor = global.__LAST_VISITOR__ ?? null;
+          }
+        } catch (error) {
+          console.error("Error reading from blob storage:", error);
           previousVisitor = global.__LAST_VISITOR__ ?? null;
         }
-      } catch {
+      } else {
+        console.log("No blob token, using in-memory fallback");
         previousVisitor = global.__LAST_VISITOR__ ?? null;
       }
 
@@ -167,7 +196,24 @@ export default async function handler(
         timestamp: new Date().toISOString(),
       };
 
-      // Try to persist to blob storage if token is present; ignore write errors
+      console.log("New visitor record:", record);
+      console.log("Previous visitor was:", previousVisitor);
+
+      // Check if we're getting the same visitor data (could indicate caching issues)
+      if (
+        previousVisitor &&
+        previousVisitor.city === record.city &&
+        previousVisitor.region === record.region &&
+        previousVisitor.country === record.country &&
+        previousVisitor.latitude === record.latitude &&
+        previousVisitor.longitude === record.longitude
+      ) {
+        console.warn(
+          "New visitor matches previous visitor exactly - possible caching issue",
+        );
+      }
+
+      // Try to persist to blob storage if token is present
       if (process.env.BLOB_READ_WRITE_TOKEN) {
         try {
           await put("last-visitor.json", JSON.stringify(record), {
@@ -175,15 +221,28 @@ export default async function handler(
             contentType: "application/json",
             token: process.env.BLOB_READ_WRITE_TOKEN,
           });
-        } catch {
-          // ignore
+          console.log(
+            "Successfully wrote visitor data to blob storage:",
+            record,
+          );
+        } catch (error) {
+          console.error("Failed to write to blob storage:", error);
+          // Continue execution - we still have in-memory fallback
         }
+      } else {
+        console.warn("BLOB_READ_WRITE_TOKEN not found, skipping blob storage");
       }
 
       // Always keep an in-memory fallback for the current server instance
       global.__LAST_VISITOR__ = record;
 
       // Return the previous visitor data so the client can use it immediately
+      res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, max-age=0",
+      );
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", "0");
       return res.status(200).json({ ok: true, previousVisitor });
     } catch (error: any) {
       return res.status(500).json({ error: error?.message || "Unknown error" });
