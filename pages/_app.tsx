@@ -3,12 +3,13 @@ import type { AppProps as NextAppProps } from "next/app";
 import { ApolloCache, ApolloProvider } from "@apollo/client";
 import dynamic from "next/dynamic";
 import { Suspense, useEffect } from "react";
-import localFont from "next/font/local";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import PageTransition from "../components/PageTransition";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 
 // Import GlobalClickSound with dynamic loading (no SSR)
 const GlobalClickSound = dynamic(
@@ -17,12 +18,6 @@ const GlobalClickSound = dynamic(
     ssr: false,
   },
 );
-
-const sansFont = localFont({
-  src: "../public/inter.roman.var.woff2",
-  weight: "100 900",
-  display: "swap",
-});
 
 type AppProps<P = any> = {
   pageProps: P;
@@ -72,11 +67,12 @@ export default function MyApp({
   }, [router.events]);
 
   return (
-    <>
+    <div className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <style jsx global>
         {`
           :root {
-            --sans-font: ${sansFont.style.fontFamily};
+            --font-geist-sans: ${GeistSans.style.fontFamily};
+            --font-geist-mono: ${GeistMono.style.fontFamily};
           }
         `}
       </style>
@@ -89,6 +85,6 @@ export default function MyApp({
       <GlobalClickSound />
       <Analytics />
       <SpeedInsights />
-    </>
+    </div>
   );
 }

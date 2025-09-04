@@ -12,7 +12,7 @@ module.exports = {
       },
       fontFamily: {
         sans: [
-          "var(--sans-font)",
+          "var(--font-geist-sans)",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -27,6 +27,17 @@ module.exports = {
           "Segoe UI Emoji",
           "Segoe UI Symbol",
           "Noto Color Emoji",
+        ],
+        mono: [
+          "var(--font-geist-mono)",
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          "Liberation Mono",
+          "Courier New",
+          "monospace",
         ],
         serif: [
           "LiterataVar",

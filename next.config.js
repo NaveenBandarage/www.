@@ -6,6 +6,7 @@ const withMDX = require("@next/mdx")({
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  transpilePackages: ["geist"],
   images: {
     formats: ["image/avif", "image/webp"],
     domains: ["images.ctfassets.net", "i.scdn.co"],
