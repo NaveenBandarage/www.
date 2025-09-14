@@ -8,11 +8,20 @@ export default function Footer() {
   const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
-    // Get the current local time in New York City, USA
-    const newYorkTime = moment().tz("America/New_York").format("HH:mm:ss");
+    // Function to update the time
+    const updateTime = () => {
+      const newYorkTime = moment().tz("America/New_York").format("HH:mm:ss");
+      setCurrentTime(newYorkTime);
+    };
 
-    // Set the current local time
-    setCurrentTime(newYorkTime);
+    // Set initial time
+    updateTime();
+
+    // Set up interval to update time every second
+    const interval = setInterval(updateTime, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []); // Run this effect only once on component mount
 
   return (
