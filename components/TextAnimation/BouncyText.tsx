@@ -16,6 +16,8 @@ const BouncyText: React.FC<BouncyTextProps> = ({
   const [visibleLetters, setVisibleLetters] = useState<number>(0);
 
   useEffect(() => {
+    const timeouts: NodeJS.Timeout[] = [];
+
     const startTimeout = setTimeout(() => {
       let currentLetter = 0;
 
@@ -24,7 +26,8 @@ const BouncyText: React.FC<BouncyTextProps> = ({
           setVisibleLetters(currentLetter);
           currentLetter++;
           if (currentLetter <= text.length) {
-            setTimeout(showNextLetter, letterDelay);
+            const timeout = setTimeout(showNextLetter, letterDelay);
+            timeouts.push(timeout);
           }
         }
       };
@@ -32,14 +35,18 @@ const BouncyText: React.FC<BouncyTextProps> = ({
       showNextLetter();
     }, delay);
 
-    return () => clearTimeout(startTimeout);
+    timeouts.push(startTimeout);
+
+    return () => {
+      timeouts.forEach((timeout) => clearTimeout(timeout));
+    };
   }, [text, delay, letterDelay]);
 
   return (
     <span className={className}>
       {text.split("").map((letter, index) => (
         <span
-          key={index}
+          key={`${text}-${index}`} // Better key that includes text to handle text changes
           className={`inline-block transition-all duration-300 ${
             index < visibleLetters
               ? "opacity-100 transform translate-y-0"

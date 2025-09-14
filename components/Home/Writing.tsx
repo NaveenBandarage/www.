@@ -3,7 +3,16 @@ import { NoteIcon } from "../Icons";
 import Badge from "../../components/Badge";
 import { FadeInText } from "../TextAnimation";
 
-export default function Writing({ latestPosts }) {
+interface Post {
+  slug: string;
+  title: string;
+}
+
+interface WritingProps {
+  latestPosts: Post[];
+}
+
+export default function Writing({ latestPosts }: WritingProps) {
   return (
     <dl className="list-container">
       <dt className="list-title">
