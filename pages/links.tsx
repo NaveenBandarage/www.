@@ -2,6 +2,7 @@ import React from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import { AnimatedLink } from "../components/Links";
+import { EmailCopy } from "../components/EmailCopy";
 
 export default function Links() {
   return (
@@ -29,9 +30,11 @@ export default function Links() {
                   Email
                 </AnimatedLink>
                 <br />
-                <time className="time blur-sm hover:blur-none transition-all duration-300 select-none">
-                  bandaragenaveen@gmail.com
-                </time>
+                <div className="time">
+                  <EmailCopy email="bandaragenaveen@gmail.com">
+                    bandaragenaveen@gmail.com
+                  </EmailCopy>
+                </div>
                 <span className="text-xs text-neutral-400 dark:text-neutral-600">
                   blurred to be less easily be available to scrapers :)
                 </span>
