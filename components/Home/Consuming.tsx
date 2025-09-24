@@ -12,10 +12,10 @@ export default function Consuming() {
       <dd className="list-content">
         <FadeInText text="" delay={5500} duration={800}>
           <div>
-            <LinkExternal href="//literal.club/book/open-qpj85">
-              Open An Autobiography
+            <LinkExternal href="//literal.club/book/steven-bartlett-happy-sexy-millionaire-iy4hk">
+              Happy Sexy Millionaire
             </LinkExternal>{" "}
-            by Andre Agassi
+            by Steven Bartlett
           </div>
           <div>
             <LinkExternal href="//literal.club/book/software-engineering-at-google-2yflu">
