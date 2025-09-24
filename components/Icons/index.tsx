@@ -328,3 +328,13 @@ export function GoodreadsIcon({ size }) {
     </svg>
   );
 }
+
+export function ClipboardIcon({ size }) {
+  return (
+    <PhosphorIcon
+      label="Copy to clipboard"
+      size={size}
+      path="M208 32H48a16 16 0 00-16 16v160a16 16 0 0016 16h72a8 8 0 000-16H48V48h160v72a8 8 0 0016 0V48a16 16 0 00-16-16zM144 144a8 8 0 01-8 8H88a8 8 0 01-8-8V88a8 8 0 018-8h48a8 8 0 018 8zm-8-40H96v32h40zm72 96a8 8 0 01-8 8h-48a8 8 0 01-8-8v-56a8 8 0 018-8h48a8 8 0 018 8zm-8-40h-32v32h32z"
+    />
+  );
+}
