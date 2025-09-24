@@ -1,4 +1,16 @@
-export function PhosphorIcon({ label, path, size, ...rest }) {
+interface PhosphorIconProps {
+  label: string;
+  path: string;
+  size: number;
+  [key: string]: any; // for ...rest props
+}
+
+export function PhosphorIcon({
+  label,
+  path,
+  size,
+  ...rest
+}: PhosphorIconProps) {
   return (
     <svg
       aria-label={label}
@@ -14,7 +26,11 @@ export function PhosphorIcon({ label, path, size, ...rest }) {
   );
 }
 
-export function HomeIcon({ size }) {
+interface IconProps {
+  size: number;
+}
+
+export function HomeIcon({ size }: IconProps) {
   return (
     <PhosphorIcon
       label="Home"
@@ -24,7 +40,7 @@ export function HomeIcon({ size }) {
   );
 }
 
-export function NoteIcon({ size }) {
+export function NoteIcon({ size }: IconProps) {
   return (
     <PhosphorIcon
       label="Note"

@@ -1,6 +1,12 @@
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { ReactNode } from "react";
 
-export function Tooltip({ open, children }) {
+interface TooltipProps {
+  open: boolean;
+  children: ReactNode;
+}
+
+export function Tooltip({ open, children }: TooltipProps) {
   return (
     <TransitionGroup className="absolute bottom-auto left-1/2 top-0 -translate-x-1/2 translate-y-[calc(-100%-10px)] select-none pointer-coarse:hidden sm:bottom-0 sm:top-auto sm:-translate-y-[calc(-100%-10px)]">
       {open ? (
