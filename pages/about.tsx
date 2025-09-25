@@ -56,12 +56,24 @@ export default function About() {
             </h3>
           </dt>
           <dd className="list-content">
-            <div>Software Engineer (SRE)</div>
+            <div>Software Engineer</div>
             <div>
               <LinkExternal href="//xero.com">Xero</LinkExternal>
             </div>
             <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
               New York, USA
+            </div>
+          </dd>
+          <dt className="list-title mt-4 border-none pt-0 sm:mt-0">
+            <h3 className="text-neutral-500 dark:text-silver-dark">2024</h3>
+          </dt>
+          <dd className="list-content">
+            <div>Software Engineer</div>
+            <div>
+              <LinkExternal href="//xero.com">Xero</LinkExternal>
+            </div>
+            <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
+              Melbourne, AU
             </div>
           </dd>
           <dt className="list-title mt-4 border-none pt-0 sm:mt-0">
@@ -73,7 +85,7 @@ export default function About() {
               <LinkExternal href="//xero.com">Xero</LinkExternal>
             </div>
             <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
-              Melbourne, AU
+              Wellington, NZ
             </div>
           </dd>
           <dt className="list-title mt-4 border-none pt-0 sm:mt-0">
