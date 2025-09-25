@@ -51,6 +51,11 @@ export default function Footer() {
                     Blog
                   </Link>
                 </li>
+                <li>
+                  <Link href="/fun" className="link-fade">
+                    Fun
+                  </Link>
+                </li>
               </ul>
             </nav>
             <div

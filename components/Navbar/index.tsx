@@ -36,6 +36,12 @@ export default function Navbar() {
           >
             Blog
           </Link>
+          <Link
+            href="/fun"
+            className={`text-base ${isActive("/fun") ? "text-neutral-800 dark:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark"}`}
+          >
+            Fun
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <button
