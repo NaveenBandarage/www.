@@ -5,6 +5,7 @@ This document provides context and instructions for AI coding assistants working
 ## Project Overview
 
 This is a personal portfolio website for Naveen Bandarage, a Software Engineer at Xero. The site features:
+
 - Personal blog with MDX posts
 - Professional experience showcase
 - Reading list and consumption tracking
@@ -24,6 +25,7 @@ This is a personal portfolio website for Naveen Bandarage, a Software Engineer a
 ## Code Style & Patterns
 
 ### Component Structure
+
 - Use functional components with TypeScript interfaces
 - Export components as default exports
 - Keep component files in dedicated directories with `index.tsx`
@@ -41,19 +43,23 @@ export default function Component({ title, optional }: ComponentProps) {
 ```
 
 ### Animation Components
+
 The site uses custom text animation components located in `/components/TextAnimation/`:
+
 - `TypewriterText`: Progressive character reveal with cursor
 - `FadeInText`: Smooth opacity transitions with delays
 - `SlideUpText`: Upward motion with stagger support
 - `BouncyText`: Playful bounce animations
 
 When adding animations:
+
 - Use consistent delay patterns (increments of 300-500ms)
 - Support `delay` and `duration` props
 - Include accessibility considerations
 - Follow existing stagger patterns for text reveals
 
 ### Styling Guidelines
+
 - Use Tailwind utility classes
 - Follow the existing color scheme:
   - Light mode: `text-neutral-800`, `text-neutral-500`
@@ -62,6 +68,7 @@ When adding animations:
 - Maintain responsive design with `sm:` breakpoints
 
 ### File Organization
+
 ```
 /components/
   ComponentName/
@@ -79,24 +86,30 @@ When adding animations:
 ## Key Components & Utilities
 
 ### SEO Component (`/components/SEO/`)
+
 - Handles meta tags, OpenGraph, Twitter cards
 - Includes structured data for person/website schema
 - Supports canonical URLs and custom titles/descriptions
 - Always include when creating new pages
 
 ### Analytics (`/pages/api/analytics-ingest.ts`)
+
 - Custom analytics implementation using Vercel Blob
-- Tracks pageviews, referrers, user agents, geo data
+- Tracks pageviews, referrers, user agents, geo data in single JSON file
 - Privacy-focused with no personal identification
 - Automatically triggered on route changes
+- Stores events in `analytics/events.json` with date field in each event
+- Maintains last 10,000 events to prevent excessive file growth
 
 ### Reading Time (`/lib/readingTime.ts`)
+
 - Calculates estimated reading time for blog posts
 - Sanitizes HTML/markdown before word counting
 - Returns formatted strings ("1 minute", "5 minutes", etc.)
 - Used in blog post metadata
 
 ### MDX Blog System
+
 - Posts stored in `/posts/` directory as `.mdx` files
 - Frontmatter required: `title`, `description`, `date`, `tldr`, `meta`
 - Auto-generated reading times
@@ -105,6 +118,7 @@ When adding animations:
 ## Development Guidelines
 
 ### Adding New Blog Posts
+
 1. Create `.mdx` file in `/posts/` directory
 2. Include proper frontmatter:
    ```yaml
@@ -120,6 +134,7 @@ When adding animations:
 4. Posts appear on blog index and homepage
 
 ### Creating New Components
+
 1. Create directory in `/components/`
 2. Include TypeScript interfaces
 3. Follow existing naming conventions
@@ -127,6 +142,7 @@ When adding animations:
 5. Consider responsive design and dark mode
 
 ### API Endpoints
+
 - Keep endpoints simple and focused
 - Use TypeScript for request/response types
 - Follow existing error handling patterns
@@ -135,18 +151,21 @@ When adding animations:
 ## Content Guidelines
 
 ### Writing Style
+
 - Personal, conversational tone
 - Technical but accessible
 - Include real experiences and learnings
 - Reference specific tools, technologies, and places
 
 ### Animation Timing
+
 - Homepage intro sequence: 1500ms → 2200ms → 3500ms → 4000ms → 4500ms → 5200ms
 - Use consistent delay increments
 - Allow time for users to read before next element appears
 - Consider reduced motion preferences
 
 ### Goals & Personal Content
+
 - Track personal and professional goals publicly
 - Include location context (Wellington → Melbourne → NYC journey)
 - Reference current work at Xero and career progression
@@ -155,6 +174,7 @@ When adding animations:
 ## Testing & Quality
 
 ### Before Committing
+
 - Test all animations and transitions
 - Verify responsive design on mobile
 - Check dark mode compatibility
@@ -162,6 +182,7 @@ When adding animations:
 - Validate MDX frontmatter format
 
 ### Performance Considerations
+
 - Optimize images and fonts
 - Use dynamic imports for heavy components
 - Minimize bundle size
@@ -170,6 +191,7 @@ When adding animations:
 ## Common Tasks
 
 ### Adding a new page
+
 1. Create page in `/pages/`
 2. Add SEO component with appropriate metadata
 3. Use Main layout component
@@ -177,16 +199,19 @@ When adding animations:
 5. Update sitemap if necessary
 
 ### Modifying animations
+
 1. Check existing animation components first
 2. Maintain consistent timing patterns
 3. Test on various devices and connection speeds
 4. Consider accessibility (prefers-reduced-motion)
 
 ### Working with analytics
-- Data stored in Vercel Blob with daily partitioning
-- Event structure: `{ ts, type, path, referrer, userAgent, geo }`
+
+- Data stored in single Vercel Blob file at `analytics/events.json`
+- Event structure: `{ ts, date, type, path, referrer, userAgent, geo }`
 - Keep analytics privacy-focused
-- Data automatically expires based on Blob settings
+- Maintains rolling window of last 10,000 events
+- Each event includes both timestamp and date fields for easy filtering
 
 ## Contact & Deployment
 
