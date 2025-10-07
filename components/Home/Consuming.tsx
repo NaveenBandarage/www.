@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LinkExternal } from "../Links";
 import { FadeInText } from "../TextAnimation";
 
@@ -22,6 +23,13 @@ export default function Consuming() {
               Software Engineering at Google
             </LinkExternal>{" "}
             by Hyrum Wright, Titus Winters and Tom Manshreck
+          </div>
+          <div className="mt-4 text-neutral-600 dark:text-neutral-400">
+            For what I'm currently using see{" "}
+            <Link href="/uses" className="link inline-flex items-center gap-1">
+              here
+            </Link>
+            .
           </div>
         </FadeInText>
       </dd>

@@ -47,6 +47,11 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/uses" className="link-fade">
+                    Uses
+                </Link>
+                </li>
+                <li>
                   <Link href="/fun" className="link-fade">
                     Fun
                   </Link>
