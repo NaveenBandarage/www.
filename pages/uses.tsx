@@ -34,7 +34,7 @@ export default function Uses() {
             <div className="space-y-2">
               <div>
                 <strong className="text-neutral-800 dark:text-white">
-                  MacBook Pro 14"
+                  MacBook Pro 14&quot;
                 </strong>
               </div>
               <div className="text-neutral-600 dark:text-neutral-400">
@@ -65,7 +65,7 @@ export default function Uses() {
                   Wired Apple Earphones
                 </strong>
                 <div className="text-neutral-600 dark:text-neutral-400">
-                  Literally can't beat a classic{" "}
+                  Literally can&apos;t beat a classic{" "}
                 </div>
               </div>
               <div>
@@ -73,8 +73,8 @@ export default function Uses() {
                   Apple AirPods Max 1st Gen{" "}
                 </strong>
                 <div className="text-neutral-600 dark:text-neutral-400">
-                  When I need to go wireless and beat a classic I'll use these
-                  and do stuff on the go. Sucks that they use lightning
+                  When I need to go wireless and beat a classic I&apos;ll use
+                  these and do stuff on the go. Sucks that they use lightning
                   though.{" "}
                 </div>
               </div>
@@ -96,13 +96,13 @@ export default function Uses() {
                 <LinkExternal href="https://www.raycast.com">
                   Raycast
                 </LinkExternal>{" "}
-                - Spotlight just doesn't cut it.
+                - Spotlight just doesn&apos;t cut it.
               </div>
               <div>
                 <LinkExternal href="https://www.diabrowser.com/">
                   Dia
                 </LinkExternal>{" "}
-                - Goated browser and I'm a big fan of them
+                - Goated browser and I&apos;m a big fan of them
               </div>
             </div>
           </dd>
