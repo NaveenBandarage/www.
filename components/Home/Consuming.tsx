@@ -25,7 +25,7 @@ export default function Consuming() {
             by Hyrum Wright, Titus Winters and Tom Manshreck
           </div>
           <div className="mt-4 text-neutral-600 dark:text-neutral-400">
-            For what I'm currently using see{" "}
+            For what I&apos;m currently using see{" "}
             <Link href="/uses" className="link inline-flex items-center gap-1">
               here
             </Link>
