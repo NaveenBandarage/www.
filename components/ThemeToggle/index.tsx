@@ -3,15 +3,42 @@ import { useEffect, useState } from "react";
 type Theme = "light" | "dark" | "crazy";
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Get initial theme from localStorage or default to light
-    const savedTheme = (localStorage.getItem("theme") as Theme) || "light";
-    applyTheme(savedTheme, false);
-    setTheme(savedTheme);
+
+    // Check for saved theme in localStorage
+    const savedTheme = localStorage.getItem("theme") as Theme | null;
+
+    if (savedTheme) {
+      // Use saved preference
+      applyTheme(savedTheme, false);
+      setTheme(savedTheme);
+    } else {
+      // No saved preference, check system preference
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      const systemTheme: Theme = prefersDark ? "dark" : "light";
+      applyTheme(systemTheme, false);
+      setTheme(systemTheme);
+
+      // Listen for system theme changes (only if no manual preference is set)
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleChange = (e: MediaQueryListEvent) => {
+        // Only auto-update if user hasn't manually set a theme
+        if (!localStorage.getItem("theme")) {
+          const newTheme: Theme = e.matches ? "dark" : "light";
+          applyTheme(newTheme, true);
+          setTheme(newTheme);
+        }
+      };
+
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
   }, []);
 
   const applyTheme = (newTheme: Theme, animate = true) => {
@@ -43,7 +70,7 @@ export default function ThemeToggle() {
   };
 
   const cycleTheme = () => {
-    const themes: Theme[] = ["light", "dark", "crazy"];
+    const themes: Theme[] = ["dark", "light", "crazy"];
     const currentIndex = themes.indexOf(theme);
     const nextTheme = themes[(currentIndex + 1) % themes.length];
     applyTheme(nextTheme);

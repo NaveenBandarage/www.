@@ -4,5 +4,58 @@ globs:
 alwaysApply: True
 ---
 
-- When running commands on this project use bun run dev instead of npm
-- Ensure that everything is working as expected.
+# Development Workflow with Bun
+
+## Package Manager
+
+- This project uses **Bun** as the package manager and runtime, NOT npm or yarn
+- Always use `bun` commands instead of `npm` or `yarn`
+- Install dependencies with: `bun install`
+
+## Development Commands
+
+### Before Starting Development
+
+Always run a build first to ensure linting and type checking:
+
+```bash
+bun run build
+```
+
+This will:
+
+- Run TypeScript type checking
+- Run ESLint to catch any linting errors
+- Generate the production build
+- Execute the postbuild script (sitemap generation)
+- Ensure all code is valid before starting the dev server
+
+### Starting the Development Server
+
+After a successful build, start the dev server:
+
+```bash
+bun run dev
+```
+
+### Complete Workflow
+
+For the most thorough validation:
+
+```bash
+bun run build && bun run dev
+```
+
+## Other Available Commands
+
+- `bun run lint` - Run ESLint only
+- `bun run format` - Format code with Prettier
+- `bun run start` - Start production server
+- `bun run export` - Build and export static site
+
+## Best Practices
+
+- Always run `bun run build` before committing changes to catch errors early
+- If the build fails, fix all errors before proceeding with development
+- The build command will catch TypeScript errors, linting issues, and build problems
+- Ensure the dev server runs without errors or warnings
