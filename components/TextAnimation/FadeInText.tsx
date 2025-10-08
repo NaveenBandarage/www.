@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 interface FadeInTextProps {
-  text: string;
+  text?: string;
   delay?: number;
   duration?: number;
   className?: string;
@@ -9,7 +9,7 @@ interface FadeInTextProps {
 }
 
 const FadeInText: React.FC<FadeInTextProps> = ({
-  text,
+  text = "",
   delay = 0,
   duration = 800,
   className = "",
