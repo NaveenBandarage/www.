@@ -6,6 +6,7 @@ import Link from "next/link";
 import { LinkExternal } from "../components/Links";
 import Consuming from "../components/Home/Consuming";
 import { getMdxPaths } from "./api/getMdxPaths";
+import ThemeToggle from "../components/ThemeToggle";
 import {
   TypewriterText,
   FadeInText,
@@ -22,10 +23,13 @@ export default function Home({ latestPosts }) {
         }}
       />
       <Main>
-        <header>
+        <header className="flex items-center justify-between">
           <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
             <TypewriterText text="Naveen Bandarage" speed={100} cursor={true} />
           </h1>
+          <div className="sm:pb-6">
+            <ThemeToggle />
+          </div>
         </header>
         <dl className="list-container">
           <dt className="list-title">

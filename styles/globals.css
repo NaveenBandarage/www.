@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* View Transitions API support */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+}
+
+::view-transition-new(root) {
+  animation-name: theme-transition;
+}
+
+@keyframes theme-transition {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 html,
 body {
   @apply bg-gray-50 dark:bg-black;
@@ -20,6 +45,91 @@ body {
   /* Safari fallback - use font-weight instead of font-variation-settings when not supported */
   font-weight: 400;
   font-variation-settings: "opsz" 15;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Crazy mode styles */
+.crazy {
+  /* Animated rainbow background */
+  background: linear-gradient(
+    45deg,
+    #ff0080,
+    #ff8c00,
+    #40e0d0,
+    #9400d3,
+    #ff1493,
+    #00ff00,
+    #ffd700,
+    #ff0080
+  );
+  background-size: 400% 400%;
+  animation: crazy-gradient 10s ease infinite;
+}
+
+.crazy body {
+  /* Optional: Add GIF background overlay */
+  /* background-image: url('/crazy-bg.gif'); */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+
+/* Text colors for crazy mode */
+.crazy,
+.crazy body {
+  color: #fff;
+  text-shadow:
+    0 0 10px rgba(255, 0, 255, 0.8),
+    0 0 20px rgba(0, 255, 255, 0.6);
+}
+
+.crazy a,
+.crazy .link-fade,
+.crazy [class*="text-neutral"] {
+  color: #fff !important;
+  text-shadow: 0 0 5px rgba(255, 255, 0, 0.8);
+}
+
+.crazy .bg-gray-50,
+.crazy .bg-white,
+.crazy .dark\:bg-black,
+.crazy .dark\:bg-neutral-900 {
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px);
+}
+
+.crazy [cmdk-root] {
+  background: rgba(20, 20, 40, 0.95) !important;
+  border-color: rgba(255, 0, 255, 0.5) !important;
+}
+
+.crazy [cmdk-input] {
+  color: #fff !important;
+}
+
+.crazy [cmdk-item] {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.crazy [cmdk-item][aria-selected] {
+  background: rgba(255, 0, 255, 0.3) !important;
+  color: #fff !important;
+}
+
+@keyframes crazy-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Pixelated Mac Icon Styles */

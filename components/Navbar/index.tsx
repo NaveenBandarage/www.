@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import ThemeToggle from "../ThemeToggle";
 
 export default function Navbar() {
   const router = useRouter();
@@ -14,36 +15,37 @@ export default function Navbar() {
         <div className="flex items-center gap-6">
           <Link
             href="/"
-            className={`text-base ${isActive("/") ? "text-neutral-800 dark:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark"}`}
+            className={`text-base ${isActive("/") ? "text-neutral-800 dark:text-white crazy:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark crazy:text-white/80"}`}
           >
             Home
           </Link>
           <Link
             href="/about"
-            className={`text-base ${isActive("/about") ? "text-neutral-800 dark:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark"}`}
+            className={`text-base ${isActive("/about") ? "text-neutral-800 dark:text-white crazy:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark crazy:text-white/80"}`}
           >
             About
           </Link>
           <Link
             href="/links"
-            className={`text-base ${isActive("/links") ? "text-neutral-800 dark:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark"}`}
+            className={`text-base ${isActive("/links") ? "text-neutral-800 dark:text-white crazy:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark crazy:text-white/80"}`}
           >
             Links
           </Link>
           <Link
             href="/blog"
-            className={`text-base ${isActive("/blog") ? "text-neutral-800 dark:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark"}`}
+            className={`text-base ${isActive("/blog") ? "text-neutral-800 dark:text-white crazy:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark crazy:text-white/80"}`}
           >
             Blog
           </Link>
           <Link
             href="/uses"
-            className={`text-base ${isActive("/uses") ? "text-neutral-800 dark:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark"}`}
+            className={`text-base ${isActive("/uses") ? "text-neutral-800 dark:text-white crazy:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark crazy:text-white/80"}`}
           >
             Uses
           </Link>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <button
             onClick={() =>
               document.dispatchEvent(

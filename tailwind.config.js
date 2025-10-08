@@ -4,6 +4,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: ["class", '[class~="dark"]'],
   theme: {
     extend: {
       fontSize: {
@@ -102,5 +103,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography"), require("tailwindcss-touch")()],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("tailwindcss-touch")(),
+    require("./tailwind-crazy.plugin.js"),
+  ],
 };
