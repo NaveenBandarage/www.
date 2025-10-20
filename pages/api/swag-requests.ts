@@ -56,7 +56,6 @@ export default async function handler(
     return res.status(200).json({
       pendingRequests: formattedRequests,
       submissionCounts,
-      allSubmissions: submissionsByDate,
     });
   } catch (error) {
     console.error("Error fetching swag requests:", error);
