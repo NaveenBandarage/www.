@@ -9,14 +9,24 @@ import {
 } from "../components/SwagCalendar";
 import Link from "next/link";
 
+interface Submission {
+  date: string;
+  companyName: string;
+  companyEmail: string;
+  swagDescription: string;
+  submittedAt: string;
+}
+
 interface SwagPageProps {
   pendingRequests: { companyName: string; count: number }[];
   submissionCounts: { [date: string]: number };
+  submissionsByDate: { [date: string]: Submission[] };
 }
 
 export default function SwagPage({
   pendingRequests,
   submissionCounts,
+  submissionsByDate,
 }: SwagPageProps) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -65,6 +75,7 @@ export default function SwagPage({
             selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
             submissions={submissionCounts}
+            submissionDetails={submissionsByDate}
           />
         </div>
 
@@ -103,6 +114,7 @@ export async function getServerSideProps() {
       props: {
         pendingRequests: data.pendingRequests || [],
         submissionCounts: data.submissionCounts || {},
+        submissionsByDate: data.submissionsByDate || {},
       },
     };
   } catch (error) {
@@ -111,6 +123,7 @@ export async function getServerSideProps() {
       props: {
         pendingRequests: [],
         submissionCounts: {},
+        submissionsByDate: {},
       },
     };
   }
