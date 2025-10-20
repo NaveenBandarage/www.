@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface CalendarProps {
   selectedDate: string | null;
@@ -6,63 +6,111 @@ interface CalendarProps {
   submissions: { [date: string]: number };
 }
 
+// Helper function to generate calendar days for a given month/year
+function generateCalendarDays(year: number, month: number) {
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startDayOfWeek = firstDay.getDay(); // 0 = Sunday
+
+  const days: Array<{
+    date: string | null;
+    day: number | null;
+    isPast: boolean;
+  }> = [];
+
+  // Add empty cells for days before the month starts
+  for (let i = 0; i < startDayOfWeek; i++) {
+    days.push({ date: null, day: null, isPast: false });
+  }
+
+  // Add days of the month
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const isPast = date < today;
+    days.push({ date: dateStr, day, isPast });
+  }
+
+  return days;
+}
+
 export default function Calendar({
   selectedDate,
   onDateSelect,
   submissions,
 }: CalendarProps) {
-  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const now = new Date();
+  const [currentYear, setCurrentYear] = useState(now.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(now.getMonth());
 
-  // October 2025 calendar data
-  const calendarDays = [
-    // Week 1 (Sept 28 - Oct 4)
-    { date: null, day: null },
-    { date: null, day: null },
-    { date: null, day: null },
-    { date: "2025-10-01", day: 1 },
-    { date: "2025-10-02", day: 2 },
-    { date: "2025-10-03", day: 3 },
-    { date: "2025-10-04", day: 4 },
-    // Week 2 (Oct 5-11)
-    { date: "2025-10-05", day: 5 },
-    { date: "2025-10-06", day: 6 },
-    { date: "2025-10-07", day: 7 },
-    { date: "2025-10-08", day: 8 },
-    { date: "2025-10-09", day: 9 },
-    { date: "2025-10-10", day: 10 },
-    { date: "2025-10-11", day: 11 },
-    // Week 3 (Oct 12-18)
-    { date: "2025-10-12", day: 12 },
-    { date: "2025-10-13", day: 13 },
-    { date: "2025-10-14", day: 14 },
-    { date: "2025-10-15", day: 15 },
-    { date: "2025-10-16", day: 16 },
-    { date: "2025-10-17", day: 17 },
-    { date: "2025-10-18", day: 18 },
-    // Week 4 (Oct 19-25)
-    { date: "2025-10-19", day: 19 },
-    { date: "2025-10-20", day: 20 },
-    { date: "2025-10-21", day: 21 },
-    { date: "2025-10-22", day: 22 },
-    { date: "2025-10-23", day: 23 },
-    { date: "2025-10-24", day: 24 },
-    { date: "2025-10-25", day: 25 },
-    // Week 5 (Oct 26 - Nov 1)
-    { date: "2025-10-26", day: 26 },
-    { date: "2025-10-27", day: 27 },
-    { date: "2025-10-28", day: 28 },
-    { date: "2025-10-29", day: 29 },
-    { date: "2025-10-30", day: 30 },
-    { date: "2025-10-31", day: 31 },
-    { date: null, day: null },
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
+
+  const calendarDays = generateCalendarDays(currentYear, currentMonth);
+
+  const goToPreviousMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  const goToNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+
+  // Check if we can go back (don't allow going before current month)
+  const canGoBack =
+    currentYear > now.getFullYear() ||
+    (currentYear === now.getFullYear() && currentMonth > now.getMonth());
 
   return (
     <div className="mb-8">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-medium text-neutral-800 dark:text-white [font-variation-settings:'wght'_500]">
-          October 2025
+          {monthNames[currentMonth]} {currentYear}
         </h2>
+        <div className="flex gap-2">
+          <button
+            onClick={goToPreviousMonth}
+            disabled={!canGoBack}
+            className="rounded-lg border border-neutral-200 px-3 py-1.5 text-sm transition-colors hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-30 dark:border-neutral-800 dark:hover:bg-neutral-800"
+            aria-label="Previous month"
+          >
+            ←
+          </button>
+          <button
+            onClick={goToNextMonth}
+            className="rounded-lg border border-neutral-200 px-3 py-1.5 text-sm transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-800"
+            aria-label="Next month"
+          >
+            →
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-7 gap-2">
@@ -83,33 +131,40 @@ export default function Calendar({
           const isSelected = selectedDate === item.date;
           const submissionCount = submissions[item.date] || 0;
           const hasSubmissions = submissionCount > 0;
+          const isPast = item.isPast;
 
           return (
             <button
               key={item.date}
-              onClick={() => onDateSelect(item.date!)}
+              onClick={() => !isPast && onDateSelect(item.date!)}
+              disabled={isPast}
               className={`
                 relative min-h-[80px] rounded-lg border p-2 text-center transition-all
                 ${
-                  isSelected
-                    ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950"
-                    : "border-neutral-200 bg-white hover:border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-600"
+                  isPast
+                    ? "cursor-not-allowed border-neutral-100 bg-neutral-50 text-neutral-300 dark:border-neutral-900 dark:bg-neutral-950 dark:text-neutral-700"
+                    : isSelected
+                      ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950"
+                      : "border-neutral-200 bg-white hover:border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-600"
                 }
               `}
             >
-              <div className="text-sm font-medium text-neutral-800 dark:text-white">
+              <div
+                className={`text-sm font-medium ${isPast ? "" : "text-neutral-800 dark:text-white"}`}
+              >
                 {item.day}
               </div>
-              {hasSubmissions && (
+              {hasSubmissions && !isPast && (
                 <div className="mt-1">
                   <span className="badge">{submissionCount} pending</span>
                 </div>
               )}
-              {isSelected && (
+              {isSelected && !isPast && (
                 <div className="mt-1 text-xs text-blue-600 dark:text-blue-400">
                   Selected!
                 </div>
               )}
+              {isPast && <div className="mt-1 text-xs">Past</div>}
             </button>
           );
         })}

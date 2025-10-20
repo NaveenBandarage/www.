@@ -30,7 +30,7 @@ export default function SwagPage({
     <>
       <SEO
         seo={{
-          title: "Swag Calendar 2025",
+          title: "Swag Calendar",
           description:
             "Send your company swag. I'll wear it for a full day and post on X.",
           path: "/swag",
@@ -39,7 +39,7 @@ export default function SwagPage({
       <Main>
         <header className="mb-8">
           <h1 className="mb-4 text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:text-2xl">
-            <FadeInText text="Swag Calendar 2025" delay={0} duration={600} />
+            <FadeInText text="Swag Calendar" delay={0} duration={600} />
           </h1>
           <div className="text-neutral-600 dark:text-silver-dark">
             <FadeInText text="" delay={300}>
