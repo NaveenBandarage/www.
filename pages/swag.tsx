@@ -44,8 +44,8 @@ export default function SwagPage({
           <div className="text-neutral-600 dark:text-silver-dark">
             <FadeInText text="" delay={300}>
               <p className="mb-4">
-                Send your company swag. I'll wear it for a full day and post on
-                X{" "}
+                Send your company swag. I&apos;ll wear it for a full day and
+                post on X{" "}
                 <a
                   href="https://x.com/naveenbandarage/status/1879724419449163852"
                   target="_blank"
