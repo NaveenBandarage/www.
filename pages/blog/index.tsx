@@ -1,12 +1,15 @@
 import React from "react";
-import Link from "next/link";
 import { Main } from "../../components/Layouts";
 import { SEO } from "../../components/SEO";
 import { getMdxPaths } from "../api/getMdxPaths";
-import { ClockIcon } from "../../components/Icons";
 import calculateReadingTime from "../../lib/readingTime";
+import YearTabs, { YearTabPost } from "../../components/Blog/YearTabs";
 
-const BlogIndex = ({ posts }) => {
+interface BlogIndexProps {
+  posts: YearTabPost[];
+}
+
+const BlogIndex = ({ posts }: BlogIndexProps) => {
   return (
     <>
       <SEO seo={{ title: "Blog", path: "/blog" }} />
@@ -16,33 +19,7 @@ const BlogIndex = ({ posts }) => {
             Blog
           </h1>
         </header>
-        <dl className="list-container">
-          <dd className="list-content">
-            <ul>
-              {posts.map((post) => (
-                <li key={post.slug} className="pb-2 last-of-type:pb-0">
-                  <div>
-                    <Link href={`/blog/${post.slug}`}>
-                      <h3 className="text-neutral-500 dark:text-silver-dark">
-                        {post.title}
-                      </h3>
-                    </Link>
-                    <div className="flex items-center gap-4">
-                      <time className="time">{post.date}</time>
-                      {post.readingTime && (
-                        <span className="time flex items-center gap-1">
-                          <ClockIcon size={14} />
-                          {post.readingTime}
-                        </span>
-                      )}
-                    </div>
-                    <br />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </dd>
-        </dl>
+        <YearTabs posts={posts} />
       </Main>
     </>
   );
@@ -53,18 +30,12 @@ export default BlogIndex;
 export async function getStaticProps() {
   const posts = await getMdxPaths();
 
-  // For each post, calculate reading time from content
-  const postsWithReadingTime = await Promise.all(
-    posts.map(async (post) => {
-      if (post.content) {
-        return {
-          ...post,
-          readingTime: calculateReadingTime(post.content),
-        };
-      }
-      return post;
-    }),
-  );
+  const postsWithReadingTime: YearTabPost[] = posts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    readingTime: post.content ? calculateReadingTime(post.content) : undefined,
+  }));
 
   return {
     props: {
