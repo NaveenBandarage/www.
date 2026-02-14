@@ -1,28 +1,65 @@
 import Link from "next/link";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getCurrentNewYorkTime } from "../../lib/timeUtils";
 import LastVisitor from "../Home/LastVisitor";
 
-export default function Footer() {
+function NewYorkClock() {
   const [currentTime, setCurrentTime] = useState("");
 
-  // Memoize the time update function
-  const updateTime = useCallback(() => {
-    const formattedTime = getCurrentNewYorkTime();
-    setCurrentTime(formattedTime);
+  useEffect(() => {
+    const updateTime = () => {
+      setCurrentTime(getCurrentNewYorkTime());
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
   }, []);
 
+  return (
+    <div className="link-fade">
+      <p>New York, NY</p>
+      <time
+        dateTime={new Date().toISOString()}
+        aria-label={`Current time in New York: ${currentTime}`}
+        className="tabindex-0"
+      >
+        {currentTime}
+      </time>
+    </div>
+  );
+}
+
+export default function Footer() {
+  const [lastVisitorEnabled, setLastVisitorEnabled] = useState(false);
+  const lastVisitorRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    // Set initial time
-    updateTime();
+    if (lastVisitorEnabled) return;
 
-    // Set up interval to update time every second
-    const interval = setInterval(updateTime, 1000);
+    const element = lastVisitorRef.current;
+    if (!element) return;
 
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval);
-  }, [updateTime]);
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      setLastVisitorEnabled(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setLastVisitorEnabled(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px 0px" },
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [lastVisitorEnabled]);
 
   return (
     <footer className="m:px-0 flex justify-center px-6 pt-6 sm:pt-32">
@@ -49,7 +86,7 @@ export default function Footer() {
                 <li>
                   <Link href="/uses" className="link-fade">
                     Uses
-                </Link>
+                  </Link>
                 </li>
                 <li>
                   <Link href="/fun" className="link-fade">
@@ -68,20 +105,11 @@ export default function Footer() {
               role="region"
               aria-label="Current time"
             >
-              <div className="link-fade">
-                <p>New York, NY</p>
-                <time
-                  dateTime={new Date().toISOString()}
-                  aria-label={`Current time in New York: ${currentTime}`}
-                  className="tabindex-0"
-                >
-                  {currentTime}
-                </time>
-              </div>
+              <NewYorkClock />
             </div>
           </div>
-          <div className="flex items-start pt-6">
-            <LastVisitor variant="footer" />
+          <div className="flex items-start pt-6" ref={lastVisitorRef}>
+            <LastVisitor variant="footer" enabled={lastVisitorEnabled} />
           </div>
         </div>
       </div>
