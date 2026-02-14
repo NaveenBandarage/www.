@@ -97,7 +97,7 @@ export default function YearTabs({ posts }: YearTabsProps) {
       y: 0,
       transition: {
         duration: shouldReduceMotion ? 0 : 0.25,
-        ease: "easeOut",
+        ease: "easeOut" as const,
       },
     },
   };
