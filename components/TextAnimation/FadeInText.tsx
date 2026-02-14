@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import React from "react";
 
 interface FadeInTextProps {
   text: string;
@@ -15,28 +16,28 @@ const FadeInText: React.FC<FadeInTextProps> = ({
   className = "",
   children,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsVisible(true);
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [delay]);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
-    <span
+    <motion.span
       className={`transition-all ${className}`}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translateY(0)" : "translateY(10px)",
-        transitionDuration: `${duration}ms`,
-        transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-      }}
+      initial={
+        shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10, filter: "blur(6px)" }
+      }
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={
+        shouldReduceMotion
+          ? { duration: 0 }
+          : {
+              duration: duration / 1000,
+              delay: delay / 1000,
+              ease: [0.22, 1, 0.36, 1],
+            }
+      }
+      style={{ willChange: "opacity, transform, filter" }}
     >
       {children || text}
-    </span>
+    </motion.span>
   );
 };
 
