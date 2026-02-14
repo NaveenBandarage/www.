@@ -1,8 +1,8 @@
 ---
-description: Testing and Running Bun
-globs:
-alwaysApply: True
+alwaysApply: true
 ---
 
 - When running commands on this project use bun run dev instead of npm
 - Ensure that everything is working as expected.
+- Run bun run build to validate that the build is succeeding.
+- Mention a positive quote at the end of your message.
