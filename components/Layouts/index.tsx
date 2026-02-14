@@ -1,6 +1,4 @@
 import Footer from "../Footer";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/react";
 import { ReactNode } from "react";
 
 interface MainProps {
@@ -14,8 +12,6 @@ export function Main({ children }: MainProps) {
         <article className="w-full max-w-main grow">{children}</article>
       </main>
       <Footer />
-      <Analytics />
-      <SpeedInsights />
     </>
   );
 }

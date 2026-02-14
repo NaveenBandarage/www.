@@ -2,16 +2,12 @@ import { Main } from "../Layouts";
 import { useRouter } from "next/router";
 import { MDXRemote } from "next-mdx-remote";
 import formatDate from "../../lib/formatDate";
-import calculateReadingTime from "../../lib/readingTime";
 import { SEO } from "../SEO";
 import { ClockIcon } from "../Icons";
 import ScrollReveal from "../ScrollReveal";
 
-const BlogLayout = ({ meta, source, rawContent }) => {
+const BlogLayout = ({ meta, source, readingTime }) => {
   const router = useRouter();
-
-  // Calculate reading time from the raw content for consistency with blog listing
-  const readingTime = calculateReadingTime(rawContent);
 
   return (
     <>
