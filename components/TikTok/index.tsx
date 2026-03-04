@@ -19,7 +19,6 @@ export function TikTokEmbed({ url, caption }: TikTokEmbedProps) {
 
   return (
     <div>
-      {/* @ts-expect-error tiktok blockquote embed */}
       <blockquote
         className="tiktok-embed"
         cite={url}
