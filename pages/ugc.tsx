@@ -11,9 +11,9 @@ const stats = [
   { label: "Followers", value: "400+" },
   { label: "Total Likes", value: "34K+" },
   { label: "Avg. Views per Video", value: "34K+" },
-  { label: "Engagement Rate", value: "9.2%" },
+  { label: "Engagement Rate", value: "4.6%+" },
   { label: "Videos Posted", value: "200+" },
-  { label: "Profile Views (30d)", value: "45.2K" },
+  { label: "Profile Views (30d)", value: "4.5K+" },
 ];
 
 const featuredVideos: { url: string; caption?: string }[] = [
