@@ -9,7 +9,7 @@ import { TikTokEmbed } from "../components/TikTok";
 
 const stats = [
   { label: "Followers", value: "400+" },
-  { label: "Total Likes", value: "34K+" },
+  { label: "Total Likes", value: "42K+" },
   { label: "Avg. Views per Video", value: "34K+" },
   { label: "Engagement Rate", value: "4.6%+" },
   { label: "Videos Posted", value: "200+" },
