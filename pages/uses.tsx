@@ -46,6 +46,24 @@ export default function Uses() {
 
         <dl className="list-container">
           <dt className="list-title">
+            <h3 className="text-neutral-500 dark:text-silver-dark">Monitor</h3>
+          </dt>
+          <dd className="list-content">
+            <div className="space-y-2">
+              <div>
+                <strong className="text-neutral-800 dark:text-white">
+                  Apple Studio Display Nano Texture Glass 2026
+                </strong>
+                <div className="text-neutral-600 dark:text-neutral-400">
+                  While the 60hz is a bummer this display is a work of art.
+                </div>
+              </div>
+            </div>
+          </dd>
+        </dl>
+
+        <dl className="list-container">
+          <dt className="list-title">
             <h3 className="text-neutral-500 dark:text-silver-dark">
               Peripherals
             </h3>
@@ -103,6 +121,12 @@ export default function Uses() {
                   Dia
                 </LinkExternal>{" "}
                 - Goated browser and I&apos;m a big fan of them
+              </div>
+              <div>
+                <LinkExternal href="https://www.conductor.build/">
+                  Conductor
+                </LinkExternal>{" "}
+                - How I run Codex and Claude Code.
               </div>
             </div>
           </dd>
