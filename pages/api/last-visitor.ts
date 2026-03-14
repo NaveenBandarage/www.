@@ -128,12 +128,7 @@ export default async function handler(
           });
           if (meta?.url) {
             previousVisitor = await fetch(meta.url).then((r) => r.json());
-            console.log(
-              "Retrieved previous visitor from blob:",
-              previousVisitor,
-            );
           } else {
-            console.log("No blob found, using in-memory fallback");
             previousVisitor = global.__LAST_VISITOR__ ?? null;
           }
         } catch (error) {
@@ -141,7 +136,6 @@ export default async function handler(
           previousVisitor = global.__LAST_VISITOR__ ?? null;
         }
       } else {
-        console.log("No blob token, using in-memory fallback");
         previousVisitor = global.__LAST_VISITOR__ ?? null;
       }
 
@@ -196,9 +190,6 @@ export default async function handler(
         timestamp: new Date().toISOString(),
       };
 
-      console.log("New visitor record:", record);
-      console.log("Previous visitor was:", previousVisitor);
-
       // Check if we're getting the same visitor data (could indicate caching issues)
       if (
         previousVisitor &&
@@ -222,10 +213,6 @@ export default async function handler(
             token: process.env.BLOB_READ_WRITE_TOKEN,
             allowOverwrite: true,
           });
-          console.log(
-            "Successfully wrote visitor data to blob storage:",
-            record,
-          );
         } catch (error) {
           console.error("Failed to write to blob storage:", error);
           // Continue execution - we still have in-memory fallback
