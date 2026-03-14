@@ -20,7 +20,15 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "books.google.com",
+      },
+      {
+        protocol: "https",
         hostname: "assets.literal.club",
+      },
+      {
+        protocol: "https",
+        hostname: "covers.openlibrary.org",
       },
       {
         protocol: "https",
