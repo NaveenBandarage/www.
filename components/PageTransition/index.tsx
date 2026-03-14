@@ -1,24 +1,51 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ReactNode } from "react";
 
 interface PageTransitionProps {
   children: ReactNode;
 }
 
-const variants = {
-  hidden: { opacity: 0 },
-  enter: { opacity: 1 },
-  exit: { opacity: 0 },
-};
-
 export default function PageTransition({ children }: PageTransitionProps) {
+  const shouldReduceMotion = useReducedMotion();
+  const hiddenState = shouldReduceMotion
+    ? { opacity: 1 }
+    : {
+        opacity: 0,
+        y: 20,
+        scale: 0.995,
+        filter: "blur(10px)",
+      };
+  const visibleState = shouldReduceMotion
+    ? { opacity: 1, transition: { duration: 0 } }
+    : {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        transition: {
+          duration: 0.55,
+          ease: [0.22, 1, 0.36, 1] as const,
+        },
+      };
+  const exitState = shouldReduceMotion
+    ? { opacity: 1, transition: { duration: 0 } }
+    : {
+        opacity: 0,
+        y: -12,
+        scale: 1,
+        filter: "blur(8px)",
+        transition: {
+          duration: 0.26,
+          ease: [0.4, 0, 1, 1] as const,
+        },
+      };
+
   return (
     <motion.div
-      variants={variants}
-      initial="hidden"
-      animate="enter"
-      exit="exit"
-      transition={{ duration: 0.4, ease: "easeInOut" }}
+      initial={hiddenState}
+      animate={visibleState}
+      exit={exitState}
+      style={{ willChange: "opacity, transform, filter" }}
     >
       {children}
     </motion.div>

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 interface SoundDefinition {
-  [key: string]: [number, number]; // [start_time_ms, duration_ms]
+  [key: string]: [number, number];
 }
 
 interface SoundConfig {
@@ -13,152 +13,149 @@ interface SoundConfig {
   defines: SoundDefinition;
 }
 
+const INTERACTIVE_SELECTOR =
+  "input, textarea, button, select, [role=button], [contenteditable]";
+
+const isSafariBrowser = () =>
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
 export default function GlobalClickSound() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [soundConfig, setSoundConfig] = useState<SoundConfig | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+  const soundConfigRef = useRef<SoundConfig | null>(null);
+  const audioEnabledRef = useRef(false);
+  const loadPromiseRef = useRef<Promise<void> | null>(null);
 
   useEffect(() => {
-    // Load the sound configuration
-    const loadSoundConfig = async () => {
-      try {
-        const response = await fetch("/config.json");
+    let disposed = false;
+    const abortController = new AbortController();
+
+    const unloadAudio = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+      }
+
+      audioRef.current = null;
+      soundConfigRef.current = null;
+      audioEnabledRef.current = false;
+    };
+
+    const ensureAudioLoaded = async () => {
+      if (soundConfigRef.current && audioRef.current) {
+        return;
+      }
+
+      if (loadPromiseRef.current) {
+        await loadPromiseRef.current;
+        return;
+      }
+
+      loadPromiseRef.current = (async () => {
+        const response = await fetch("/config.json", {
+          signal: abortController.signal,
+        });
 
         if (!response.ok) {
           throw new Error(`Failed to fetch config: ${response.status}`);
         }
 
         const config: SoundConfig = await response.json();
-        setSoundConfig(config);
-
-        // Pre-load the audio file
         const audio = new Audio(`/${config.sound}`);
         audio.preload = "auto";
-        audio.volume = 0.3; // Set default volume
+        audio.volume = 0.3;
 
-        // Store references to event handlers for proper cleanup
-        const handleCanPlayThrough = () => {
-          setIsLoaded(true);
-        };
+        await new Promise<void>((resolve, reject) => {
+          const onCanPlayThrough = () => {
+            cleanup();
+            resolve();
+          };
 
-        const handleError = (e: Event) => {
-          console.error("Audio loading error:", e);
-        };
+          const onError = () => {
+            cleanup();
+            reject(new Error("Audio failed to load"));
+          };
 
-        // Wait for audio to be ready
-        audio.addEventListener("canplaythrough", handleCanPlayThrough);
-        audio.addEventListener("error", handleError);
+          const cleanup = () => {
+            audio.removeEventListener("canplaythrough", onCanPlayThrough);
+            audio.removeEventListener("error", onError);
+          };
 
+          audio.addEventListener("canplaythrough", onCanPlayThrough);
+          audio.addEventListener("error", onError);
+        });
+
+        if (disposed) {
+          audio.pause();
+          audio.src = "";
+          return;
+        }
+
+        soundConfigRef.current = config;
         audioRef.current = audio;
-
-        // Store cleanup function that uses the same function references
-        const cleanup = () => {
-          if (audioRef.current) {
-            audioRef.current.removeEventListener(
-              "canplaythrough",
-              handleCanPlayThrough,
-            );
-            audioRef.current.removeEventListener("error", handleError);
-          }
-        };
-
-        // Store cleanup function on the audio element for access in useEffect cleanup
-        (audio as any)._cleanup = cleanup;
-      } catch (error) {
-        console.error("Failed to load sound configuration:", error);
-      }
-    };
-
-    loadSoundConfig();
-
-    return () => {
-      if (audioRef.current && (audioRef.current as any)._cleanup) {
-        (audioRef.current as any)._cleanup();
-      }
-    };
-  }, []);
-
-  // Enable audio on first user interaction - Safari-compatible
-  useEffect(() => {
-    const enableAudio = async () => {
-      if (!audioRef.current || isAudioEnabled) return;
+      })();
 
       try {
-        // Safari-specific audio context unlock
-        const audio = audioRef.current;
+        await loadPromiseRef.current;
+      } finally {
+        loadPromiseRef.current = null;
+      }
+    };
 
-        // Check if we're on Safari
-        const isSafari = /^((?!chrome|android).)*safari/i.test(
-          navigator.userAgent,
-        );
+    const unlockAudio = async () => {
+      const audio = audioRef.current;
 
-        if (isSafari) {
-          // Safari requires more explicit user interaction
+      if (!audio || audioEnabledRef.current) {
+        return;
+      }
+
+      try {
+        if (isSafariBrowser()) {
           audio.muted = true;
           await audio.play();
           audio.pause();
           audio.muted = false;
           audio.currentTime = 0;
         } else {
-          // Standard unlock for other browsers
           await audio.play();
           audio.pause();
           audio.currentTime = 0;
         }
 
-        setIsAudioEnabled(true);
-      } catch (error) {
-        console.log(
-          "Audio context not yet enabled, will try on next interaction",
-        );
+        audioEnabledRef.current = true;
+      } catch {
+        // Keep disabled and retry on the next interaction.
       }
     };
 
-    const handleFirstInteraction = () => {
-      enableAudio();
+    const ensureAudioEnabled = async () => {
+      try {
+        await ensureAudioLoaded();
+        await unlockAudio();
+      } catch (error) {
+        if (!disposed) {
+          console.error("Failed to initialize click sound:", error);
+        }
+      }
     };
-
-    // Listen for first user interaction
-    document.addEventListener("click", handleFirstInteraction, { once: true });
-    document.addEventListener("keydown", handleFirstInteraction, {
-      once: true,
-    });
-
-    return () => {
-      document.removeEventListener("click", handleFirstInteraction);
-      document.removeEventListener("keydown", handleFirstInteraction);
-    };
-  }, [isLoaded, isAudioEnabled]);
-
-  useEffect(() => {
-    if (!isLoaded || !soundConfig || !audioRef.current || !isAudioEnabled)
-      return;
 
     const playRandomSound = () => {
-      if (!audioRef.current || !soundConfig) return;
+      if (
+        !audioEnabledRef.current ||
+        !audioRef.current ||
+        !soundConfigRef.current
+      ) {
+        return;
+      }
 
-      // Get all available sound definitions
-      const soundKeys = Object.keys(soundConfig.defines);
-
+      const soundKeys = Object.keys(soundConfigRef.current.defines);
       if (soundKeys.length === 0) return;
 
-      // Pick a random sound
       const randomKey = soundKeys[Math.floor(Math.random() * soundKeys.length)];
-      const [startTime, duration] = soundConfig.defines[randomKey];
-
-      // Convert milliseconds to seconds for HTML Audio API
+      const [startTime, duration] = soundConfigRef.current.defines[randomKey];
       const startTimeSeconds = startTime / 1000;
-      const durationSeconds = duration / 1000;
 
       try {
-        // Safari-compatible audio playback
-        const isSafari = /^((?!chrome|android).)*safari/i.test(
-          navigator.userAgent,
-        );
-
-        if (isSafari) {
-          // Use the original audio element for Safari for better compatibility
+        if (isSafariBrowser()) {
           const audio = audioRef.current;
           audio.currentTime = startTimeSeconds;
           audio.volume = 0.3;
@@ -168,8 +165,7 @@ export default function GlobalClickSound() {
             audio.currentTime = 0;
           }, duration);
 
-          audio.play().catch((error) => {
-            console.log("Safari audio play failed:", error);
+          audio.play().catch(() => {
             clearTimeout(stopTimeout);
           });
 
@@ -180,52 +176,86 @@ export default function GlobalClickSound() {
             },
             { once: true },
           );
-        } else {
-          // Clone the audio for other browsers to allow concurrent sounds
-          const audioClone = audioRef.current.cloneNode() as HTMLAudioElement;
-          audioClone.currentTime = startTimeSeconds;
-          audioClone.volume = 0.3;
-
-          const stopTimeout = setTimeout(() => {
-            audioClone.pause();
-            audioClone.currentTime = 0;
-          }, duration);
-
-          audioClone.play().catch((error) => {
-            console.error("Failed to play sound:", error);
-            clearTimeout(stopTimeout);
-          });
-
-          audioClone.addEventListener("ended", () => {
-            clearTimeout(stopTimeout);
-          });
+          return;
         }
-      } catch (error) {
-        console.error("Error playing sound:", error);
+
+        const audioClone = audioRef.current.cloneNode() as HTMLAudioElement;
+        audioClone.currentTime = startTimeSeconds;
+        audioClone.volume = 0.3;
+
+        const stopTimeout = setTimeout(() => {
+          audioClone.pause();
+          audioClone.currentTime = 0;
+        }, duration);
+
+        audioClone.play().catch(() => {
+          clearTimeout(stopTimeout);
+        });
+
+        audioClone.addEventListener(
+          "ended",
+          () => {
+            clearTimeout(stopTimeout);
+          },
+          { once: true },
+        );
+      } catch {
+        // Ignore transient playback errors.
       }
     };
 
-    // Add click event listener to the document
-    const handleClick = (event: MouseEvent) => {
-      // Don't interfere with form inputs, buttons, but allow links
-      const target = event.target as HTMLElement;
-      const isInteractiveElement = target.closest(
-        "input, textarea, button, select, [role=button], [contenteditable]",
-      );
+    const handlePlayableClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest(INTERACTIVE_SELECTOR)) return;
 
-      if (!isInteractiveElement) {
-        playRandomSound();
+      if (!audioEnabledRef.current) {
+        void ensureAudioEnabled();
+        return;
       }
+
+      playRandomSound();
     };
 
-    // Use capture phase to catch clicks before they might be stopped by other handlers
-    document.addEventListener("click", handleClick, { capture: true });
+    const attachPlaybackListener = () => {
+      document.addEventListener("click", handlePlayableClick, { capture: true });
+    };
+
+    const detachPlaybackListener = () => {
+      document.removeEventListener("click", handlePlayableClick, {
+        capture: true,
+      });
+    };
+
+    const activateSoundSystem = () => {
+      document.removeEventListener("click", activateSoundSystem, {
+        capture: true,
+      });
+      document.removeEventListener("keydown", activateSoundSystem);
+
+      void ensureAudioEnabled();
+      attachPlaybackListener();
+    };
+
+    document.addEventListener("click", activateSoundSystem, {
+      once: true,
+      capture: true,
+    });
+    document.addEventListener("keydown", activateSoundSystem, {
+      once: true,
+    });
 
     return () => {
-      document.removeEventListener("click", handleClick, { capture: true });
-    };
-  }, [isLoaded, soundConfig, isAudioEnabled]);
+      disposed = true;
+      abortController.abort();
 
-  // This component doesn't render anything visible
+      document.removeEventListener("click", activateSoundSystem, {
+        capture: true,
+      });
+      document.removeEventListener("keydown", activateSoundSystem);
+      detachPlaybackListener();
+      unloadAudio();
+    };
+  }, []);
+
   return null;
 }

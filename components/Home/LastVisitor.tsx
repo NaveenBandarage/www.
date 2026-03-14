@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import formatDate from "../../lib/formatDate";
 
 type LastVisitor = {
@@ -12,40 +12,68 @@ type LastVisitor = {
 
 type Props = {
   variant?: "card" | "footer";
+  enabled?: boolean;
 };
 
-export default function LastVisitor({ variant = "card" }: Props) {
+export default function LastVisitor({ variant = "card", enabled = true }: Props) {
   const [lastVisitor, setLastVisitor] = useState<LastVisitor>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(enabled);
 
   useEffect(() => {
-    // Record this visit and get the previous visitor in one request
-    fetch("/api/last-visitor", {
-      method: "POST",
-      headers: {
-        "Cache-Control": "no-cache",
-        Pragma: "no-cache",
-      },
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        // Use the previous visitor data returned from the POST
-        setLastVisitor(data?.previousVisitor ?? null);
-      })
-      .catch(() => {
+    if (!enabled) return;
+
+    let cancelled = false;
+    const headers = {
+      "Cache-Control": "no-cache",
+      Pragma: "no-cache",
+    };
+
+    const loadLastVisitor = async () => {
+      setLoading(true);
+
+      try {
+        // Record this visit and get the previous visitor in one request
+        const response = await fetch("/api/last-visitor", {
+          method: "POST",
+          headers,
+        });
+        const data = await response.json();
+
+        if (!cancelled) {
+          setLastVisitor(data?.previousVisitor ?? null);
+          setLoading(false);
+        }
+        return;
+      } catch {
         // Fallback: fetch the current data if POST fails
-        fetch("/api/last-visitor", {
-          headers: {
-            "Cache-Control": "no-cache",
-            Pragma: "no-cache",
-          },
-        })
-          .then((r) => r.json())
-          .then((data) => setLastVisitor(data?.lastVisitor ?? null))
-          .catch(() => setLastVisitor(null));
-      })
-      .finally(() => setLoading(false));
-  }, []);
+      }
+
+      try {
+        const response = await fetch("/api/last-visitor", {
+          headers,
+        });
+        const data = await response.json();
+
+        if (!cancelled) {
+          setLastVisitor(data?.lastVisitor ?? null);
+        }
+      } catch {
+        if (!cancelled) {
+          setLastVisitor(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadLastVisitor();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled]);
 
   const renderLocation = () => {
     if (!lastVisitor) return "No previous visitor recorded yet.";
@@ -54,15 +82,20 @@ export default function LastVisitor({ variant = "card" }: Props) {
       .join(", ");
     return parts || "Unknown";
   };
+  const locationText = !enabled
+    ? "Scroll near the footer to load."
+    : loading
+      ? "Loading..."
+      : renderLocation();
 
   if (variant === "footer") {
     return (
       <div className="flex flex-col items-end text-right leading-none">
         <div className="text-neutral-800 dark:text-white">Last visitor</div>
         <div className="text-neutral-600 dark:text-neutral-300 mt-1">
-          {loading ? "Loading..." : renderLocation()}
+          {locationText}
         </div>
-        {!loading && lastVisitor?.timestamp && (
+        {enabled && !loading && lastVisitor?.timestamp && (
           <div className="text-neutral-600 dark:text-neutral-300 mt-1">
             Seen {formatDate(lastVisitor.timestamp, true)}
           </div>
@@ -79,9 +112,9 @@ export default function LastVisitor({ variant = "card" }: Props) {
             Last visitor location
           </div>
           <div className="text-neutral-600 dark:text-neutral-300">
-            {loading ? "Loading..." : renderLocation()}
+            {locationText}
           </div>
-          {!loading && lastVisitor?.timestamp && (
+          {enabled && !loading && lastVisitor?.timestamp && (
             <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
               Seen {formatDate(lastVisitor.timestamp, true)}
             </div>

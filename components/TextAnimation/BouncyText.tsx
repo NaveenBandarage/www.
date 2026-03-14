@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 
 interface BouncyTextProps {
   text: string;
@@ -13,10 +14,17 @@ const BouncyText: React.FC<BouncyTextProps> = ({
   className = "",
   letterDelay = 80,
 }) => {
+  const shouldReduceMotion = useReducedMotion();
   const [visibleLetters, setVisibleLetters] = useState<number>(0);
 
   useEffect(() => {
+    if (shouldReduceMotion) {
+      setVisibleLetters(text.length);
+      return;
+    }
+
     const timeouts: NodeJS.Timeout[] = [];
+    setVisibleLetters(0);
 
     const startTimeout = setTimeout(() => {
       let currentLetter = 0;
@@ -24,7 +32,7 @@ const BouncyText: React.FC<BouncyTextProps> = ({
       const showNextLetter = () => {
         if (currentLetter <= text.length) {
           setVisibleLetters(currentLetter);
-          currentLetter++;
+          currentLetter += 1;
           if (currentLetter <= text.length) {
             const timeout = setTimeout(showNextLetter, letterDelay);
             timeouts.push(timeout);
@@ -40,43 +48,39 @@ const BouncyText: React.FC<BouncyTextProps> = ({
     return () => {
       timeouts.forEach((timeout) => clearTimeout(timeout));
     };
-  }, [text, delay, letterDelay]);
+  }, [text, delay, letterDelay, shouldReduceMotion]);
+
+  if (shouldReduceMotion) {
+    return <span className={className}>{text}</span>;
+  }
 
   return (
     <span className={className}>
-      {text.split("").map((letter, index) => (
-        <span
-          key={`${text}-${index}`} // Better key that includes text to handle text changes
-          className={`inline-block transition-all duration-300 ${
-            index < visibleLetters
-              ? "opacity-100 transform translate-y-0"
-              : "opacity-0 transform translate-y-2"
-          }`}
-          style={{
-            transitionDelay: index < visibleLetters ? `${index * 30}ms` : "0ms",
-            animation:
-              index < visibleLetters ? "bounce-in 0.6s ease-out" : "none",
-          }}
-        >
-          {letter === " " ? "\u00A0" : letter}
-        </span>
-      ))}
-      <style jsx>{`
-        @keyframes bounce-in {
-          0% {
-            transform: translateY(10px) scale(0.8);
-            opacity: 0;
-          }
-          50% {
-            transform: translateY(-5px) scale(1.1);
-            opacity: 0.8;
-          }
-          100% {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-          }
-        }
-      `}</style>
+      {text.split("").map((letter, index) => {
+        const isVisible = index < visibleLetters;
+
+        return (
+          <motion.span
+            key={`${text}-${index}`}
+            className="inline-block"
+            initial={{ opacity: 0, y: 8, scale: 0.85, rotate: -3 }}
+            animate={
+              isVisible
+                ? { opacity: 1, y: 0, scale: 1, rotate: 0 }
+                : { opacity: 0, y: 8, scale: 0.85, rotate: -3 }
+            }
+            transition={{
+              type: "spring",
+              stiffness: 520,
+              damping: 26,
+              mass: 0.7,
+              delay: isVisible ? index * 0.015 : 0,
+            }}
+          >
+            {letter === " " ? "\u00A0" : letter}
+          </motion.span>
+        );
+      })}
     </span>
   );
 };

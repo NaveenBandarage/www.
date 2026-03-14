@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import React from "react";
 
 interface SlideUpTextProps {
   text: string;
@@ -19,45 +20,63 @@ const SlideUpText: React.FC<SlideUpTextProps> = ({
   staggerDelay = 50,
   children,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsVisible(true);
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [delay]);
+  const shouldReduceMotion = useReducedMotion();
 
   if (staggerChildren && !children) {
     const words = text.split(" ");
+
     return (
       <span className={className}>
         {words.map((word, index) => (
-          <SlideUpText
-            key={index}
-            text={word}
-            delay={delay + index * staggerDelay}
-            duration={duration}
+          <motion.span
+            key={`${word}-${index}`}
             className="inline-block mr-1"
-          />
+            initial={
+              shouldReduceMotion
+                ? { opacity: 1, y: 0, filter: "blur(0px)" }
+                : { opacity: 0, y: 18, filter: "blur(8px)" }
+            }
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : {
+                    duration: duration / 1000,
+                    delay: (delay + index * staggerDelay) / 1000,
+                    ease: [0.22, 1, 0.36, 1],
+                  }
+            }
+            style={{ willChange: "opacity, transform, filter" }}
+          >
+            {word}
+          </motion.span>
         ))}
       </span>
     );
   }
 
   return (
-    <span
+    <motion.span
       className={`inline-block transition-all ${className}`}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translateY(0)" : "translateY(20px)",
-        transitionDuration: `${duration}ms`,
-        transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-      }}
+      initial={
+        shouldReduceMotion
+          ? { opacity: 1, y: 0, filter: "blur(0px)" }
+          : { opacity: 0, y: 20, filter: "blur(8px)" }
+      }
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={
+        shouldReduceMotion
+          ? { duration: 0 }
+          : {
+              duration: duration / 1000,
+              delay: delay / 1000,
+              ease: [0.22, 1, 0.36, 1],
+            }
+      }
+      style={{ willChange: "opacity, transform, filter" }}
     >
       {children || text}
-    </span>
+    </motion.span>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ExternalIcon,
   EmailIcon,
@@ -60,53 +60,62 @@ const getIconForUrl = (href: string) => {
 
 export function AnimatedLink({ href, children }: AnimatedLinkProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const IconComponent = getIconForUrl(href);
 
   return (
     <div className="relative inline-block">
-      <a
+      <motion.a
         className="link link-external"
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onFocus={() => setIsHovered(true)}
+        onBlur={() => setIsHovered(false)}
+        transition={{ type: "spring", stiffness: 420, damping: 26 }}
       >
         {children}
         <ExternalIcon size={16} />
-      </a>
+      </motion.a>
 
       <AnimatePresence>
         {isHovered && (
           <motion.div
             initial={{
               opacity: 0,
-              scale: 0,
-              y: 10,
+              scale: shouldReduceMotion ? 1 : 0.85,
+              y: shouldReduceMotion ? -36 : -20,
               x: -20,
+              rotate: shouldReduceMotion ? 0 : -8,
+              filter: shouldReduceMotion ? "blur(0px)" : "blur(8px)",
             }}
             animate={{
               opacity: 1,
               scale: 1,
               y: -40,
               x: -20,
+              rotate: 0,
+              filter: "blur(0px)",
             }}
             exit={{
               opacity: 0,
-              scale: 0,
-              y: 10,
+              scale: shouldReduceMotion ? 1 : 0.9,
+              y: shouldReduceMotion ? -36 : -20,
               x: -20,
+              rotate: shouldReduceMotion ? 0 : -4,
+              filter: shouldReduceMotion ? "blur(0px)" : "blur(6px)",
             }}
             transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 25,
-              duration: 0.15,
+              duration: shouldReduceMotion ? 0 : 0.25,
+              ease: [0.22, 1, 0.36, 1],
             }}
             className="absolute pointer-events-none z-10"
             style={{
               top: "50%",
               left: "0%",
+              willChange: "opacity, transform, filter",
             }}
           >
             <div className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 shadow-lg">

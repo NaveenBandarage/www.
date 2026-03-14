@@ -20,6 +20,8 @@ body {
   /* Safari fallback - use font-weight instead of font-variation-settings when not supported */
   font-weight: 400;
   font-variation-settings: "opsz" 15;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Pixelated Mac Icon Styles */
@@ -289,6 +291,20 @@ a[href^="mailto:"] {
     @apply border-t border-solid border-neutral-500/10 pt-4 dark:border-neutral-900;
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    .list-container {
+      transition: border-color 280ms ease;
+    }
+
+    .list-container:hover {
+      border-color: rgb(115 115 115 / 0.18);
+    }
+
+    .dark .list-container:hover {
+      border-color: rgb(38 38 38 / 0.9);
+    }
+  }
+
   .list-container:last-of-type {
     @apply mb-0;
   }
@@ -358,6 +374,20 @@ a[href^="mailto:"] {
   .link-external svg {
     @apply decoration-transparent;
     @apply text-neutral-400 dark:text-silver-dark;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .link-external svg {
+      transition:
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 220ms ease;
+    }
+
+    .link-external:hover svg,
+    .link-external:focus-visible svg {
+      transform: translate(2px, -2px);
+      opacity: 1;
+    }
   }
 
   .link-back:hover svg {

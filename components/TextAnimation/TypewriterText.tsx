@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useReducedMotion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 
 interface TypewriterTextProps {
   text: string;
@@ -17,39 +18,70 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({
   onComplete,
   cursor = true,
 }) => {
+  const shouldReduceMotion = useReducedMotion();
   const [displayedText, setDisplayedText] = useState("");
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let startTimeout: NodeJS.Timeout | undefined;
+    let typingTimeout: NodeJS.Timeout | undefined;
+    let isCancelled = false;
+
+    setDisplayedText("");
+    setIsComplete(false);
+
+    const completeImmediately = () => {
+      if (isCancelled) return;
+      setDisplayedText(text);
+      setIsComplete(true);
+      onComplete?.();
+    };
+
+    if (shouldReduceMotion || speed <= 0 || text.length === 0) {
+      if (delay > 0) {
+        startTimeout = setTimeout(completeImmediately, delay);
+      } else {
+        completeImmediately();
+      }
+
+      return () => {
+        isCancelled = true;
+        if (startTimeout) clearTimeout(startTimeout);
+      };
+    }
 
     const startTyping = () => {
       let currentIndex = 0;
 
       const typeNextCharacter = () => {
+        if (isCancelled) return;
+
         if (currentIndex < text.length) {
-          setDisplayedText(text.slice(0, currentIndex + 1));
-          currentIndex++;
-          timeout = setTimeout(typeNextCharacter, speed);
-        } else {
-          setIsComplete(true);
-          onComplete?.();
+          currentIndex += 1;
+          setDisplayedText(text.slice(0, currentIndex));
+          typingTimeout = setTimeout(typeNextCharacter, speed);
+          return;
         }
+
+        setIsComplete(true);
+        onComplete?.();
       };
 
       typeNextCharacter();
     };
 
     if (delay > 0) {
-      timeout = setTimeout(startTyping, delay);
+      startTimeout = setTimeout(startTyping, delay);
     } else {
       startTyping();
     }
 
     return () => {
-      if (timeout) clearTimeout(timeout);
+      isCancelled = true;
+      if (startTimeout) clearTimeout(startTimeout);
+      if (typingTimeout) clearTimeout(typingTimeout);
     };
-  }, [text, speed, delay, onComplete]);
+  }, [text, speed, delay, onComplete, shouldReduceMotion]);
 
   return (
     <span className={className}>

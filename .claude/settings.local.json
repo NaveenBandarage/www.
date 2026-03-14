@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/naveenbandarage/Developer/www/pages -type f -name \"*.ts\" -o -name \"*.tsx\" -o -name \"*.js\" | xargs ls -la 2>/dev/null)",
+      "Bash(find /Users/naveenbandarage/Developer/www -name \"*.test.*\" -o -name \"*.spec.*\" -o -name \"jest.config.*\" -o -name \"vitest.config.*\" 2>/dev/null | head -10)",
+      "Bash(tree -L 2 -I 'node_modules|.next' /Users/naveenbandarage/Developer/www 2>/dev/null || find /Users/naveenbandarage/Developer/www -maxdepth 2 -not -path '*/node_modules/*' -not -path '*/.next/*' -type d | sort)"
+    ]
+  }
+}
