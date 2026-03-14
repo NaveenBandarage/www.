@@ -17,7 +17,7 @@ export default function Consuming() {
               year
             </Link>
           </div>
-          <div className="mt-4 text-neutral-600 dark:text-neutral-400">
+          <div className="mt-4">
             For what I&apos;m currently using see{" "}
             <Link href="/uses" className="link inline-flex items-center gap-1">
               here
