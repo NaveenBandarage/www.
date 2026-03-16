@@ -189,9 +189,26 @@ function spawnFullscreenConfetti(): Confetti[] {
   return particles;
 }
 
+const TEXT_CHALLENGES = [
+  { prompt: "Type the word: birdie", answer: "birdie" },
+  { prompt: "Type the word: eagle", answer: "eagle" },
+  { prompt: "Type the word: fore", answer: "fore" },
+  { prompt: "Type the word: bogey", answer: "bogey" },
+  { prompt: "Type the word: par", answer: "par" },
+  { prompt: "Type the word: putter", answer: "putter" },
+];
+
+function getRandomTextChallenge() {
+  return TEXT_CHALLENGES[Math.floor(Math.random() * TEXT_CHALLENGES.length)];
+}
+
 export function MiniGolfCaptcha({ open, onSuccess, onClose }: MiniGolfCaptchaProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [course, setCourse] = useState<Course>(generateCourse);
+  const [mode, setMode] = useState<"golf" | "text">("golf");
+  const [textChallenge, setTextChallenge] = useState(getRandomTextChallenge);
+  const [textInput, setTextInput] = useState("");
+  const [textError, setTextError] = useState(false);
   const [attempt, setAttempt] = useState(1);
   const [status, setStatus] = useState<"aiming" | "rolling" | "sunk" | "failed">("aiming");
   const [dragStart, setDragStart] = useState<Vec2 | null>(null);
@@ -217,6 +234,10 @@ export function MiniGolfCaptcha({ open, onSuccess, onClose }: MiniGolfCaptchaPro
       setDragStart(null);
       setDragCurrent(null);
       confettiRef.current = [];
+      setMode("golf");
+      setTextChallenge(getRandomTextChallenge());
+      setTextInput("");
+      setTextError(false);
     }
   }, [open]);
 
@@ -590,70 +611,142 @@ export function MiniGolfCaptcha({ open, onSuccess, onClose }: MiniGolfCaptchaPro
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-semibold text-neutral-800 dark:text-white">
-                    Mini Golf Challenge
+                    {mode === "golf" ? "Mini Golf Challenge" : "Text Challenge"}
                   </h3>
                   <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                    Putt the ball into the hole to view email
+                    {mode === "golf"
+                      ? "Putt the ball into the hole to view email"
+                      : "Answer the prompt below to view email"}
                   </p>
                 </div>
-                <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
-                  {attempt}/{MAX_ATTEMPTS}
-                </span>
+                {mode === "golf" && (
+                  <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
+                    {attempt}/{MAX_ATTEMPTS}
+                  </span>
+                )}
               </div>
             </div>
 
-            {/* Canvas */}
-            <div className="flex justify-center bg-neutral-50 p-5 dark:bg-neutral-800/50">
-              <canvas
-                ref={canvasRef}
-                style={{ width: "100%", maxWidth: CANVAS_W, aspectRatio: `${CANVAS_W}/${CANVAS_H}`, borderRadius: 8, cursor: status === "aiming" ? "crosshair" : "default", touchAction: "none" }}
-                onPointerDown={handlePointerDown}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-              />
-            </div>
+            {mode === "golf" ? (
+              <>
+                {/* Canvas */}
+                <div className="flex justify-center bg-neutral-50 p-5 dark:bg-neutral-800/50">
+                  <canvas
+                    ref={canvasRef}
+                    style={{ width: "100%", maxWidth: CANVAS_W, aspectRatio: `${CANVAS_W}/${CANVAS_H}`, borderRadius: 8, cursor: status === "aiming" ? "crosshair" : "default", touchAction: "none" }}
+                    onPointerDown={handlePointerDown}
+                    onPointerMove={handlePointerMove}
+                    onPointerUp={handlePointerUp}
+                  />
+                </div>
 
-            {/* Footer */}
-            <div className="flex items-center justify-between border-t border-neutral-200 px-5 py-3 dark:border-neutral-700">
-              {status === "aiming" && (
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                  Drag from the ball to aim & shoot
-                </p>
-              )}
-              {status === "rolling" && (
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                  Rolling...
-                </p>
-              )}
-              {status === "sunk" && (
-                <p className="text-xs font-medium text-green-600 dark:text-green-400">
-                  Nice putt! Verification complete.
-                </p>
-              )}
-              {status === "failed" && (
-                <p className="text-xs text-red-500 dark:text-red-400">
-                  Out of attempts
-                </p>
-              )}
+                {/* Footer */}
+                <div className="flex items-center justify-between border-t border-neutral-200 px-5 py-3 dark:border-neutral-700">
+                  {status === "aiming" && (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Drag from the ball to aim & shoot
+                    </p>
+                  )}
+                  {status === "rolling" && (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Rolling...
+                    </p>
+                  )}
+                  {status === "sunk" && (
+                    <p className="text-xs font-medium text-green-600 dark:text-green-400">
+                      Nice putt! Verification complete.
+                    </p>
+                  )}
+                  {status === "failed" && (
+                    <p className="text-xs text-red-500 dark:text-red-400">
+                      Out of attempts
+                    </p>
+                  )}
 
-              <div className="flex gap-2">
-                {status === "failed" && (
+                  <div className="flex gap-2">
+                    {status === "failed" && (
+                      <button
+                        onClick={newChallenge}
+                        className="rounded-md bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                      >
+                        New Challenge
+                      </button>
+                    )}
+                    {status === "sunk" && (
+                      <button
+                        onClick={onSuccess}
+                        className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-green-700"
+                      >
+                        Continue
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* Text-based accessible challenge */
+              <div className="px-5 py-6">
+                <label
+                  htmlFor="text-captcha"
+                  className="block text-sm text-neutral-700 dark:text-neutral-300"
+                >
+                  {textChallenge.prompt}
+                </label>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (textInput.trim().toLowerCase() === textChallenge.answer) {
+                      setTextError(false);
+                      onSuccess();
+                    } else {
+                      setTextError(true);
+                      setTextInput("");
+                    }
+                  }}
+                  className="mt-3 flex gap-2"
+                >
+                  <input
+                    id="text-captcha"
+                    type="text"
+                    autoFocus
+                    autoComplete="off"
+                    value={textInput}
+                    onChange={(e) => {
+                      setTextInput(e.target.value);
+                      setTextError(false);
+                    }}
+                    className="flex-1 rounded-md border border-neutral-300 bg-white px-3 py-1.5 text-sm text-neutral-800 outline-none focus:border-neutral-500 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white dark:focus:border-neutral-400"
+                    aria-describedby={textError ? "text-captcha-error" : undefined}
+                  />
                   <button
-                    onClick={newChallenge}
-                    className="rounded-md bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
-                  >
-                    New Challenge
-                  </button>
-                )}
-                {status === "sunk" && (
-                  <button
-                    onClick={onSuccess}
+                    type="submit"
                     className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-green-700"
                   >
-                    Continue
+                    Verify
                   </button>
+                </form>
+                {textError && (
+                  <p
+                    id="text-captcha-error"
+                    role="alert"
+                    className="mt-2 text-xs text-red-500 dark:text-red-400"
+                  >
+                    Incorrect, try again.
+                  </p>
                 )}
               </div>
+            )}
+
+            {/* Mode toggle */}
+            <div className="border-t border-neutral-200 px-5 py-2.5 dark:border-neutral-700">
+              <button
+                onClick={() => setMode(mode === "golf" ? "text" : "golf")}
+                className="text-[11px] text-neutral-400 transition-colors hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300"
+              >
+                {mode === "golf"
+                  ? "Use accessible text challenge instead"
+                  : "Play mini golf instead"}
+              </button>
             </div>
           </motion.div>
         </motion.div>
