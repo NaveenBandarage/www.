@@ -1,18 +1,24 @@
 import React from "react";
 import Image from "next/image";
 import Script from "next/script";
+import type { GetStaticProps } from "next";
+import { head } from "@vercel/blob";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import { AnimatedLink } from "../components/Links";
 import Badge from "../components/Badge";
 import { TikTokEmbed } from "../components/TikTok";
+import type { TikTokStats } from "./api/tiktok-stats";
 
-const stats = [
-  { label: "Followers", value: "400+" },
-  { label: "Total Likes", value: "42K+" },
+function formatCount(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1).replace(/\.0$/, "")}K`;
+  return String(n);
+}
+
+const STATIC_STATS = [
   { label: "Avg. Views per Video", value: "34K+" },
   { label: "Engagement Rate", value: "4.6%+" },
-  { label: "Videos Posted", value: "200+" },
   { label: "Profile Views (30d)", value: "4.5K+" },
 ];
 
@@ -23,7 +29,48 @@ const featuredVideos: { url: string; caption?: string }[] = [
   { url: "https://www.tiktok.com/@hokageoftheeastvillage/video/7601949298082843934" },
 ];
 
-export default function UGC() {
+type Props = {
+  stats: TikTokStats | null;
+};
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  let stats: TikTokStats | null = null;
+
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const meta = await head("tiktok-stats.json", {
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
+      if (meta?.url) {
+        stats = await fetch(meta.url).then((r) => r.json());
+      }
+    } catch {
+      // fall through to null
+    }
+  }
+
+  return {
+    props: { stats },
+    revalidate: 3600,
+  };
+};
+
+export default function UGC({ stats }: Props) {
+  const dynamicStats = [
+    { label: "Followers", value: stats ? formatCount(stats.followers) : "400+" },
+    { label: "Total Likes", value: stats ? formatCount(stats.likes) : "42K+" },
+    { label: "Videos Posted", value: stats ? formatCount(stats.videos) : "200+" },
+  ];
+
+  const allStats = [
+    dynamicStats[0],
+    dynamicStats[1],
+    STATIC_STATS[0],
+    STATIC_STATS[1],
+    dynamicStats[2],
+    STATIC_STATS[2],
+  ];
+
   return (
     <>
       <SEO
@@ -75,7 +122,7 @@ export default function UGC() {
           </dt>
           <dd className="list-content">
             <div className="grid grid-cols-3 gap-4">
-              {stats.map(({ label, value }) => (
+              {allStats.map(({ label, value }) => (
                 <div key={label} className="flex flex-col gap-0.5">
                   <span className="time">{label}</span>
                   <span className="font-semibold text-neutral-800 dark:text-white">{value}</span>
