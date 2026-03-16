@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import { AnimatedLink } from "../components/Links";
 import { EmailCopy } from "../components/EmailCopy";
 import ScrollReveal from "../components/ScrollReveal";
+import { MiniGolfCaptcha } from "../components/MiniGolfCaptcha";
 
 export default function Links() {
+  const [captchaOpen, setCaptchaOpen] = useState(false);
+  const [emailRevealed, setEmailRevealed] = useState(false);
+
   return (
     <>
       <SEO
@@ -32,18 +36,32 @@ export default function Links() {
             <dd className="list-content">
               <div className="pb-2 last-of-type:pb-0">
                 <div>
-                  <AnimatedLink href="mailto:bandaragenaveen@gmail.com">
-                    Email
-                  </AnimatedLink>
-                  <br />
-                  <div className="time">
-                    <EmailCopy email="bandaragenaveen@gmail.com">
-                      bandaragenaveen@gmail.com
-                    </EmailCopy>
-                  </div>
-                  <span className="text-xs text-neutral-400 dark:text-neutral-600">
-                    blurred to be less easily be available to scrapers :)
-                  </span>
+                  {emailRevealed ? (
+                    <>
+                      <AnimatedLink href="mailto:bandaragenaveen@gmail.com">
+                        Email
+                      </AnimatedLink>
+                      <br />
+                      <div className="time">
+                        <EmailCopy email="bandaragenaveen@gmail.com">
+                          bandaragenaveen@gmail.com
+                        </EmailCopy>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => setCaptchaOpen(true)}
+                        className="link link-external cursor-pointer bg-transparent border-none p-0 text-left"
+                      >
+                        Email
+                      </button>
+                      <br />
+                      <span className="time text-neutral-400 dark:text-neutral-600">
+                        Complete a mini challenge to view
+                      </span>
+                    </>
+                  )}
                   <br />
                 </div>
                 <div>
@@ -125,6 +143,15 @@ export default function Links() {
           </dl>
         </ScrollReveal>
       </Main>
+
+      <MiniGolfCaptcha
+        open={captchaOpen}
+        onSuccess={() => {
+          setCaptchaOpen(false);
+          setEmailRevealed(true);
+        }}
+        onClose={() => setCaptchaOpen(false)}
+      />
     </>
   );
 }
