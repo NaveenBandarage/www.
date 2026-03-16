@@ -60,8 +60,8 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const isCron =
-    req.headers.authorization ===
-    `Bearer ${process.env.CRON_SECRET}`;
+    !!process.env.CRON_SECRET &&
+    req.headers.authorization === `Bearer ${process.env.CRON_SECRET}`;
 
   if (req.method === "GET" && isCron) {
     // Vercel Cron path: scrape fresh data and update blob
