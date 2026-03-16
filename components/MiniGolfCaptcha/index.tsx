@@ -45,11 +45,20 @@ const CONFETTI_COLORS = [
 ];
 
 // --- Sound synthesis via Web Audio API ---
+let sharedAudioCtx: AudioContext | null = null;
+
 function getAudioCtx(): AudioContext | null {
   if (typeof window === "undefined") return null;
+  if (sharedAudioCtx && sharedAudioCtx.state !== "closed") {
+    if (sharedAudioCtx.state === "suspended") {
+      sharedAudioCtx.resume();
+    }
+    return sharedAudioCtx;
+  }
   const AC = window.AudioContext || (window as any).webkitAudioContext;
   if (!AC) return null;
-  return new AC();
+  sharedAudioCtx = new AC();
+  return sharedAudioCtx;
 }
 
 function playHitSound() {
