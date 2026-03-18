@@ -59,4 +59,13 @@ export const booksData: Book[] = [
     readYear: 2026,
     status: "read",
   },
+  {
+    id: "money-for-couples",
+    title: "Money for Couples",
+    author: "Ramit Sethi",
+    isbn: "9781523523689",
+    coverSrc: "/books/money-for-couples.jpg",
+    readYear: 2026,
+    status: "read",
+  },
 ];
