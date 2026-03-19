@@ -68,4 +68,13 @@ export const booksData: Book[] = [
     readYear: 2026,
     status: "read",
   },
+  {
+    id: "hey-yang-wheres-my-thousand-bucks",
+    title: "Hey Yang, Where's My Thousand Bucks?: And Other True Stories of Staggering Depth",
+    author: "Andrew Yang",
+    isbn: "9781636142791",
+    coverSrc: "/books/hey-yang-wheres-my-thousand-bucks.jpg",
+    readYear: 2026,
+    status: "read",
+  },
 ];
