@@ -1,21 +1,16 @@
-const withMDX = require("@next/mdx")({
-  extension: /\.mdx?$/,
-});
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
-    domains: ["images.ctfassets.net", "i.scdn.co"],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "**.digitaloceanspaces.com",
       },
       {
-        protocol: "http",
+        protocol: "https",
         hostname: "books.google.com",
       },
       {
@@ -24,16 +19,37 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "covers.openlibrary.org",
+      },
+      {
+        protocol: "https",
         hostname: "**.spotifycdn.com",
       },
     ],
   },
-  webpack: (config, { webpack }) => {
-    /* Hide error "Critical dependency: the request of a dependency is an
-     * expression" from remark-textr */
-    config.plugins.push(new webpack.ContextReplacementPlugin(/remark-textr/));
+  async headers() {
+    const headers = [
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      {
+        key: "Referrer-Policy",
+        value: "strict-origin-when-cross-origin",
+      },
+      {
+        key: "Permissions-Policy",
+        value: "camera=(), microphone=(), geolocation=()",
+      },
+      { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
+    ];
 
-    return config;
+    if (process.env.NODE_ENV === "production") {
+      headers.push({
+        key: "Strict-Transport-Security",
+        value: "max-age=63072000; includeSubDomains; preload",
+      });
+    }
+
+    return [{ source: "/(.*)", headers }];
   },
 };
 
@@ -41,4 +57,4 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-module.exports = withBundleAnalyzer(withMDX(nextConfig));
+module.exports = withBundleAnalyzer(nextConfig);

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { LinkExternal } from "../Links";
 import { FadeInText } from "../TextAnimation";
 
 export default function Consuming() {
@@ -13,18 +12,12 @@ export default function Consuming() {
       <dd className="list-content">
         <FadeInText text="" delay={5500} duration={800}>
           <div>
-            <LinkExternal href="//literal.club/book/steven-bartlett-happy-sexy-millionaire-iy4hk">
-              Happy Sexy Millionaire
-            </LinkExternal>{" "}
-            by Steven Bartlett
+            The things I&apos;ve read this{" "}
+            <Link href="/books" className="link inline-flex items-center gap-1">
+              year
+            </Link>
           </div>
-          <div>
-            <LinkExternal href="//literal.club/book/software-engineering-at-google-2yflu">
-              Software Engineering at Google
-            </LinkExternal>{" "}
-            by Hyrum Wright, Titus Winters and Tom Manshreck
-          </div>
-          <div className="mt-4 text-neutral-600 dark:text-neutral-400">
+          <div className="mt-4">
             For what I&apos;m currently using see{" "}
             <Link href="/uses" className="link inline-flex items-center gap-1">
               here

@@ -37,6 +37,12 @@ export default function Navbar() {
             Blog
           </Link>
           <Link
+            href="/books"
+            className={`text-base ${isActive("/books") ? "text-neutral-800 dark:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark"}`}
+          >
+            Books
+          </Link>
+          <Link
             href="/uses"
             className={`text-base ${isActive("/uses") ? "text-neutral-800 dark:text-white [font-variation-settings:'wght'_500]" : "text-neutral-500 dark:text-silver-dark"}`}
           >
