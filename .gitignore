@@ -30,6 +30,9 @@ pids
 coverage/
 *.lcov
 
+# Lighthouse CI reports
+.lighthouseci/
+
 # Dependency directories
 node_modules/
 jspm_packages/
