@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "lenis/dist/lenis.css";
 import type { AppProps as NextAppProps } from "next/app";
 import { ApolloCache, ApolloProvider } from "@apollo/client";
 import dynamic from "next/dynamic";
@@ -9,6 +10,7 @@ import { useRouter } from "next/router";
 import PageTransition from "../components/PageTransition";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import SmoothScroll from "../components/SmoothScroll";
 
 // Import GlobalClickSound with dynamic loading (no SSR)
 const GlobalClickSound = dynamic(
@@ -87,6 +89,7 @@ export default function MyApp({
       </AnimatePresence>
 
       <GlobalClickSound />
+      <SmoothScroll />
       <Analytics />
       <SpeedInsights />
     </>
