@@ -54,6 +54,27 @@ export default function Uses() {
         <ScrollReveal delay={0.18}>
           <dl className="list-container">
             <dt className="list-title">
+              <h3 className="text-neutral-500 dark:text-silver-dark">Monitor</h3>
+            </dt>
+            <dd className="list-content">
+              <div className="space-y-2">
+                <div>
+                  <strong className="text-neutral-800 dark:text-white">
+                    Apple Studio Display with Nano-texture Glass (2026)
+                  </strong>
+                </div>
+                <div className="text-neutral-600 dark:text-neutral-400">
+                  60Hz is a bummer, but this display is genuinely a piece of
+                  art.
+                </div>
+              </div>
+            </dd>
+          </dl>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.22}>
+          <dl className="list-container">
+            <dt className="list-title">
               <h3 className="text-neutral-500 dark:text-silver-dark">
                 Peripherals
               </h3>
@@ -91,7 +112,7 @@ export default function Uses() {
           </dl>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.22}>
+        <ScrollReveal delay={0.26}>
           <dl className="list-container">
             <dt className="list-title">
               <h3 className="text-neutral-500 dark:text-silver-dark">

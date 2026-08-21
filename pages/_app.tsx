@@ -1,9 +1,8 @@
 import "../styles/globals.css";
 import "lenis/dist/lenis.css";
-import type { AppProps as NextAppProps } from "next/app";
-import { ApolloCache, ApolloProvider } from "@apollo/client";
+import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import localFont from "next/font/local";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
@@ -26,18 +25,10 @@ const sansFont = localFont({
   display: "swap",
 });
 
-type AppProps<P = any> = {
-  pageProps: P;
-} & Omit<NextAppProps<P>, "pageProps">;
-
-interface CustomPageProps {
-  initialApolloState?: ApolloCache<any>;
-}
-
 export default function MyApp({
   Component,
   pageProps,
-}: AppProps<CustomPageProps>) {
+}: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
