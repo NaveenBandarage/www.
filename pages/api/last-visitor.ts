@@ -1,5 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { head, put } from "@vercel/blob";
+import { isIP } from "net";
+import { checkRateLimit, getClientAddress } from "../../lib/rateLimit";
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "1kb",
+    },
+  },
+};
 
 type LastVisitor = {
   city: string | null;
@@ -25,6 +35,8 @@ function getClientIp(req: NextApiRequest): string | null {
 
   // Strip IPv6 prefix such as ::ffff:
   const cleaned = ip.replace("::ffff:", "");
+
+  if (!isIP(cleaned)) return null;
 
   // Ignore local/private addresses
   if (
@@ -56,21 +68,42 @@ function getClientIp(req: NextApiRequest): string | null {
 }
 
 function getGeoFromHeaders(req: NextApiRequest) {
-  const country =
-    (req.headers["x-vercel-ip-country"] as string | undefined) ?? null;
-  const region =
-    (req.headers["x-vercel-ip-country-region"] as string | undefined) ?? null;
+  const country = normalizeHeader(req.headers["x-vercel-ip-country"]);
+  const region = normalizeHeader(req.headers["x-vercel-ip-country-region"]);
   // Decode URL-encoded city names from Vercel headers
   const cityHeader = req.headers["x-vercel-ip-city"] as string | undefined;
-  const city = cityHeader ? decodeURIComponent(cityHeader) : null;
+  const city = cityHeader ? safeDecodeURIComponent(cityHeader) : null;
 
   const latHeader = req.headers["x-vercel-ip-latitude"] as string | undefined;
   const lonHeader = req.headers["x-vercel-ip-longitude"] as string | undefined;
 
-  const latitude = latHeader != null ? Number(latHeader) : null;
-  const longitude = lonHeader != null ? Number(lonHeader) : null;
+  const latitude = parseCoordinate(latHeader, -90, 90);
+  const longitude = parseCoordinate(lonHeader, -180, 180);
 
   return { country, region, city, latitude, longitude } as const;
+}
+
+function normalizeHeader(value: string | string[] | undefined) {
+  const header = Array.isArray(value) ? value[0] : value;
+  return header?.replace(/[\u0000-\u001f\u007f]/g, "").slice(0, 128) || null;
+}
+
+function safeDecodeURIComponent(value: string) {
+  try {
+    return decodeURIComponent(value)
+      .replace(/[\u0000-\u001f\u007f]/g, "")
+      .slice(0, 128);
+  } catch {
+    return null;
+  }
+}
+
+function parseCoordinate(value: string | undefined, min: number, max: number) {
+  if (value == null) return null;
+  const coordinate = Number(value);
+  return Number.isFinite(coordinate) && coordinate >= min && coordinate <= max
+    ? coordinate
+    : null;
 }
 
 export default async function handler(
@@ -78,6 +111,16 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method === "GET") {
+    const rateLimit = checkRateLimit(
+      `last-visitor:get:${getClientAddress(req)}`,
+      120,
+      60_000,
+    );
+    if (!rateLimit.allowed) {
+      res.setHeader("Retry-After", rateLimit.retryAfter);
+      return res.status(429).json({ error: "Too many requests" });
+    }
+
     try {
       const meta = await head("last-visitor.json", {
         token: process.env.BLOB_READ_WRITE_TOKEN,
@@ -117,6 +160,16 @@ export default async function handler(
   }
 
   if (req.method === "POST") {
+    const rateLimit = checkRateLimit(
+      `last-visitor:post:${getClientAddress(req)}`,
+      10,
+      60_000,
+    );
+    if (!rateLimit.allowed) {
+      res.setHeader("Retry-After", rateLimit.retryAfter);
+      return res.status(429).json({ error: "Too many requests" });
+    }
+
     try {
       // First, get the current last visitor before we update it
       let previousVisitor: LastVisitor | null = null;
@@ -157,6 +210,7 @@ export default async function handler(
 
         const response = await fetch(url, {
           headers: { "user-agent": req.headers["user-agent"] || "" },
+          signal: AbortSignal.timeout(5_000),
         });
 
         if (response.ok) {
@@ -232,8 +286,9 @@ export default async function handler(
       res.setHeader("Pragma", "no-cache");
       res.setHeader("Expires", "0");
       return res.status(200).json({ ok: true, previousVisitor });
-    } catch (error: any) {
-      return res.status(500).json({ error: error?.message || "Unknown error" });
+    } catch (error) {
+      console.error("Failed to update last visitor:", error);
+      return res.status(500).json({ error: "Unable to update visitor data" });
     }
   }
 
