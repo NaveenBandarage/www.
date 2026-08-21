@@ -8,9 +8,12 @@
     "analyze": "ANALYZE=true next build",
     "postbuild": "next-sitemap",
     "start": "next start",
+    "serve:lhci": "next start",
     "lint": "next lint",
     "export": "next build && next export",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "danger": "danger",
+    "lighthouse": "lhci autorun"
   },
   "dependencies": {
     "@apollo/client": "^3.10.8",
@@ -66,7 +69,9 @@
     "@tailwindcss/typography": "^0.5.13",
     "@types/node": "^20.14.14",
     "@types/react": "^18.3.3",
+    "@lhci/cli": "^0.15.1",
     "autoprefixer": "^10.4.19",
+    "danger": "^13.0.10",
     "eslint": "8.57.0",
     "eslint-config-next": "^14.2.5",
     "postcss": "^8.4.40",
