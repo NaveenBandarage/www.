@@ -37,7 +37,7 @@
   "overrides": {
     "flatted": "^3.4.4",
     "sharp": "^0.35.3",
-    "undici": "^6.28.0",
+    "undici": "^6.29.0",
     "picomatch": "^2.3.2",
     "tinyglobby": "^0.2.17",
     "yaml": "^2.9.0",
