@@ -9,10 +9,7 @@ export default async function handler(
     res.setHeader("Allow", "GET");
     return res.status(405).end();
   }
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=30, stale-while-revalidate=30",
-  );
+  res.setHeader("Cache-Control", "public, max-age=0, s-maxage=15");
   return res
     .status(200)
     .json({ configured: musicConfigured(), track: await getListeningTrack() });

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "spotify:connect": "node --env-file-if-exists=.env.local scripts/connect-spotify.mjs",
+    "test:spotify": "node --test tests/music.test.mjs tests/connect-spotify.test.mjs tests/listeningTime.test.mjs",
     "dev": "node scripts/build-memory.mjs && next dev",
     "build": "node scripts/build-memory.mjs && next build",
     "build:memory": "node scripts/build-memory.mjs",
