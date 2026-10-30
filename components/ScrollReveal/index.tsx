@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
+import useReducedMotion from "../../lib/useReducedMotion";
 import { ReactNode } from "react";
 
 interface ScrollRevealProps {
@@ -10,6 +11,7 @@ interface ScrollRevealProps {
   blur?: number;
   once?: boolean;
   amount?: number;
+  initiallyVisible?: boolean;
 }
 
 export default function ScrollReveal({
@@ -18,9 +20,10 @@ export default function ScrollReveal({
   delay = 0,
   duration = 0.55,
   distance = 18,
-  blur = 8,
+  blur = 0,
   once = true,
   amount = 0.2,
+  initiallyVisible = false,
 }: ScrollRevealProps) {
   const shouldReduceMotion = useReducedMotion();
 
@@ -29,19 +32,26 @@ export default function ScrollReveal({
   }
 
   return (
-    <motion.div
+    <m.div
       className={className}
-      initial={{ opacity: 0, y: distance, filter: `blur(${blur}px)` }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={{
+        opacity: initiallyVisible ? 1 : 0,
+        y: distance,
+        ...(blur > 0 ? { filter: `blur(${blur}px)` } : {}),
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+        ...(blur > 0 ? { filter: "blur(0px)" } : {}),
+      }}
       viewport={{ once, amount }}
       transition={{
         delay,
         duration,
         ease: [0.22, 1, 0.36, 1],
       }}
-      style={{ willChange: "opacity, transform, filter" }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

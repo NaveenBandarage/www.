@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import localFont from "next/font/local";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, LazyMotion, MotionConfig } from "framer-motion";
 import { useRouter } from "next/router";
 import PageTransition from "../components/PageTransition";
 import { Analytics } from "@vercel/analytics/react";
@@ -19,16 +19,16 @@ const GlobalClickSound = dynamic(
   },
 );
 
+const loadMotionFeatures = () =>
+  import("../lib/motionFeatures").then((module) => module.default);
+
 const sansFont = localFont({
   src: "../public/inter.roman.var.woff2",
   weight: "100 900",
   display: "swap",
 });
 
-export default function MyApp({
-  Component,
-  pageProps,
-}: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
@@ -73,11 +73,15 @@ export default function MyApp({
           }
         `}
       </style>
-      <AnimatePresence mode="wait">
-        <PageTransition key={router.asPath}>
-          <Component {...pageProps} />
-        </PageTransition>
-      </AnimatePresence>
+      <MotionConfig reducedMotion="user">
+        <LazyMotion features={loadMotionFeatures} strict>
+          <AnimatePresence mode="wait">
+            <PageTransition key={router.asPath}>
+              <Component {...pageProps} />
+            </PageTransition>
+          </AnimatePresence>
+        </LazyMotion>
+      </MotionConfig>
 
       <GlobalClickSound />
       <SmoothScroll />

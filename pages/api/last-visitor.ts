@@ -202,36 +202,39 @@ export default async function handler(
       let latitude: number | null = headerGeo.latitude;
       let longitude: number | null = headerGeo.longitude;
 
-      if (!city || !country) {
-        const ip = getClientIp(req);
-        const url = ip
-          ? `https://ipapi.co/${encodeURIComponent(ip)}/json/`
-          : `https://ipapi.co/json/`;
+      const ip = getClientIp(req);
+      // A missing public client IP cannot locate this visitor. Looking up the
+      // server's own IP adds latency and records the wrong location.
+      if ((!city || !country) && ip) {
+        const url = `https://ipapi.co/${encodeURIComponent(ip)}/json/`;
+        try {
+          const response = await fetch(url, {
+            headers: { "user-agent": req.headers["user-agent"] || "" },
+            signal: AbortSignal.timeout(1_500),
+          });
 
-        const response = await fetch(url, {
-          headers: { "user-agent": req.headers["user-agent"] || "" },
-          signal: AbortSignal.timeout(5_000),
-        });
-
-        if (response.ok) {
-          const data = (await response.json()) as any;
-          city = city ?? data?.city ?? null;
-          region = region ?? data?.region ?? data?.region_name ?? null;
-          country = country ?? data?.country_name ?? data?.country ?? null;
-          latitude =
-            latitude ??
-            (typeof data?.latitude === "number"
-              ? data.latitude
-              : typeof data?.lat === "number"
-                ? data.lat
-                : null);
-          longitude =
-            longitude ??
-            (typeof data?.longitude === "number"
-              ? data.longitude
-              : typeof data?.lon === "number"
-                ? data.lon
-                : null);
+          if (response.ok) {
+            const data = (await response.json()) as any;
+            city = city ?? data?.city ?? null;
+            region = region ?? data?.region ?? data?.region_name ?? null;
+            country = country ?? data?.country_name ?? data?.country ?? null;
+            latitude =
+              latitude ??
+              (typeof data?.latitude === "number"
+                ? data.latitude
+                : typeof data?.lat === "number"
+                  ? data.lat
+                  : null);
+            longitude =
+              longitude ??
+              (typeof data?.longitude === "number"
+                ? data.longitude
+                : typeof data?.lon === "number"
+                  ? data.lon
+                  : null);
+          }
+        } catch {
+          // Geolocation is optional; a slow provider must not discard a visit.
         }
       }
 

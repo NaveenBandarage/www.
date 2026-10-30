@@ -6,12 +6,7 @@ import Link from "next/link";
 import { LinkExternal } from "../components/Links";
 import Consuming from "../components/Home/Consuming";
 import ScrollReveal from "../components/ScrollReveal";
-import { getMdxPaths } from "./api/getMdxPaths";
-import {
-  TypewriterText,
-  FadeInText,
-  SlideUpText,
-} from "../components/TextAnimation";
+import { getMdxPaths } from "../lib/posts";
 
 export default function Home({ latestPosts }) {
   return (
@@ -28,58 +23,44 @@ export default function Home({ latestPosts }) {
             aria-hidden
             className="pointer-events-none absolute -top-24 -left-20 h-56 w-56 rounded-full bg-gradient-to-br from-neutral-200/70 via-indigo-100/40 to-transparent blur-3xl dark:from-neutral-800/50 dark:via-neutral-700/20"
           />
-          <ScrollReveal delay={0.05}>
+          <ScrollReveal initiallyVisible duration={0.3} distance={8}>
             <header>
               <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
-                <TypewriterText
-                  text="Naveen Bandarage"
-                  speed={100}
-                  cursor={true}
-                />
+                Naveen Bandarage
               </h1>
             </header>
           </ScrollReveal>
         </div>
-        <ScrollReveal delay={0.12}>
+        <ScrollReveal initiallyVisible delay={0.05} duration={0.3} distance={8}>
           <dl className="list-container">
             <dt className="list-title">
-              <h3 className="text-neutral-500 dark:text-silver-dark">
-                <FadeInText text="Intro" delay={1500} duration={600} />
-              </h3>
+              <h2 className="text-neutral-500 dark:text-silver-dark">Intro</h2>
             </dt>
             <dd className="list-content">
               <div>
-                <SlideUpText
-                  text="Building, breaking, listening and constantly learning. Currently accelerating software development at"
-                  delay={2200}
-                  staggerChildren={true}
-                  staggerDelay={80}
-                />{" "}
-                <FadeInText text="" delay={3500}>
-                  <LinkExternal href="//xero.com">Xero</LinkExternal>
-                </FadeInText>
+                Building, breaking, listening and constantly learning. Currently
+                accelerating software development at{" "}
+                <LinkExternal href="//xero.com">Xero</LinkExternal>
                 {"."}
                 <div>
                   <br></br>
-                  <FadeInText text="" delay={4000}>
-                    Get some more info about me{" "}
-                    <Link
-                      href="/about"
-                      className="link inline-flex items-center gap-1"
-                    >
-                      here
-                    </Link>
-                    .
-                  </FadeInText>
+                  Get some more info about me{" "}
+                  <Link
+                    href="/about"
+                    className="link inline-flex items-center gap-1"
+                  >
+                    here
+                  </Link>
+                  .
                 </div>
               </div>
             </dd>
           </dl>
         </ScrollReveal>
-        <ScrollReveal delay={0.18}>
+        <ScrollReveal initiallyVisible delay={0.1} duration={0.3} distance={8}>
           <Writing latestPosts={latestPosts} />
         </ScrollReveal>
-        <ScrollReveal delay={0.24}>
+        <ScrollReveal initiallyVisible delay={0.15} duration={0.3} distance={8}>
           <Consuming />
         </ScrollReveal>
       </Main>
@@ -90,7 +71,11 @@ export default function Home({ latestPosts }) {
 export async function getStaticProps() {
   const allPosts = await getMdxPaths();
 
-  const latestPosts = allPosts.slice(0, 2);
+  const latestPosts = allPosts.slice(0, 2).map(({ slug, title, date }) => ({
+    slug,
+    title,
+    date,
+  }));
 
   return {
     props: {

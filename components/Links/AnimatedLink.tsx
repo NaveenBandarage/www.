@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
+import useReducedMotion from "../../lib/useReducedMotion";
 import {
   ExternalIcon,
   EmailIcon,
@@ -65,7 +66,7 @@ export function AnimatedLink({ href, children }: AnimatedLinkProps) {
 
   return (
     <div className="relative inline-block">
-      <motion.a
+      <m.a
         className="link link-external"
         href={href}
         target="_blank"
@@ -78,11 +79,11 @@ export function AnimatedLink({ href, children }: AnimatedLinkProps) {
       >
         {children}
         <ExternalIcon size={16} />
-      </motion.a>
+      </m.a>
 
       <AnimatePresence>
         {isHovered && (
-          <motion.div
+          <m.div
             initial={{
               opacity: 0,
               scale: shouldReduceMotion ? 1 : 0.85,
@@ -121,7 +122,7 @@ export function AnimatedLink({ href, children }: AnimatedLinkProps) {
             <div className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2 shadow-lg">
               <IconComponent size={20} />
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

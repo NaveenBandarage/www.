@@ -4,28 +4,41 @@ import { useEffect, useRef, useState } from "react";
 import { getCurrentNewYorkTime } from "../../lib/timeUtils";
 import LastVisitor from "../Home/LastVisitor";
 
-function NewYorkClock() {
-  const [currentTime, setCurrentTime] = useState("");
+function NewYorkClock({ enabled }: { enabled: boolean }) {
+  const [currentTime, setCurrentTime] = useState({ label: "", iso: "" });
 
   useEffect(() => {
+    if (!enabled) return;
+    let interval: ReturnType<typeof setInterval> | undefined;
     const updateTime = () => {
-      setCurrentTime(getCurrentNewYorkTime());
+      setCurrentTime({
+        label: getCurrentNewYorkTime(),
+        iso: new Date().toISOString(),
+      });
     };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    const syncVisibility = () => {
+      clearInterval(interval);
+      if (document.hidden) return;
+      updateTime();
+      interval = setInterval(updateTime, 1000);
+    };
+    syncVisibility();
+    document.addEventListener("visibilitychange", syncVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", syncVisibility);
+    };
+  }, [enabled]);
 
   return (
     <div className="link-fade">
       <p>New York, NY</p>
       <time
-        dateTime={new Date().toISOString()}
-        aria-label={`Current time in New York: ${currentTime}`}
-        className="tabindex-0"
+        dateTime={currentTime.iso || undefined}
+        aria-label={`Current time in New York: ${currentTime.label || "loading"}`}
+        className="inline-block min-h-[1.5em] min-w-[8ch] tabular-nums"
       >
-        {currentTime}
+        {currentTime.label || "\u00a0"}
       </time>
     </div>
   );
@@ -110,7 +123,7 @@ export default function Footer() {
               role="region"
               aria-label="Current time"
             >
-              <NewYorkClock />
+              <NewYorkClock enabled={lastVisitorEnabled} />
             </div>
           </div>
           <div className="flex items-start pt-6" ref={lastVisitorRef}>

@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
+import useReducedMotion from "../../lib/useReducedMotion";
 import React, { useEffect, useState } from "react";
 
 interface BouncyTextProps {
@@ -60,7 +61,7 @@ const BouncyText: React.FC<BouncyTextProps> = ({
         const isVisible = index < visibleLetters;
 
         return (
-          <motion.span
+          <m.span
             key={`${text}-${index}`}
             className="inline-block"
             initial={{ opacity: 0, y: 8, scale: 0.85, rotate: -3 }}
@@ -78,7 +79,7 @@ const BouncyText: React.FC<BouncyTextProps> = ({
             }}
           >
             {letter === " " ? "\u00A0" : letter}
-          </motion.span>
+          </m.span>
         );
       })}
     </span>

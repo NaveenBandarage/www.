@@ -1,4 +1,4 @@
-import fs from "fs/promises"; // Use fs.promises for the asynchronous API
+import fs from "fs/promises";
 import matter from "gray-matter";
 import path from "path";
 
@@ -13,7 +13,9 @@ const PostsDirectory = path.join(process.cwd(), "posts");
 
 export const getMdxPaths = async (): Promise<GetMdxPathsResult[]> => {
   try {
-    const mdxFiles = await fs.readdir(PostsDirectory);
+    const mdxFiles = (await fs.readdir(PostsDirectory)).filter((file) =>
+      file.endsWith(".mdx"),
+    );
 
     const posts = await Promise.all(
       mdxFiles.map(async (file) => {
@@ -32,7 +34,7 @@ export const getMdxPaths = async (): Promise<GetMdxPathsResult[]> => {
 
     posts.sort((a, b) => b.date.localeCompare(a.date));
 
-    return Promise.all(posts);
+    return posts;
   } catch (error) {
     console.error("Error reading directory:", error);
     throw error;
