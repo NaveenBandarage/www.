@@ -1,13 +1,22 @@
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import { AnimatedLink } from "../components/Links";
 import { EmailCopy } from "../components/EmailCopy";
 import ScrollReveal from "../components/ScrollReveal";
-import { MiniGolfCaptcha } from "../components/MiniGolfCaptcha";
+
+const MiniGolfCaptcha = dynamic(
+  () =>
+    import("../components/MiniGolfCaptcha").then(
+      (module) => module.MiniGolfCaptcha,
+    ),
+  { ssr: false },
+);
 
 export default function Links() {
   const [captchaOpen, setCaptchaOpen] = useState(false);
+  const [captchaRequested, setCaptchaRequested] = useState(false);
   const [emailRevealed, setEmailRevealed] = useState(false);
 
   return (
@@ -51,7 +60,10 @@ export default function Links() {
                   ) : (
                     <>
                       <button
-                        onClick={() => setCaptchaOpen(true)}
+                        onClick={() => {
+                          setCaptchaRequested(true);
+                          setCaptchaOpen(true);
+                        }}
                         className="link link-external cursor-pointer bg-transparent border-none p-0 text-left"
                       >
                         Email
@@ -144,14 +156,16 @@ export default function Links() {
         </ScrollReveal>
       </Main>
 
-      <MiniGolfCaptcha
-        open={captchaOpen}
-        onSuccess={() => {
-          setCaptchaOpen(false);
-          setEmailRevealed(true);
-        }}
-        onClose={() => setCaptchaOpen(false)}
-      />
+      {captchaRequested && (
+        <MiniGolfCaptcha
+          open={captchaOpen}
+          onSuccess={() => {
+            setCaptchaOpen(false);
+            setEmailRevealed(true);
+          }}
+          onClose={() => setCaptchaOpen(false)}
+        />
+      )}
     </>
   );
 }

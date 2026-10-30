@@ -1,36 +1,49 @@
-import { format } from "date-fns";
-import { formatInTimeZone } from "date-fns-tz";
+const newYorkTimeFormatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "America/New_York",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23",
+});
 
-/**
- * Format time in New York timezone
- */
-export function formatNewYorkTime(
-  date: Date = new Date(),
-  timeFormat: string = "HH:mm:ss",
-): string {
-  try {
-    return formatInTimeZone(date, "America/New_York", timeFormat);
-  } catch (error) {
-    console.error("Error formatting New York time:", error);
-    // Fallback to local time if timezone formatting fails
-    return format(date, timeFormat);
-  }
+const shortDateFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  month: "short",
+  day: "2-digit",
+  year: "numeric",
+});
+
+const longDateFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+
+/** Reuse the native formatter instead of loading a date library on every page. */
+export function formatNewYorkTime(date: Date = new Date()): string {
+  return newYorkTimeFormatter.format(date);
 }
 
-/**
- * Get current time in New York timezone
- */
 export function getCurrentNewYorkTime(): string {
   return formatNewYorkTime();
 }
 
-/**
- * Format date consistently across the app
- */
-export function formatAppDate(
-  date: string | Date,
-  short: boolean = false,
-): string {
+/** Use UTC so date-only post metadata stays consistent across time zones. */
+export function formatAppDate(date: string | Date, short = false): string {
   const dateObj = typeof date === "string" ? new Date(date) : date;
-  return format(dateObj, short ? "MMM dd, yyyy" : "MMMM do, yyyy");
+  if (short) return shortDateFormatter.format(dateObj);
+
+  return longDateFormatter
+    .formatToParts(dateObj)
+    .map((part) => {
+      if (part.type !== "day") return part.value;
+      const day = Number(part.value);
+      const suffix =
+        day >= 11 && day <= 13
+          ? "th"
+          : ({ 1: "st", 2: "nd", 3: "rd" }[day % 10] ?? "th");
+      return `${day}${suffix}`;
+    })
+    .join("");
 }

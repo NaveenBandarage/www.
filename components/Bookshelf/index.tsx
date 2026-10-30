@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
+import useReducedMotion from "../../lib/useReducedMotion";
 import { useEffect, useState } from "react";
 import type { Book } from "../../data/books";
 
@@ -32,7 +33,9 @@ interface BookCoverProps {
 }
 
 function BookCover({ book, sizes, priority = false }: BookCoverProps) {
-  const [src, setSrc] = useState(book.coverSrc ?? getPrimaryCoverUrl(book.isbn));
+  const [src, setSrc] = useState(
+    book.coverSrc ?? getPrimaryCoverUrl(book.isbn),
+  );
 
   useEffect(() => {
     setSrc(book.coverSrc ?? getPrimaryCoverUrl(book.isbn));
@@ -45,7 +48,7 @@ function BookCover({ book, sizes, priority = false }: BookCoverProps) {
       fill
       sizes={sizes}
       priority={priority}
-      quality={95}
+      quality={85}
       className="object-cover"
       onError={() => {
         if (book.coverSrc && src === book.coverSrc) {
@@ -84,7 +87,9 @@ export default function Bookshelf({ books }: BookshelfProps) {
       return;
     }
 
-    const activeIsVisible = visibleBooks.some((book) => book.id === activeBookId);
+    const activeIsVisible = visibleBooks.some(
+      (book) => book.id === activeBookId,
+    );
 
     if (!activeBookId || !activeIsVisible) {
       setActiveBookId(defaultBookId);
@@ -109,7 +114,8 @@ export default function Bookshelf({ books }: BookshelfProps) {
   const transition = shouldReduceMotion ? { duration: 0 } : STACK_TRANSITION;
 
   const stackBooks = visibleBooks.map((book, index) => {
-    const distance = (index - activeIndex + visibleBooks.length) % visibleBooks.length;
+    const distance =
+      (index - activeIndex + visibleBooks.length) % visibleBooks.length;
 
     return {
       book,
@@ -181,10 +187,12 @@ export default function Bookshelf({ books }: BookshelfProps) {
               const x = distance * 18;
               const y = 98 - distance * 3;
               const scale = Math.max(0.82, 1 - distance * 0.022);
-              const opacity = isActive ? 1 : Math.max(0.76, 1 - distance * 0.03);
+              const opacity = isActive
+                ? 1
+                : Math.max(0.76, 1 - distance * 0.03);
 
               return (
-                <motion.button
+                <m.button
                   key={book.id}
                   type="button"
                   initial={false}
@@ -223,7 +231,7 @@ export default function Bookshelf({ books }: BookshelfProps) {
                     sizes="(max-width: 639px) 144px, 144px"
                     priority={isActive}
                   />
-                </motion.button>
+                </m.button>
               );
             })}
           </div>
@@ -236,10 +244,12 @@ export default function Bookshelf({ books }: BookshelfProps) {
               const x = distance * 28;
               const y = 126 - distance * 5;
               const scale = Math.max(0.84, 1 - distance * 0.018);
-              const opacity = isActive ? 1 : Math.max(0.78, 1 - distance * 0.028);
+              const opacity = isActive
+                ? 1
+                : Math.max(0.78, 1 - distance * 0.028);
 
               return (
-                <motion.button
+                <m.button
                   key={book.id}
                   type="button"
                   initial={false}
@@ -278,7 +288,7 @@ export default function Bookshelf({ books }: BookshelfProps) {
                     sizes="(max-width: 1023px) 200px, 240px"
                     priority={isActive}
                   />
-                </motion.button>
+                </m.button>
               );
             })}
           </div>

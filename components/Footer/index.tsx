@@ -3,29 +3,43 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { getCurrentNewYorkTime } from "../../lib/timeUtils";
 import LastVisitor from "../Home/LastVisitor";
+import NowPlaying from "../NowPlaying";
 
-function NewYorkClock() {
-  const [currentTime, setCurrentTime] = useState("");
+function NewYorkClock({ enabled }: { enabled: boolean }) {
+  const [currentTime, setCurrentTime] = useState({ label: "", iso: "" });
 
   useEffect(() => {
+    if (!enabled) return;
+    let interval: ReturnType<typeof setInterval> | undefined;
     const updateTime = () => {
-      setCurrentTime(getCurrentNewYorkTime());
+      setCurrentTime({
+        label: getCurrentNewYorkTime(),
+        iso: new Date().toISOString(),
+      });
     };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    const syncVisibility = () => {
+      clearInterval(interval);
+      if (document.hidden) return;
+      updateTime();
+      interval = setInterval(updateTime, 1000);
+    };
+    syncVisibility();
+    document.addEventListener("visibilitychange", syncVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", syncVisibility);
+    };
+  }, [enabled]);
 
   return (
     <div className="link-fade">
       <p>New York, NY</p>
       <time
-        dateTime={new Date().toISOString()}
-        aria-label={`Current time in New York: ${currentTime}`}
-        className="tabindex-0"
+        dateTime={currentTime.iso || undefined}
+        aria-label={`Current time in New York: ${currentTime.label || "loading"}`}
+        className="inline-block min-h-[1.5em] min-w-[8ch] tabular-nums"
       >
-        {currentTime}
+        {currentTime.label || "\u00a0"}
       </time>
     </div>
   );
@@ -67,7 +81,7 @@ export default function Footer() {
         <div className="flex h-full w-full items-start justify-between border-t border-solid border-neutral-500/10 pt-8 pb-8 dark:border-neutral-900">
           <div className="flex-2">
             <nav aria-label="Footer navigation">
-              <ul className="flex gap-4 pb-6">
+              <ul className="flex flex-wrap gap-4 pb-6">
                 <li>
                   <Link href="/" className="link-fade">
                     Home
@@ -94,6 +108,11 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/photos" className="link-fade">
+                    Photos
+                  </Link>
+                </li>
+                <li>
                   <Link href="/blog" className="link-fade">
                     Blog
                   </Link>
@@ -110,7 +129,8 @@ export default function Footer() {
               role="region"
               aria-label="Current time"
             >
-              <NewYorkClock />
+              <NewYorkClock enabled={lastVisitorEnabled} />
+              <NowPlaying enabled={lastVisitorEnabled} />
             </div>
           </div>
           <div className="flex items-start pt-6" ref={lastVisitorRef}>
