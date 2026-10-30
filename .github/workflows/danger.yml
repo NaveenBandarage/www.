@@ -40,6 +40,8 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Run Danger
-        run: bun run danger ci
+        # Danger spawns its own `runner` command; invoke its Node entry point
+        # directly so Bun does not treat that internal command as a package script.
+        run: node ./node_modules/danger/distribution/commands/danger-ci.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
