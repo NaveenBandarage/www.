@@ -75,11 +75,18 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </style>
       <MotionConfig reducedMotion="user">
         <LazyMotion features={loadMotionFeatures} strict>
-          <AnimatePresence mode="wait">
-            <PageTransition key={router.asPath}>
-              <Component {...pageProps} />
-            </PageTransition>
-          </AnimatePresence>
+          {router.pathname === "/memory" ||
+          router.pathname === "/photos" ||
+          router.pathname.startsWith("/photo/") ||
+          router.pathname.startsWith("/photos/") ? (
+            <Component {...pageProps} />
+          ) : (
+            <AnimatePresence mode="wait">
+              <PageTransition key={router.asPath}>
+                <Component {...pageProps} />
+              </PageTransition>
+            </AnimatePresence>
+          )}
         </LazyMotion>
       </MotionConfig>
 

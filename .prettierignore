@@ -3,3 +3,4 @@ node_modules
 ~/
 out
 *.generated.ts
+public/memory-explorer/

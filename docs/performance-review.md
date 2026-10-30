@@ -1,16 +1,16 @@
 # Performance and dependency review
 
-Reviewed October 29, 2026 using local production builds.
+Reviewed October 29, 2026. Changes are local and have not been deployed.
 
 ## Measured results
 
 | Measure | Before | After |
 | --- | ---: | ---: |
-| Initial homepage JavaScript, gzip | 156 KB | 123 KB |
+| Initial homepage JavaScript, gzip | 156 KB | 124 KB |
 | Homepage JSON page data | 8,184 bytes | 219 bytes |
 | Dependency audit findings | 14 | 0 |
 
-Initial JavaScript is about 21% smaller. Page data is 97% smaller. Deferred
+Initial JavaScript is about 20% smaller. Page data is 97% smaller. Deferred
 animation code still downloads separately when needed; the JavaScript figure
 measures the initial bundle rather than all subsequent requests.
 
@@ -21,7 +21,7 @@ homepage, but scores across Lighthouse versions should not be compared directly.
 The bundle and page-data comparisons above use the same measurement method.
 
 Local HTML reports are in
-`.lighthouseci/`; these generated artifacts are
+`.lighthouseci/performance-review-2026-10-29/`; these generated artifacts are
 ignored by Git. Remaining audit findings include existing contrast and blog
 tab semantics issues; the performance work does not constitute a full
 accessibility audit.
@@ -83,13 +83,13 @@ public-IP requests still record visits when the geolocation provider fails.
 
 Browser checks cover mobile layouts at 375px, desktop dark mode at 1280px,
 client navigation, blog year tabs, book selection, on-demand mini-game loading,
-and reduced motion. Footer APIs are stubbed in
+photo pages, gallery rendering, and reduced motion. Footer APIs are stubbed in
 interaction checks; Lighthouse uses the local API fallback without production
 credentials.
 
-Final validation runs from the dedicated PR worktree. Unrelated gallery, music,
-and memory-explorer work is excluded from this change and preserved in the
-original workspace.
+Final validation runs from a temporary source copy because another development
+session was writing to the shared `.next` directory. Existing gallery, music,
+and memory-explorer work was preserved.
 
 Lab scores measure a local production build with mobile emulation. They do not
 establish deployed Core Web Vitals, which need production measurements after

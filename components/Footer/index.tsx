@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { getCurrentNewYorkTime } from "../../lib/timeUtils";
 import LastVisitor from "../Home/LastVisitor";
+import NowPlaying from "../NowPlaying";
 
 function NewYorkClock({ enabled }: { enabled: boolean }) {
   const [currentTime, setCurrentTime] = useState({ label: "", iso: "" });
@@ -80,7 +81,7 @@ export default function Footer() {
         <div className="flex h-full w-full items-start justify-between border-t border-solid border-neutral-500/10 pt-8 pb-8 dark:border-neutral-900">
           <div className="flex-2">
             <nav aria-label="Footer navigation">
-              <ul className="flex gap-4 pb-6">
+              <ul className="flex flex-wrap gap-4 pb-6">
                 <li>
                   <Link href="/" className="link-fade">
                     Home
@@ -107,6 +108,11 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/photos" className="link-fade">
+                    Photos
+                  </Link>
+                </li>
+                <li>
                   <Link href="/blog" className="link-fade">
                     Blog
                   </Link>
@@ -124,6 +130,7 @@ export default function Footer() {
               aria-label="Current time"
             >
               <NewYorkClock enabled={lastVisitorEnabled} />
+              <NowPlaying enabled={lastVisitorEnabled} />
             </div>
           </div>
           <div className="flex items-start pt-6" ref={lastVisitorRef}>
