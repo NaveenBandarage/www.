@@ -1,7 +1,6 @@
 import "../styles/globals.css";
 import "lenis/dist/lenis.css";
 import type { AppProps } from "next/app";
-import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import localFont from "next/font/local";
 import { AnimatePresence, LazyMotion, MotionConfig } from "framer-motion";
@@ -11,14 +10,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScroll from "../components/SmoothScroll";
 import NowPlaying from "../components/NowPlaying";
-
-// Import GlobalClickSound with dynamic loading (no SSR)
-const GlobalClickSound = dynamic(
-  () => import("../components/GlobalClickSound"),
-  {
-    ssr: false,
-  },
-);
+import InteractionSounds from "../components/InteractionSounds";
 
 const loadMotionFeatures = () =>
   import("../lib/motionFeatures").then((module) => module.default);
@@ -66,7 +58,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   return (
-    <>
+    <InteractionSounds>
       <style jsx global>
         {`
           :root {
@@ -92,10 +84,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         </LazyMotion>
       </MotionConfig>
 
-      <GlobalClickSound />
       <SmoothScroll />
       <Analytics />
       <SpeedInsights />
-    </>
+    </InteractionSounds>
   );
 }
