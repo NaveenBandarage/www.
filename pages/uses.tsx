@@ -83,6 +83,22 @@ export default function Uses() {
               <div className="space-y-4">
                 <div>
                   <strong className="text-neutral-800 dark:text-white">
+                    Lofree Flow 2
+                  </strong>
+                  <div className="text-neutral-600 dark:text-neutral-400">
+                    Looks and sounds amazing.
+                  </div>
+                </div>
+                <div>
+                  <strong className="text-neutral-800 dark:text-white">
+                    Edifier M60
+                  </strong>
+                  <div className="text-neutral-600 dark:text-neutral-400">
+                    Simply amazing speakers.
+                  </div>
+                </div>
+                <div>
+                  <strong className="text-neutral-800 dark:text-white">
                     MX Master 3S
                   </strong>
                   <div className="text-neutral-600 dark:text-neutral-400">
@@ -94,17 +110,16 @@ export default function Uses() {
                     Wired Apple Earphones
                   </strong>
                   <div className="text-neutral-600 dark:text-neutral-400">
-                    Literally can&apos;t beat a classic{" "}
+                    Literally can&apos;t beat a classic.
                   </div>
                 </div>
                 <div>
                   <strong className="text-neutral-800 dark:text-white">
-                    Apple AirPods Max 1st Gen{" "}
+                    Apple AirPods Max (1st generation)
                   </strong>
                   <div className="text-neutral-600 dark:text-neutral-400">
-                    When I need to go wireless and beat a classic I&apos;ll use
-                    these and do stuff on the go. Sucks that they use lightning
-                    though.{" "}
+                    When I need to go wireless, I&apos;ll use these and do stuff
+                    on the go. Sucks that they use Lightning, though.
                   </div>
                 </div>
               </div>
@@ -122,9 +137,16 @@ export default function Uses() {
             <dd className="list-content">
               <div className="space-y-2">
                 <div>
-                  <LinkExternal href="https://cursor.com">Cursor</LinkExternal>{" "}
-                  - Best editor out there for code.
+                  <LinkExternal href="https://openai.com/codex/">
+                    Codex
+                  </LinkExternal>{" "}
+                  /{" "}
+                  <LinkExternal href="https://chatgpt.com">
+                    ChatGPT
+                  </LinkExternal>{" "}
+                  - I switch between both too frequently.
                 </div>
+                <div>Rex - Simply beautiful software.</div>
                 <div>
                   <LinkExternal href="https://www.raycast.com">
                     Raycast
@@ -135,7 +157,7 @@ export default function Uses() {
                   <LinkExternal href="https://www.diabrowser.com/">
                     Dia
                   </LinkExternal>{" "}
-                  - Goated browser and I&apos;m a big fan of them
+                  - Goated browser, and I&apos;m a big fan of them.
                 </div>
               </div>
             </dd>
