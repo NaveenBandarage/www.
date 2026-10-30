@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
+import useReducedMotion from "../../lib/useReducedMotion";
 import React from "react";
 
 interface SlideUpTextProps {
@@ -28,15 +29,13 @@ const SlideUpText: React.FC<SlideUpTextProps> = ({
     return (
       <span className={className}>
         {words.map((word, index) => (
-          <motion.span
+          <m.span
             key={`${word}-${index}`}
             className="inline-block mr-1"
             initial={
-              shouldReduceMotion
-                ? { opacity: 1, y: 0, filter: "blur(0px)" }
-                : { opacity: 0, y: 18, filter: "blur(8px)" }
+              shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }
             }
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            animate={{ opacity: 1, y: 0 }}
             transition={
               shouldReduceMotion
                 ? { duration: 0 }
@@ -46,24 +45,21 @@ const SlideUpText: React.FC<SlideUpTextProps> = ({
                     ease: [0.22, 1, 0.36, 1],
                   }
             }
-            style={{ willChange: "opacity, transform, filter" }}
           >
             {word}
-          </motion.span>
+          </m.span>
         ))}
       </span>
     );
   }
 
   return (
-    <motion.span
-      className={`inline-block transition-all ${className}`}
+    <m.span
+      className={`inline-block ${className}`}
       initial={
-        shouldReduceMotion
-          ? { opacity: 1, y: 0, filter: "blur(0px)" }
-          : { opacity: 0, y: 20, filter: "blur(8px)" }
+        shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
       }
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      animate={{ opacity: 1, y: 0 }}
       transition={
         shouldReduceMotion
           ? { duration: 0 }
@@ -73,10 +69,9 @@ const SlideUpText: React.FC<SlideUpTextProps> = ({
               ease: [0.22, 1, 0.36, 1],
             }
       }
-      style={{ willChange: "opacity, transform, filter" }}
     >
       {children || text}
-    </motion.span>
+    </m.span>
   );
 };
 

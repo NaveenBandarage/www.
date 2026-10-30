@@ -1,4 +1,4 @@
-import { useReducedMotion } from "framer-motion";
+import useReducedMotion from "../../lib/useReducedMotion";
 import React, { useEffect, useState } from "react";
 
 interface TypewriterTextProps {
@@ -38,7 +38,7 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({
     };
 
     if (shouldReduceMotion || speed <= 0 || text.length === 0) {
-      if (delay > 0) {
+      if (!shouldReduceMotion && delay > 0) {
         startTimeout = setTimeout(completeImmediately, delay);
       } else {
         completeImmediately();
@@ -84,13 +84,20 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({
   }, [text, speed, delay, onComplete, shouldReduceMotion]);
 
   return (
-    <span className={className}>
-      {displayedText}
-      {cursor && !isComplete && (
-        <span className="animate-pulse text-neutral-400 dark:text-neutral-500">
-          |
-        </span>
-      )}
+    <span className={`inline-grid ${className}`}>
+      <span className="invisible col-start-1 row-start-1" aria-hidden="true">
+        {text}
+        {cursor ? "|" : ""}
+      </span>
+      <span className="sr-only">{text}</span>
+      <span className="col-start-1 row-start-1" aria-hidden="true">
+        {shouldReduceMotion ? text : displayedText}
+        {cursor && !isComplete && !shouldReduceMotion && (
+          <span className="animate-pulse text-neutral-400 dark:text-neutral-500">
+            |
+          </span>
+        )}
+      </span>
     </span>
   );
 };

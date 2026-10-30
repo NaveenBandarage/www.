@@ -13,7 +13,7 @@ This is a personal portfolio website for Naveen Bandarage, a Software Engineer a
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 with TypeScript
+- **Framework**: Next.js 15 Pages Router with TypeScript
 - **Styling**: Tailwind CSS with custom design tokens
 - **Content**: MDX for blog posts with gray-matter frontmatter
 - **Analytics**: Custom implementation with Vercel Blob storage
@@ -48,10 +48,12 @@ The site uses custom text animation components located in `/components/TextAnima
 - `BouncyText`: Playful bounce animations
 
 When adding animations:
-- Use consistent delay patterns (increments of 300-500ms)
+- Keep entrance animations brief and content visible while it moves
 - Support `delay` and `duration` props
 - Include accessibility considerations
 - Follow existing stagger patterns for text reveals
+- Use `m` with the app's `LazyMotion` provider and the hydration-safe
+  `/lib/useReducedMotion.ts` hook
 
 ### Styling Guidelines
 - Use Tailwind utility classes
@@ -141,9 +143,9 @@ When adding animations:
 - Reference specific tools, technologies, and places
 
 ### Animation Timing
-- Homepage intro sequence: 1500ms → 2200ms → 3500ms → 4000ms → 4500ms → 5200ms
-- Use consistent delay increments
-- Allow time for users to read before next element appears
+- Homepage content is visible immediately, including server-rendered HTML
+- Homepage entrance: 300ms movement with 0ms → 50ms → 100ms → 150ms stagger
+- Avoid multi-second delays that hide content or postpone largest contentful paint
 - Consider reduced motion preferences
 
 ### Goals & Personal Content

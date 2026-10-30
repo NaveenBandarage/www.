@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
+import useReducedMotion from "../../lib/useReducedMotion";
 import { useEffect, useMemo, useState } from "react";
 import formatDate from "../../lib/formatDate";
 import { ClockIcon } from "../Icons";
@@ -88,12 +89,10 @@ export default function YearTabs({ posts }: YearTabsProps) {
   const itemVariants = {
     hidden: (currentDirection: Direction) => ({
       opacity: 0,
-      filter: shouldReduceMotion ? "blur(0px)" : "blur(8px)",
       y: shouldReduceMotion ? 0 : currentDirection === "right" ? -10 : 10,
     }),
     visible: {
       opacity: 1,
-      filter: "blur(0px)",
       y: 0,
       transition: {
         duration: shouldReduceMotion ? 0 : 0.25,
@@ -115,9 +114,12 @@ export default function YearTabs({ posts }: YearTabsProps) {
           const tabId = `year-tab-${group.year}`;
 
           return (
-            <li key={group.year} className="relative isolate min-w-[84px] flex-1">
+            <li
+              key={group.year}
+              className="relative isolate min-w-[84px] flex-1"
+            >
               {isActive && (
-                <motion.div
+                <m.div
                   layoutId="active-year-tab-indicator"
                   className="absolute inset-0 -z-10 rounded-t-3xl bg-neutral-100 dark:bg-neutral-900"
                   transition={{
@@ -132,7 +134,7 @@ export default function YearTabs({ posts }: YearTabsProps) {
                   {hasRightTab && (
                     <span className="pointer-events-none absolute bottom-0 -right-4 h-4 w-4 bg-neutral-100 before:absolute before:inset-0 before:rounded-bl-full before:bg-gray-50 dark:bg-neutral-900 dark:before:bg-black" />
                   )}
-                </motion.div>
+                </m.div>
               )}
 
               <button
@@ -164,17 +166,17 @@ export default function YearTabs({ posts }: YearTabsProps) {
         } ${shouldRoundTopRight ? "rounded-tr-3xl" : ""} rounded-b-3xl`}
       >
         <AnimatePresence mode="wait" custom={direction}>
-          <motion.ul
+          <m.ul
             key={activeYear.year}
             variants={containerVariants}
             custom={direction}
-            initial="hidden"
+            initial={direction === null ? false : "hidden"}
             animate="visible"
             exit="hidden"
             className="divide-y divide-neutral-500/10 dark:divide-neutral-800"
           >
             {activeYear.posts.map((post) => (
-              <motion.li
+              <m.li
                 key={post.slug}
                 variants={itemVariants}
                 custom={direction}
@@ -199,9 +201,9 @@ export default function YearTabs({ posts }: YearTabsProps) {
                     {formatDate(post.date, true)}
                   </time>
                 </Link>
-              </motion.li>
+              </m.li>
             ))}
-          </motion.ul>
+          </m.ul>
         </AnimatePresence>
       </div>
     </div>

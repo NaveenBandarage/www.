@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "agent": {
+    "id": "demo-agent",
+    "name": "Orchid",
+    "demo": true
+  },
+  "nodes": [
+    {
+      "id": "projects",
+      "title": "projects/",
+      "type": "folder",
+      "parent": null,
+      "created_at": "2026-10-20T12:00:00-04:00"
+    },
+    {
+      "id": "preferences",
+      "title": "preferences/",
+      "type": "folder",
+      "parent": null,
+      "created_at": "2026-10-20T12:00:00-04:00"
+    },
+    {
+      "id": "episodes",
+      "title": "episodes/",
+      "type": "folder",
+      "parent": null,
+      "created_at": "2026-10-20T12:00:00-04:00"
+    },
+    {
+      "id": "explorer",
+      "title": "memory-explorer/",
+      "type": "folder",
+      "parent": "projects",
+      "created_at": "2026-10-20T12:00:00-04:00"
+    },
+    {
+      "id": "three",
+      "title": "use-three-js.md",
+      "type": "memory",
+      "parent": "explorer",
+      "content": "Use Three.js for the visualization. Preserve the white Finder window and organic, lime-green particle branches.",
+      "source_ids": ["conversation-three"],
+      "created_at": "2026-10-21T12:00:00-04:00",
+      "status": "active",
+      "scope": "Memory explorer",
+      "evidence": "Explicit instruction",
+      "tags": ["rendering", "library", "three.js", "WebGL"]
+    },
+    {
+      "id": "provenance",
+      "title": "keep-the-sources.md",
+      "type": "memory",
+      "parent": "projects",
+      "content": "Every extracted memory should link to the original message or document. A correction should preserve the previous version.",
+      "source_ids": ["conversation-memory"],
+      "created_at": "2026-10-22T12:00:00-04:00",
+      "status": "active",
+      "scope": "Memory explorer",
+      "evidence": "Explicit instruction",
+      "tags": ["evidence", "history", "source", "provenance"]
+    },
+    {
+      "id": "organic",
+      "title": "organic-branches.md",
+      "type": "memory",
+      "parent": "explorer",
+      "content": "Keep the original mossy branches, generous white space, and small file labels. Opening a folder should grow its branch.",
+      "source_ids": ["conversation-style"],
+      "created_at": "2026-10-24T12:00:00-04:00",
+      "status": "active",
+      "scope": "Memory explorer",
+      "evidence": "Explicit instruction",
+      "tags": ["design", "style", "appearance"]
+    },
+    {
+      "id": "retrieval",
+      "title": "recall/",
+      "type": "folder",
+      "parent": "explorer",
+      "created_at": "2026-10-23T12:00:00-04:00"
+    },
+    {
+      "id": "trace",
+      "title": "trace-retrieval.md",
+      "type": "memory",
+      "parent": "retrieval",
+      "content": "Show which memories a retrieval operation returned, the matching terms, and the supporting sources. Do not present a decorative animation as an agent reasoning trace.",
+      "source_ids": ["conversation-memory"],
+      "created_at": "2026-10-23T12:00:00-04:00",
+      "status": "active",
+      "scope": "Memory explorer",
+      "evidence": "Explicit instruction",
+      "tags": ["search", "retrieval", "recall"]
+    },
+    {
+      "id": "budget",
+      "title": "local-neighborhood.md",
+      "type": "memory",
+      "parent": "retrieval",
+      "content": "Expand one neighborhood at a time. Keep labels and particle geometry bounded, even when the stored memory contains thousands of records.",
+      "source_ids": ["conversation-scale"],
+      "created_at": "2026-10-25T12:00:00-04:00",
+      "status": "active",
+      "scope": "Memory explorer",
+      "evidence": "Explicit instruction",
+      "tags": ["scale", "performance", "graph"]
+    },
+    {
+      "id": "calm",
+      "title": "quiet-interface.md",
+      "type": "memory",
+      "parent": "preferences",
+      "content": "Use a calm, white interface with thin gray icons. Keep the moss-green highlights for branches, selection, and recall.",
+      "source_ids": ["conversation-style"],
+      "created_at": "2026-10-24T12:00:00-04:00",
+      "status": "active",
+      "scope": "Memory explorer",
+      "evidence": "Explicit instruction",
+      "tags": ["design", "style", "white", "interface"],
+      "pinned": true
+    },
+    {
+      "id": "camera",
+      "title": "mostly-flat-camera.md",
+      "type": "memory",
+      "parent": "preferences",
+      "content": "Use a mostly flat camera. Keep labels readable and allow dragging, scrolling, and touch gestures.",
+      "source_ids": ["conversation-style"],
+      "created_at": "2026-10-24T12:00:00-04:00",
+      "status": "active",
+      "scope": "Memory explorer",
+      "evidence": "Explicit instruction",
+      "tags": ["camera", "zoom", "navigation"]
+    },
+    {
+      "id": "old-renderer",
+      "title": "canvas-experiment.md",
+      "type": "memory",
+      "parent": "explorer",
+      "content": "Try a 2D canvas for the branch renderer.",
+      "source_ids": ["conversation-early"],
+      "created_at": "2026-10-20T12:00:00-04:00",
+      "status": "superseded",
+      "scope": "Memory explorer",
+      "evidence": "Explicit instruction",
+      "valid_to": "2026-10-21T12:00:00-04:00",
+      "superseded_by": "three",
+      "tags": ["rendering", "library"]
+    },
+    {
+      "id": "conversation-early",
+      "title": "initial-experiment.txt",
+      "type": "source",
+      "parent": "episodes",
+      "content": "Early experiment: try a 2D canvas for the branch renderer. This was replaced by the Three.js decision.",
+      "created_at": "2026-10-20T12:00:00-04:00",
+      "kind": "conversation"
+    },
+    {
+      "id": "conversation-three",
+      "title": "rendering-choice.txt",
+      "type": "source",
+      "parent": "episodes",
+      "content": "Use Three.js for the visualization. The original uses Three.js too.",
+      "created_at": "2026-10-21T12:00:00-04:00",
+      "kind": "conversation"
+    },
+    {
+      "id": "conversation-memory",
+      "title": "memory-brief.txt",
+      "type": "source",
+      "parent": "episodes",
+      "content": "Build a knowledge graph for an agent’s memory. Each memory should keep its evidence, and we should be able to inspect what was recalled.",
+      "created_at": "2026-10-22T12:00:00-04:00",
+      "kind": "conversation"
+    },
+    {
+      "id": "conversation-style",
+      "title": "design-direction.txt",
+      "type": "source",
+      "parent": "episodes",
+      "content": "Keep the same design style as the original: white Finder window, lime-green particle branches, and quiet file labels.",
+      "created_at": "2026-10-24T12:00:00-04:00",
+      "kind": "conversation"
+    },
+    {
+      "id": "conversation-scale",
+      "title": "scaling-notes.md",
+      "type": "source",
+      "parent": "episodes",
+      "content": "Use progressive expansion and bounded visible neighborhoods. The full memory store should not become a single giant scene.",
+      "created_at": "2026-10-25T12:00:00-04:00",
+      "kind": "conversation"
+    }
+  ],
+  "edges": [
+    {
+      "from": "three",
+      "to": "conversation-three",
+      "type": "supported_by"
+    },
+    {
+      "from": "provenance",
+      "to": "conversation-memory",
+      "type": "supported_by"
+    },
+    {
+      "from": "organic",
+      "to": "calm",
+      "type": "related_to"
+    },
+    {
+      "from": "three",
+      "to": "old-renderer",
+      "type": "supersedes"
+    },
+    {
+      "from": "trace",
+      "to": "provenance",
+      "type": "depends_on"
+    },
+    {
+      "from": "budget",
+      "to": "trace",
+      "type": "related_to"
+    }
+  ],
+  "recalls": []
+}

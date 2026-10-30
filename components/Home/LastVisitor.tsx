@@ -15,7 +15,10 @@ type Props = {
   enabled?: boolean;
 };
 
-export default function LastVisitor({ variant = "card", enabled = true }: Props) {
+export default function LastVisitor({
+  variant = "card",
+  enabled = true,
+}: Props) {
   const [lastVisitor, setLastVisitor] = useState<LastVisitor>(null);
   const [loading, setLoading] = useState<boolean>(enabled);
 
@@ -23,6 +26,7 @@ export default function LastVisitor({ variant = "card", enabled = true }: Props)
     if (!enabled) return;
 
     let cancelled = false;
+    const controller = new AbortController();
     const headers = {
       "Cache-Control": "no-cache",
       Pragma: "no-cache",
@@ -36,7 +40,10 @@ export default function LastVisitor({ variant = "card", enabled = true }: Props)
         const response = await fetch("/api/last-visitor", {
           method: "POST",
           headers,
+          signal: controller.signal,
         });
+        if (!response.ok)
+          throw new Error(`Visitor request failed: ${response.status}`);
         const data = await response.json();
 
         if (!cancelled) {
@@ -47,11 +54,15 @@ export default function LastVisitor({ variant = "card", enabled = true }: Props)
       } catch {
         // Fallback: fetch the current data if POST fails
       }
+      if (cancelled) return;
 
       try {
         const response = await fetch("/api/last-visitor", {
           headers,
+          signal: controller.signal,
         });
+        if (!response.ok)
+          throw new Error(`Visitor request failed: ${response.status}`);
         const data = await response.json();
 
         if (!cancelled) {
@@ -72,6 +83,7 @@ export default function LastVisitor({ variant = "card", enabled = true }: Props)
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [enabled]);
 

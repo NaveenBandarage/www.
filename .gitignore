@@ -9,6 +9,7 @@ yarn-error.log*
 out/
 build/
 dist/
+public/memory-explorer/
 
 # Production
 /build
@@ -100,6 +101,8 @@ dist
 
 # Bun specific
 .bun
+# Legacy cache created by the previous literal tilde cache path
+~/
 
 # OS generated files
 .DS_Store

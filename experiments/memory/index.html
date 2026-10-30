@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#fafbf8" />
+    <meta
+      name="description"
+      content="A living explorer for agent memory. Trace memories to their sources, inspect recall, and grow your knowledge graph."
+    />
+    <title>Memory — a living agent memory</title>
+  </head>
+  <body>
+    <main class="memory-landscape">
+      <h1 class="sr-only">Naveen’s growing memory tree</h1>
+      <section class="memory-space" aria-label="Memory explorer">
+        <header class="landscape-header">
+          <div class="landscape-name">
+            <a href="/fun" target="_top" aria-label="Back to Naveen’s site"
+              >← naveen</a
+            ><span aria-hidden="true">/</span
+            ><button id="home" title="Center the memory tree">memory</button>
+          </div>
+          <nav aria-label="Memory controls">
+            <button
+              id="timeline-toggle"
+              class="icon-button"
+              aria-label="Memory timeline"
+              aria-expanded="false"
+              title="Memory timeline"
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M4 10a8 8 0 1 1 1 8M4 4v6h6" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+            </button>
+            <button
+              id="grow-all"
+              class="icon-button"
+              aria-label="Grow all folders"
+              title="Grow all folders"
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="m5 7 5 5-5 5m8-10 5 5-5 5" />
+              </svg>
+            </button>
+            <button
+              id="search-toggle"
+              class="icon-button"
+              aria-label="Search and recall memories"
+              aria-expanded="false"
+              title="Search and recall"
+            >
+              <svg viewBox="0 0 24 24">
+                <circle cx="10" cy="10" r="6" />
+                <path d="m15 15 5 5" />
+              </svg>
+            </button>
+            <button
+              id="menu-toggle"
+              class="icon-button"
+              aria-label="Memory options"
+              aria-expanded="false"
+              title="Memory options"
+            >
+              <svg viewBox="0 0 24 24">
+                <circle cx="5" cy="12" r="1" />
+                <circle cx="12" cy="12" r="1" />
+                <circle cx="19" cy="12" r="1" />
+              </svg>
+            </button>
+          </nav>
+          <div id="options-menu" class="options-menu" hidden>
+            <button id="import-open">
+              Import memory… <span>JSON / Markdown</span></button
+            ><button id="export">Export memory <span>JSON</span></button
+            ><button id="add-open">New memory… <span>⌘ N</span></button>
+            <hr />
+            <button id="links-toggle" aria-pressed="false">
+              Show relationships</button
+            ><button id="recall-history">Recall history</button
+            ><button id="collapse">Collapse branches</button>
+            <hr />
+            <button id="demo-open">Open sample memory…</button
+            ><button id="help-open">About this memory explorer</button>
+          </div>
+        </header>
+        <div id="timeline" class="timeline" hidden>
+          <label for="time-slider">As of <span id="time-label">Now</span></label
+          ><input
+            id="time-slider"
+            type="range"
+            min="0"
+            max="1"
+            value="1"
+            aria-label="Memory snapshot"
+          /><button id="time-now">Now ↗</button>
+        </div>
+        <div class="work-area">
+          <div
+            id="viewport"
+            aria-label="Memory branches. Drag to explore, scroll to zoom."
+          >
+            <svg id="connections" aria-hidden="true"></svg>
+            <div id="labels"></div>
+            <section
+              class="search-box floating-panel"
+              hidden
+              aria-label="Find a memory"
+            >
+              <form id="search-form">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="10" cy="10" r="6" />
+                  <path d="m15 15 5 5" /></svg
+                ><input
+                  id="search"
+                  type="search"
+                  placeholder="What should the agent remember?"
+                  aria-label="Search memories"
+                  autocomplete="off"
+                /><button type="submit" id="run-recall">Recall ↗</button>
+              </form>
+              <div class="search-mode">
+                <span>Local text search · titles, content & tags</span
+                ><button
+                  type="button"
+                  id="search-close"
+                  aria-label="Close search"
+                >
+                  esc
+                </button>
+              </div>
+              <div id="search-results" aria-live="polite"></div>
+            </section>
+            <div id="recall-strip" class="recall-strip floating-panel" hidden>
+              <span id="recall-summary"></span
+              ><button id="recall-details">Inspect recall ↗</button
+              ><button id="clear-recall" aria-label="Clear recall highlight">
+                ×
+              </button>
+            </div>
+            <div class="zoom-controls">
+              <button id="zoom-out" aria-label="Zoom out">−</button
+              ><button id="fit" title="Fit tree" aria-label="Fit tree">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" />
+                </svg></button
+              ><button id="zoom-in" aria-label="Zoom in">+</button>
+            </div>
+            <p id="webgl-error" hidden>
+              This tree needs WebGL. Please open it in a browser with hardware
+              acceleration enabled.
+            </p>
+          </div>
+          <aside
+            id="inspector"
+            class="inspector"
+            aria-label="Memory inspector"
+            hidden
+          >
+            <header>
+              <span id="inspector-kind">MEMORY</span
+              ><button id="inspector-close" aria-label="Close inspector">
+                ×
+              </button>
+            </header>
+            <div id="inspector-content" aria-live="polite"></div>
+          </aside>
+        </div>
+        <footer class="status">
+          <span id="agent-label">Orchid <i>· sample</i></span
+          ><span id="item-count" aria-live="polite">Loading memory…</span
+          ><span
+            ><button id="status-date" title="Open memory timeline">Now</button
+            ><span id="zoom-status">100%</span></span
+          >
+        </footer>
+      </section>
+      <div class="landscape-caption">
+        <p id="workspace-caption">Open a branch. See what grows.</p>
+        <span>drag to wander · scroll to zoom</span>
+      </div>
+      <button id="import-shortcut" hidden>Import memory</button>
+      <div id="notice" role="status" aria-live="polite" hidden></div>
+    </main>
+    <dialog id="import-dialog">
+      <form method="dialog">
+        <button class="close-preview" aria-label="Close import">×</button>
+      </form>
+      <p class="eyebrow">BRING YOUR OWN MEMORY</p>
+      <h1>Give the branches something to remember.</h1>
+      <p class="dialog-copy">
+        Import an agent’s JSON export, or turn a Markdown document’s sections
+        into memories. Files stay in this browser.
+      </p>
+      <label class="file-drop" for="memory-file"
+        >Choose a JSON, Markdown, or text file<input
+          type="file"
+          id="memory-file"
+          accept=".json,.md,.markdown,.txt"
+      /></label>
+      <p class="dialog-hint">
+        Import replaces the current workspace. Export it first to keep a copy.
+      </p>
+      <div id="import-review" hidden>
+        <p id="import-summary"></p>
+        <button class="soft-button" id="import-confirm">Import memory</button>
+      </div>
+      <p id="import-error" role="alert"></p>
+      <div class="dialog-footer">
+        <a href="%BASE_URL%example-memory.json" download
+          >Download example JSON ↓</a
+        ><button id="import-help">View format</button>
+      </div>
+    </dialog>
+    <dialog id="edit-dialog">
+      <form id="edit-form">
+        <button
+          type="button"
+          id="edit-close"
+          class="close-preview"
+          aria-label="Cancel memory edit"
+        >
+          ×
+        </button>
+        <p class="eyebrow" id="edit-kicker">NEW MEMORY</p>
+        <h1 id="edit-title">A new leaf.</h1>
+        <label
+          >Title<input
+            id="memory-title"
+            maxlength="200"
+            required
+            placeholder="rendering-choice.md" /></label
+        ><label>Folder<select id="memory-parent"></select></label
+        ><label
+          >Memory<textarea
+            id="memory-content"
+            required
+            rows="5"
+            placeholder="What should this agent remember?"
+          ></textarea></label
+        ><label
+          >Evidence<textarea
+            id="memory-evidence"
+            required
+            rows="2"
+            placeholder="The original instruction, observation, or source excerpt"
+          ></textarea></label
+        ><label class="edit-status"
+          >Status<select id="memory-status">
+            <option value="active">Explicit / active</option>
+            <option value="inferred">Inferred</option>
+            <option value="disputed">Disputed</option>
+          </select></label
+        >
+        <p id="edit-error" role="alert"></p>
+        <div class="dialog-footer">
+          <span>Saved with source and revision history.</span
+          ><button class="soft-button" type="submit">Save memory</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="help-dialog">
+      <form method="dialog">
+        <button class="close-preview" aria-label="Close help">×</button>
+      </form>
+      <p class="eyebrow">A LIVING MEMORY</p>
+      <h1>The branches remember.</h1>
+      <div id="help-content"></div>
+    </dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

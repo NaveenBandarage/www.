@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 interface MiniGolfCaptchaProps {
   open: boolean;
@@ -589,7 +589,7 @@ export function MiniGolfCaptcha({ open, onSuccess, onClose }: MiniGolfCaptchaPro
     />
     <AnimatePresence>
       {open && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -599,7 +599,7 @@ export function MiniGolfCaptcha({ open, onSuccess, onClose }: MiniGolfCaptchaPro
             if (e.target === e.currentTarget) onClose();
           }}
         >
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -748,8 +748,8 @@ export function MiniGolfCaptcha({ open, onSuccess, onClose }: MiniGolfCaptchaPro
                   : "Play mini golf instead"}
               </button>
             </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
     </>

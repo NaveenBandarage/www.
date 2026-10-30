@@ -3,13 +3,16 @@ import "lenis/dist/lenis.css";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import localFont from "next/font/local";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, LazyMotion, MotionConfig } from "framer-motion";
 import { useRouter } from "next/router";
 import PageTransition from "../components/PageTransition";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScroll from "../components/SmoothScroll";
 import InteractionSounds from "../components/InteractionSounds";
+
+const loadMotionFeatures = () =>
+  import("../lib/motionFeatures").then((module) => module.default);
 
 const sansFont = localFont({
   src: "../public/inter.roman.var.woff2",
@@ -62,11 +65,22 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           }
         `}
       </style>
-      <AnimatePresence mode="wait">
-        <PageTransition key={router.asPath}>
-          <Component {...pageProps} />
-        </PageTransition>
-      </AnimatePresence>
+      <MotionConfig reducedMotion="user">
+        <LazyMotion features={loadMotionFeatures} strict>
+          {router.pathname === "/memory" ||
+          router.pathname === "/photos" ||
+          router.pathname.startsWith("/photo/") ||
+          router.pathname.startsWith("/photos/") ? (
+            <Component {...pageProps} />
+          ) : (
+            <AnimatePresence mode="wait">
+              <PageTransition key={router.asPath}>
+                <Component {...pageProps} />
+              </PageTransition>
+            </AnimatePresence>
+          )}
+        </LazyMotion>
+      </MotionConfig>
 
       <SmoothScroll />
       <Analytics />
