@@ -10,6 +10,7 @@ import PageTransition from "../components/PageTransition";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScroll from "../components/SmoothScroll";
+import NowPlaying from "../components/NowPlaying";
 
 // Import GlobalClickSound with dynamic loading (no SSR)
 const GlobalClickSound = dynamic(
@@ -87,6 +88,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               </PageTransition>
             </AnimatePresence>
           )}
+          <NowPlaying />
         </LazyMotion>
       </MotionConfig>
 

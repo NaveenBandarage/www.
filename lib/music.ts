@@ -3,6 +3,7 @@ export interface ListeningTrack {
   artist: string;
   url: string;
   isPlaying: boolean;
+  playedAt: string | null;
 }
 
 interface SpotifyTrack {
@@ -72,12 +73,20 @@ async function loadTrack(): Promise<ListeningTrack | null> {
       ? current.item
       : undefined;
   const isPlaying = Boolean(track);
+  let playedAt: string | null = null;
   if (!track) {
     const recent = await spotifyFetch(
       "me/player/recently-played?limit=1",
       token.value,
     );
     track = recent?.items?.[0]?.track;
+    const timestamp = recent?.items?.[0]?.played_at;
+    if (
+      typeof timestamp === "string" &&
+      Number.isFinite(Date.parse(timestamp))
+    ) {
+      playedAt = timestamp;
+    }
   }
   if (
     !track ||
@@ -90,6 +99,7 @@ async function loadTrack(): Promise<ListeningTrack | null> {
     artist: track.artists.map((artist) => artist.name).join(", "),
     url: track.external_urls.spotify,
     isPlaying,
+    playedAt,
   };
 }
 
@@ -99,7 +109,7 @@ export async function getListeningTrack() {
   if (!pending) {
     pending = loadTrack()
       .then((track) => {
-        cached = { track, expires: Date.now() + 30_000 };
+        cached = { track, expires: Date.now() + 15_000 };
         return track;
       })
       .catch(() => {
