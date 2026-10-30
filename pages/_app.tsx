@@ -73,11 +73,15 @@ export default function MyApp({
           }
         `}
       </style>
-      <AnimatePresence mode="wait">
-        <PageTransition key={router.asPath}>
-          <Component {...pageProps} />
-        </PageTransition>
-      </AnimatePresence>
+      {router.pathname === "/memory" ? (
+        <Component {...pageProps} />
+      ) : (
+        <AnimatePresence mode="wait">
+          <PageTransition key={router.asPath}>
+            <Component {...pageProps} />
+          </PageTransition>
+        </AnimatePresence>
+      )}
 
       <GlobalClickSound />
       <SmoothScroll />

@@ -3,17 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "analyze": "ANALYZE=true next build",
+    "dev": "node scripts/build-memory.mjs && next dev",
+    "build": "node scripts/build-memory.mjs && next build",
+    "analyze": "node scripts/build-memory.mjs && ANALYZE=true next build",
     "postbuild": "next-sitemap",
     "start": "next start",
     "serve:lhci": "next start",
     "lint": "next lint",
-    "export": "next build && next export",
+    "export": "node scripts/build-memory.mjs && next build && next export",
     "format": "prettier --write .",
     "danger": "danger",
-    "lighthouse": "lhci autorun"
+    "lighthouse": "lhci autorun",
+    "build:memory": "node scripts/build-memory.mjs",
+    "test:memory": "node --test experiments/memory/tests/*.test.js"
   },
   "dependencies": {
     "@react-hook/copy": "^2.0.1",
@@ -60,7 +62,9 @@
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.19",
     "tailwindcss-touch": "^1.0.1",
+    "three": "0.186.1",
     "typescript": "5.9.3",
+    "vite": "8.3.5",
     "ws": "^7.5.13"
   }
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import ScrollReveal from "../components/ScrollReveal";
+import Link from "next/link";
 
 export default function Fun() {
   return (
@@ -23,8 +24,15 @@ export default function Fun() {
         <ScrollReveal delay={0.14}>
           <div className="list-container">
             <div className="list-content">
-              <p className="text-neutral-500 dark:text-silver-dark">
-                Coming soon... This is where the fun stuff will live! 🎉
+              <Link
+                href="/memory"
+                className="link-fade text-neutral-800 dark:text-white"
+              >
+                Memory ↗
+              </Link>
+              <p className="mt-2 text-neutral-500 dark:text-silver-dark">
+                A living tree of agent memories. Open a folder, follow its
+                roots, and see what gets remembered.
               </p>
             </div>
           </div>
