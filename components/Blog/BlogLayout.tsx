@@ -20,12 +20,13 @@ const BlogLayout = ({ meta, source, readingTime }) => {
                 {meta.title}
               </h1>
             </header>
-            <p
+            <button
+              type="button"
               onClick={() => router.back()}
-              className="text-neutral-700 sm:pb-6 sm:align-left cursor-pointer"
+              className="cursor-pointer text-left text-neutral-700 dark:text-silver-dark sm:pb-6 sm:align-left"
             >
               Go Back
-            </p>
+            </button>
           </div>
         </ScrollReveal>
         <ScrollReveal delay={0.12}>
