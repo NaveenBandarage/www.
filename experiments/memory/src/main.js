@@ -9,6 +9,7 @@ import {
   readMemory,
   saveMemory,
   ensureSourceFolder,
+  validateRecallQuery,
 } from "./memory.js";
 
 const $ = (s) => document.querySelector(s);
@@ -621,7 +622,7 @@ $(".search-box").addEventListener("keydown", (event) => {
 });
 
 async function recall() {
-  const q = $("#search").value.trim();
+  const q = validateRecallQuery($("#search").value.trim());
   if (!q) {
     $("#search").focus();
     return;

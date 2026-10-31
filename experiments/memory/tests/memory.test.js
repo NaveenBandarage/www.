@@ -7,6 +7,9 @@ import {
   retrieve,
   markdownMemory,
   ensureSourceFolder,
+  validateRecallQuery,
+  readMemory,
+  saveMemory,
 } from "../src/memory.js";
 import { projectMemory, LABEL_BUDGET } from "../src/graph-model.js";
 
@@ -225,4 +228,65 @@ test("successive edits reuse a generated source folder in an imported workspace"
     ensureSourceFolder(store, "2026-10-30T12:04:00Z").id,
     replacement.id,
   );
+});
+
+test("recall queries enforce the same limit before retrieval and workspace persistence", async () => {
+  const exact = "a".repeat(2000);
+  assert.equal(validateRecallQuery(exact), exact);
+  const oversized = exact + "a";
+  assert.throws(() => validateRecallQuery(oversized), /2,000 characters/);
+  const store = validateMemory(demoMemory());
+  store.recalls.push({
+    id: "oversized",
+    query: oversized,
+    at: "2026-10-31",
+    results: [],
+  });
+  // Validation must happen before attempting to open IndexedDB.
+  await assert.rejects(saveMemory(store), /2,000 characters/);
+  store.recalls[0].query = exact;
+  assert.equal(validateMemory(store).recalls[0].query, exact);
+});
+
+test("invalid persisted memory rejects the read promise and closes the database", async () => {
+  const original = Object.getOwnPropertyDescriptor(globalThis, "indexedDB");
+  let closed = false;
+  const store = demoMemory();
+  store.recalls.push({
+    id: "legacy",
+    query: "a".repeat(2001),
+    at: "2026-10-31",
+    results: [],
+  });
+  const db = {
+    transaction: () => ({
+      objectStore: () => ({
+        get: () => {
+          const request = { result: store };
+          queueMicrotask(() => request.onsuccess());
+          return request;
+        },
+      }),
+    }),
+    close: () => {
+      closed = true;
+    },
+  };
+  Object.defineProperty(globalThis, "indexedDB", {
+    configurable: true,
+    value: {
+      open: () => {
+        const request = { result: db };
+        queueMicrotask(() => request.onsuccess());
+        return request;
+      },
+    },
+  });
+  try {
+    await assert.rejects(readMemory(), /2,000 characters/);
+    assert.equal(closed, true);
+  } finally {
+    if (original) Object.defineProperty(globalThis, "indexedDB", original);
+    else delete globalThis.indexedDB;
+  }
 });
