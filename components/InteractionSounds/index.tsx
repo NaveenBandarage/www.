@@ -16,6 +16,7 @@ import {
   unlock,
   type SoundName,
 } from "cuelume";
+import { NAVIGATION_HOVER_SOUND_EVENT } from "../../lib/navigationSound";
 
 const STORAGE_KEY = "ui-sounds:v1";
 const CONTROL_SELECTOR =
@@ -109,12 +110,28 @@ export default function InteractionSounds({
       setSoundsEnabled(nextEnabled);
     };
 
+    let lastHoverSound = -Infinity;
+    const handleNavigationHover = () => {
+      const now = performance.now();
+      if (now - lastHoverSound < 70) return;
+      lastHoverSound = now;
+      play("select", { emphasis: "subtle", volume: 0.4 });
+    };
+
     document.addEventListener("click", handleClick, true);
     document.addEventListener("change", handleChange, true);
+    document.addEventListener(
+      NAVIGATION_HOVER_SOUND_EVENT,
+      handleNavigationHover,
+    );
     window.addEventListener("storage", handleStorage);
     return () => {
       document.removeEventListener("click", handleClick, true);
       document.removeEventListener("change", handleChange, true);
+      document.removeEventListener(
+        NAVIGATION_HOVER_SOUND_EVENT,
+        handleNavigationHover,
+      );
       window.removeEventListener("storage", handleStorage);
       setEnabled(false);
     };

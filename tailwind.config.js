@@ -29,7 +29,7 @@ module.exports = {
           "Noto Color Emoji",
         ],
         serif: [
-          "LiterataVar",
+          "var(--serif-font)",
           "ui-serif",
           "Georgia",
           "Cambria",
