@@ -12,6 +12,33 @@ function seedFor(id) {
   );
 }
 
+// Match projection ordering and historical visibility when opening a search result.
+export function revealMemory(
+  store,
+  id,
+  { expanded = [], pages = {}, asOf = Infinity } = {},
+) {
+  const available = store.nodes
+    .map((node) => memoryAt(node, asOf))
+    .filter(Boolean);
+  const byId = new Map(available.map((node) => [node.id, node]));
+  const open = new Set(expanded);
+  const nextPages = { ...pages };
+  let node = byId.get(id);
+  while (node) {
+    const siblings = available.filter(
+      (sibling) => sibling.parent === node.parent,
+    );
+    nextPages[node.parent ?? "__roots"] =
+      Math.floor(
+        siblings.findIndex((sibling) => sibling.id === node.id) / PAGE_SIZE,
+      ) + 1;
+    node = byId.get(node.parent);
+    if (node) open.add(node.id);
+  }
+  return { expanded: open, pages: nextPages };
+}
+
 // Every path grows away from its parent. The seeded bend preserves the organic
 // particle renderer without moving established nodes when another branch opens.
 function branchFor(node, parent) {

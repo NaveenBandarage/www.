@@ -159,6 +159,15 @@ export function demoMemory() {
     recalls: [],
   };
 }
+export function validateRecallQuery(query) {
+  if (typeof query !== "string") return "";
+  if (query.length > 2000)
+    throw Error(
+      "Recall queries can contain up to 2,000 characters. Shorten your query and try again.",
+    );
+  return query;
+}
+
 export function validateMemory(input) {
   if (!input || typeof input !== "object" || !Array.isArray(input.nodes))
     throw Error("Use a memory JSON export with a nodes array.");
@@ -170,8 +179,14 @@ export function validateMemory(input) {
     );
   const ids = new Set(),
     types = new Set(["folder", "memory", "source", "entity"]);
-  const text = (v, max = 100000) =>
-    typeof v === "string" ? v.slice(0, max) : "";
+  const text = (v, max = 100000) => {
+    if (typeof v !== "string") return "";
+    if (v.length > max)
+      throw Error(
+        `A text field exceeds the ${max.toLocaleString("en-US")}-character limit. Shorten it or split the document before importing. Nothing was imported.`,
+      );
+    return v;
+  };
   const stamp = (v, fallback) => {
     if (v === undefined || v === null || v === "") return fallback;
     if (typeof v !== "string" || !Number.isFinite(Date.parse(v)))
@@ -278,7 +293,7 @@ export function validateMemory(input) {
     .slice(-200)
     .map((r) => ({
       id: text(r.id, 160) || crypto.randomUUID(),
-      query: text(r.query, 2000),
+      query: validateRecallQuery(r.query),
       at: stamp(r.at, new Date().toISOString()),
       method: text(r.method, 100) || "Imported retrieval log",
       results: (Array.isArray(r.results) ? r.results : [])
@@ -482,8 +497,13 @@ export async function readMemory() {
   try {
     return await new Promise((resolve, reject) => {
       const req = db.transaction("state").objectStore("state").get("memory");
-      req.onsuccess = () =>
-        resolve(req.result ? validateMemory(req.result) : null);
+      req.onsuccess = () => {
+        try {
+          resolve(req.result ? validateMemory(req.result) : null);
+        } catch (error) {
+          reject(error);
+        }
+      };
       req.onerror = () => reject(req.error);
     });
   } finally {
@@ -491,11 +511,13 @@ export async function readMemory() {
   }
 }
 export async function saveMemory(store) {
+  // Never replace a readable workspace with unchecked runtime data.
+  const validated = validateMemory(store);
   const db = await database();
   try {
     await new Promise((resolve, reject) => {
       const tx = db.transaction("state", "readwrite");
-      tx.objectStore("state").put(store, "memory");
+      tx.objectStore("state").put(validated, "memory");
       tx.oncomplete = resolve;
       tx.onerror = () => reject(tx.error);
       tx.onabort = () => reject(tx.error);
@@ -503,4 +525,26 @@ export async function saveMemory(store) {
   } finally {
     db.close();
   }
+}
+
+// Imported workspaces may use arbitrary ids. Reuse the evidence folder we create.
+export function ensureSourceFolder(store, now) {
+  let folder = store.nodes.find(
+    (node) =>
+      node.type === "folder" &&
+      !node.archived_at &&
+      (["episodes", "sources"].includes(node.id) ||
+        (node.parent === null && node.title === "sources/")),
+  );
+  if (!folder) {
+    folder = {
+      id: "sources-" + crypto.randomUUID(),
+      title: "sources/",
+      type: "folder",
+      parent: null,
+      created_at: now,
+    };
+    store.nodes.push(folder);
+  }
+  return folder;
 }

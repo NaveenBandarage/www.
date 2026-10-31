@@ -37,9 +37,9 @@ and refresh the page. Next.js changes reload normally.
 ## Use
 
 - Open domain labels to grow branches from the center. Parent branches grow first; their children follow. Node positions stay stable as other branches open. Select a memory to inspect its content, evidence, source documents, and typed relationships.
-- Use search to find records by title, content, or tags. Choose **Recall** to record the actual local text retrieval results and highlight their supporting sources.
+- Use search to find records by title, content, or tags. Results include folder paths and text previews; use ↑/↓ and Enter to open a result. The inspector’s folder path takes you back to its branch. Choose **Recall** to record the actual local text retrieval results and highlight their supporting sources.
 - **Memory options → Recall history** opens local and imported retrieval logs. Locally recorded recalls preserve the retrieved text and source ids, even after corrections.
-- Correct a memory to create a revision with a new source. Pin memories to give matching records a small retrieval preference. Archive a memory to hide it from the present while preserving historical snapshots.
+- Correct a memory to create a revision with a new source. Pin memories to give matching records a small retrieval preference. Archive a memory to hide it from the present while preserving historical snapshots; the confirmation offers Undo to restore it immediately.
 - The clock opens a timeline of creation, correction, supersession, and archive events. Choose **Now** to return to the current state.
 - Import JSON, Markdown, or text using the menu or drag and drop. Markdown sections become memories; the complete original document becomes their source. Imports replace the current workspace; export first to preserve a copy.
 - Export JSON to back up the workspace, move it between devices, or edit the schema externally. The bundled `public/example-memory.json` is a complete example.
@@ -92,3 +92,5 @@ Imports are limited to 10 MB, 10,000 records, and 50,000 relationships. These ar
 ## Controls
 
 Drag to pan; scroll or pinch to zoom. Click Memory or the fit control to frame the visible neighborhood. Keyboard: Tab/Enter to navigate, Cmd/Ctrl+F to search, Cmd/Ctrl+N to add a memory, Escape to close, +/- to zoom, 0 to fit. Reduced-motion preferences are respected.
+
+Imports reject text fields over 100,000 characters with an explicit error instead of truncating their content. Split larger documents into smaller imports. Failed edit validation leaves the current workspace intact.

@@ -6,6 +6,10 @@ import {
   memoryAt,
   retrieve,
   markdownMemory,
+  ensureSourceFolder,
+  validateRecallQuery,
+  readMemory,
+  saveMemory,
 } from "../src/memory.js";
 import { projectMemory, LABEL_BUDGET } from "../src/graph-model.js";
 
@@ -154,4 +158,135 @@ test("corrected provenance changes with the snapshot while original evidence rem
         e.type === "supported_by",
     ),
   );
+});
+
+test("revealing a result returns to its actual page using historical sibling order", async () => {
+  const { revealMemory } = await import("../src/graph-model.js");
+  const data = validateMemory({
+    nodes: [
+      { id: "root", title: "memories/", type: "folder" },
+      ...Array.from({ length: 14 }, (_, i) => ({
+        id: `result-${i}`,
+        title: `Memory ${i}`,
+        parent: "root",
+        type: "memory",
+        created_at: i === 0 ? "2026-10-30" : "2026-10-01",
+      })),
+    ],
+  });
+  const options = revealMemory(data, "result-1", { pages: { root: 3 } });
+  assert.equal(options.pages.root, 1);
+  assert.ok(options.expanded.has("root"));
+  assert.ok(
+    projectMemory(data, {
+      ...options,
+      expanded: [...options.expanded],
+    }).nodes.some((n) => n.id === "result-1"),
+  );
+  const historical = revealMemory(data, "result-6", {
+    asOf: Date.parse("2026-10-20"),
+  });
+  assert.equal(historical.pages.root, 1);
+  assert.ok(
+    projectMemory(data, {
+      ...historical,
+      expanded: [...historical.expanded],
+      asOf: Date.parse("2026-10-20"),
+    }).nodes.some((n) => n.id === "result-6"),
+  );
+});
+
+test("oversized source text and revision snapshots fail explicitly instead of losing content", () => {
+  const content = "a".repeat(100001);
+  assert.throws(
+    () => markdownMemory(content, "large.md"),
+    /100,000-character limit/,
+  );
+  const data = demoMemory();
+  data.nodes.find((n) => n.id === "three").revisions = [
+    { at: "2026-10-29", content },
+  ];
+  assert.throws(() => validateMemory(data), /100,000-character limit/);
+  const exact = "a".repeat(100000);
+  assert.equal(
+    markdownMemory(exact, "exact.md").nodes.find((n) => n.type === "source")
+      .content,
+    exact,
+  );
+});
+
+test("successive edits reuse a generated source folder in an imported workspace", () => {
+  const store = markdownMemory("# Notes\nA memory.", "notes.md");
+  const first = ensureSourceFolder(store, "2026-10-30T12:00:00Z");
+  const second = ensureSourceFolder(store, "2026-10-30T12:01:00Z");
+  assert.equal(second.id, first.id);
+  assert.equal(store.nodes.filter((n) => n.title === "sources/").length, 1);
+  first.archived_at = "2026-10-30T12:02:00Z";
+  const replacement = ensureSourceFolder(store, "2026-10-30T12:03:00Z");
+  assert.notEqual(replacement.id, first.id);
+  assert.equal(
+    ensureSourceFolder(store, "2026-10-30T12:04:00Z").id,
+    replacement.id,
+  );
+});
+
+test("recall queries enforce the same limit before retrieval and workspace persistence", async () => {
+  const exact = "a".repeat(2000);
+  assert.equal(validateRecallQuery(exact), exact);
+  const oversized = exact + "a";
+  assert.throws(() => validateRecallQuery(oversized), /2,000 characters/);
+  const store = validateMemory(demoMemory());
+  store.recalls.push({
+    id: "oversized",
+    query: oversized,
+    at: "2026-10-31",
+    results: [],
+  });
+  // Validation must happen before attempting to open IndexedDB.
+  await assert.rejects(saveMemory(store), /2,000 characters/);
+  store.recalls[0].query = exact;
+  assert.equal(validateMemory(store).recalls[0].query, exact);
+});
+
+test("invalid persisted memory rejects the read promise and closes the database", async () => {
+  const original = Object.getOwnPropertyDescriptor(globalThis, "indexedDB");
+  let closed = false;
+  const store = demoMemory();
+  store.recalls.push({
+    id: "legacy",
+    query: "a".repeat(2001),
+    at: "2026-10-31",
+    results: [],
+  });
+  const db = {
+    transaction: () => ({
+      objectStore: () => ({
+        get: () => {
+          const request = { result: store };
+          queueMicrotask(() => request.onsuccess());
+          return request;
+        },
+      }),
+    }),
+    close: () => {
+      closed = true;
+    },
+  };
+  Object.defineProperty(globalThis, "indexedDB", {
+    configurable: true,
+    value: {
+      open: () => {
+        const request = { result: db };
+        queueMicrotask(() => request.onsuccess());
+        return request;
+      },
+    },
+  });
+  try {
+    await assert.rejects(readMemory(), /2,000 characters/);
+    assert.equal(closed, true);
+  } finally {
+    if (original) Object.defineProperty(globalThis, "indexedDB", original);
+    else delete globalThis.indexedDB;
+  }
 });
