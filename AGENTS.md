@@ -206,6 +206,7 @@ When adding animations:
 
 ## Notes for AI Assistants
 
+- After every completed task, leave this website running locally for the owner to review. Reuse a healthy development server for this worktree when available; otherwise start one. Verify the relevant page responds successfully and include its local URL in the final response. Do not stop the server during cleanup unless the owner asks.
 - This is a personal website, so maintain the personal, authentic voice
 - Reference real experiences and specific details when creating content
 - Consider the journey from Wellington → Melbourne → NYC in content
