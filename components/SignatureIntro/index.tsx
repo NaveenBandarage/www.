@@ -1,24 +1,39 @@
 import { m } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import useReducedMotion from "../../lib/useReducedMotion";
 import Signature from "../Signature";
 import styles from "./intro.module.css";
 
 interface SignatureIntroProps {
   onComplete: () => void;
+  contentRef: RefObject<HTMLDivElement>;
 }
 
 const WRITE_DURATION = 2;
 const REVEAL_AT = 2.55;
 const REVEAL_DURATION = 0.75;
 
-export default function SignatureIntro({ onComplete }: SignatureIntroProps) {
+export default function SignatureIntro({
+  onComplete,
+  contentRef,
+}: SignatureIntroProps) {
   const reducedMotion = useReducedMotion();
   const [revealing, setRevealing] = useState(false);
   const skipRef = useRef<HTMLButtonElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (reducedMotion) {
+      onComplete();
+      return;
+    }
+
+    // The CSS deadline starts at first paint, which may precede hydration.
+    // Never acquire interaction locks for an intro that has already disappeared.
+    const intro = introRef.current;
+    if (!intro) return;
+    const { visibility, display } = window.getComputedStyle(intro);
+    if (visibility === "hidden" || display === "none") {
       onComplete();
       return;
     }
@@ -32,15 +47,11 @@ export default function SignatureIntro({ onComplete }: SignatureIntroProps) {
       onComplete,
       (REVEAL_AT + REVEAL_DURATION) * 1000,
     );
-    return () => {
-      window.clearTimeout(reveal);
-      window.clearTimeout(complete);
-    };
-  }, [onComplete, reducedMotion]);
-
-  useEffect(() => {
+    const content = contentRef.current;
+    const previousInert = content?.inert ?? false;
     const previousFocus = document.activeElement as HTMLElement | null;
     const previousOverflow = document.documentElement.style.overflow;
+    if (content) content.inert = true;
     document.documentElement.style.overflow = "hidden";
     skipRef.current?.focus({ preventScroll: true });
 
@@ -53,16 +64,20 @@ export default function SignatureIntro({ onComplete }: SignatureIntroProps) {
     };
     document.addEventListener("keydown", onKeyDown);
     return () => {
+      window.clearTimeout(reveal);
+      window.clearTimeout(complete);
+      if (content) content.inert = previousInert;
       document.documentElement.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKeyDown);
       if (previousFocus?.isConnected) {
         previousFocus.focus({ preventScroll: true });
       }
     };
-  }, [onComplete]);
+  }, [onComplete, reducedMotion, contentRef]);
 
   return (
     <m.div
+      ref={introRef}
       className={styles.intro}
       role="dialog"
       aria-modal="true"
@@ -70,6 +85,11 @@ export default function SignatureIntro({ onComplete }: SignatureIntroProps) {
       initial={false}
       animate={{ opacity: revealing ? 0 : 1 }}
       transition={{ duration: REVEAL_DURATION, ease: [0.22, 1, 0.36, 1] }}
+      onAnimationEnd={(event) => {
+        // Also release React state and locks when the paint-based fallback wins.
+        // Letter stroke animations bubble through this element too.
+        if (event.target === event.currentTarget) onComplete();
+      }}
     >
       <m.div
         aria-hidden="true"

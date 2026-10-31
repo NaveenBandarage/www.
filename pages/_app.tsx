@@ -40,14 +40,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const showIntro = !introFinished && router.pathname === "/";
 
   useEffect(() => {
-    const content = contentRef.current;
-    if (content) content.inert = showIntro;
-    return () => {
-      if (content) content.inert = false;
-    };
-  }, [showIntro]);
-
-  useEffect(() => {
     router.events.on("routeChangeStart", completeIntro);
     return () => router.events.off("routeChangeStart", completeIntro);
   }, [router.events, completeIntro]);
@@ -97,7 +89,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </style>
       <MotionConfig reducedMotion="user">
         <LazyMotion features={loadMotionFeatures} strict>
-          {showIntro ? <SignatureIntro onComplete={completeIntro} /> : null}
+          {showIntro ? (
+            <SignatureIntro
+              onComplete={completeIntro}
+              contentRef={contentRef}
+            />
+          ) : null}
           <div ref={contentRef}>
             {router.pathname === "/memory" ||
             router.pathname === "/photos" ||
