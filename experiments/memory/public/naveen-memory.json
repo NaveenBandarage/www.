@@ -1,0 +1,767 @@
+{
+  "version": 1,
+  "agent": {
+    "id": "naveen-interests-2026-10",
+    "name": "Naveen"
+  },
+  "nodes": [
+    {
+      "id": "making",
+      "title": "making systems/",
+      "type": "folder",
+      "parent": null,
+      "created_at": "2026-10-30T12:00:00-04:00"
+    },
+    {
+      "id": "craft",
+      "title": "a considered world/",
+      "type": "folder",
+      "parent": null,
+      "created_at": "2026-10-30T12:00:00-04:00"
+    },
+    {
+      "id": "culture",
+      "title": "deep cuts/",
+      "type": "folder",
+      "parent": null,
+      "created_at": "2026-10-30T12:00:00-04:00"
+    },
+    {
+      "id": "exploration",
+      "title": "out in the world/",
+      "type": "folder",
+      "parent": null,
+      "created_at": "2026-10-30T12:00:00-04:00"
+    },
+    {
+      "id": "connections",
+      "title": "connecting threads/",
+      "type": "folder",
+      "parent": null,
+      "created_at": "2026-10-30T12:00:00-04:00"
+    },
+    {
+      "id": "sources",
+      "title": "source notes/",
+      "type": "folder",
+      "parent": null,
+      "created_at": "2026-10-30T12:00:00-04:00"
+    },
+    {
+      "id": "source:engineering",
+      "title": "Engineering & useful tools",
+      "type": "source",
+      "parent": "sources",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "The October 30, 2026 profile describes work in reliability and observability, practical AI tooling, and an interest in useful, polished interfaces. This is a selected summary of a private profile, not an original conversation transcript. Snapshot: October 30, 2026.",
+      "kind": "Curated profile excerpt",
+      "scope": "Public interests",
+      "evidence": "Summary-level provenance"
+    },
+    {
+      "id": "source:design",
+      "title": "Design & material culture",
+      "type": "source",
+      "parent": "sources",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "The profile explicitly values thoughtful design, craftsmanship and quality over quantity. It describes Japanese craft interests, Monet-inspired imagery, stationery, lamps and motion experiments. This is a selected summary of a private profile, not an original conversation transcript. Snapshot: October 30, 2026.",
+      "kind": "Curated profile excerpt",
+      "scope": "Public interests",
+      "evidence": "Summary-level provenance"
+    },
+    {
+      "id": "source:culture",
+      "title": "Music, stories & reading",
+      "type": "source",
+      "parent": "sources",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "The profile records recurring One Piece interest, UK underground rap listening and exploration, strategy games, expressive football highlights, and reading Wanting, The Creative Act and The Psychology of Money. Mention does not imply a favorite. This is a selected summary of a private profile, not an original conversation transcript. Snapshot: October 30, 2026.",
+      "kind": "Curated profile excerpt",
+      "scope": "Public interests",
+      "evidence": "Summary-level provenance"
+    },
+    {
+      "id": "source:exploration",
+      "title": "Exploration & image-making",
+      "type": "source",
+      "parent": "sources",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "The profile describes NYC neighborhood exploration, photography and short-form creation, alongside a life spanning Wellington, Melbourne and New York. This is a selected summary of a private profile, not an original conversation transcript. Snapshot: October 30, 2026.",
+      "kind": "Curated profile excerpt",
+      "scope": "Public interests",
+      "evidence": "Summary-level provenance"
+    },
+    {
+      "id": "observability",
+      "title": "making the invisible visible",
+      "type": "memory",
+      "parent": "making",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Observability, distributed tracing and incident response are recurring technical interests. The useful part is turning a complicated system into something someone can understand and act on.",
+      "source_ids": ["source:engineering"],
+      "tags": ["observability", "SRE", "OpenTelemetry", "systems"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "agents",
+      "title": "AI that earns its place",
+      "type": "memory",
+      "parent": "making",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Practical AI tooling, retrieval and evaluation recur in the profile. Usefulness, response time and clear interaction matter; a prototype should not be mistaken for a shipped product.",
+      "source_ids": ["source:engineering"],
+      "tags": ["AI", "agents", "retrieval", "evaluation"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "interfaces",
+      "title": "software with care",
+      "type": "memory",
+      "parent": "making",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Thoughtful, human-centered design is an explicit value: legible interfaces, useful documentation and small interactions that help people.",
+      "source_ids": ["source:design"],
+      "tags": ["design", "usability", "software", "documentation"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "motion",
+      "title": "playful motion",
+      "type": "memory",
+      "parent": "making",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Explored radial networks, particles, light and fluid interaction through projects described as Radial, Interaction Lab and Little Flight. These are experiments, with completion and launch status unverified.",
+      "source_ids": ["source:design"],
+      "tags": ["motion", "radial", "particles", "creative coding"],
+      "status": "active",
+      "evidence": "Observed / medium · exploration, not favorite",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "craftsmanship",
+      "title": "the pleasure of process",
+      "type": "memory",
+      "parent": "craft",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Craftsmanship is a strong taste signal. The profile singles out an article about traditional sake-making at Terada Honke as a favorite read, with attention to process and making things well.",
+      "source_ids": ["source:design"],
+      "tags": ["craft", "sake", "Terada Honke", "process"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "objects",
+      "title": "everyday objects, considered",
+      "type": "memory",
+      "parent": "craft",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Lights, wooden furniture, stationery, glassware and tools appear as objects worth noticing. Fatih Arslan’s “The lamps in my house” prompted reflection on lighting and design.",
+      "source_ids": ["source:design"],
+      "tags": ["lamps", "objects", "materials", "Fatih Arslan"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "japanese-craft",
+      "title": "a thread through Japanese craft",
+      "type": "memory",
+      "parent": "craft",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Japanese stationery, denim, kitchen tools and design shops recur across the profile. This describes an interest across disciplines; it does not establish ownership of particular products.",
+      "source_ids": ["source:design"],
+      "tags": ["Japan", "denim", "stationery", "craft", "Midori"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "style",
+      "title": "fewer, better things",
+      "type": "memory",
+      "parent": "craft",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Deliberate purchases, secondhand discovery and cost-per-wear are explicit preferences. Heritage clothing and workwear are recurring style interests; researched brands are not automatically favorites.",
+      "source_ids": ["source:design"],
+      "tags": ["style", "workwear", "secondhand", "quality", "denim"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "monet",
+      "title": "light before detail",
+      "type": "memory",
+      "parent": "craft",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Monet and Impressionist visual language are recurring references for images, NYC scenes and wallpapers. Other artists encountered comparatively are not established favorites.",
+      "source_ids": ["source:design"],
+      "tags": ["Monet", "Impressionism", "light", "art"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "one-piece",
+      "title": "a world worth getting lost in",
+      "type": "memory",
+      "parent": "culture",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "One Piece is a recurring, deep interest: chapters, lore and connections across a long-running world. It also supplies ideas for short-form content.",
+      "source_ids": ["source:culture"],
+      "tags": ["One Piece", "manga", "worldbuilding", "lore"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "manga",
+      "title": "off the obvious shelf",
+      "type": "memory",
+      "parent": "culture",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Anime and manga discovery includes an underrated-manga video concept featuring COSMOS, DEAD ROCK and DIG IT. Discussion indicates exploration rather than a ranked favorites list.",
+      "source_ids": ["source:culture"],
+      "tags": ["anime", "manga", "COSMOS", "DEAD ROCK", "DIG IT"],
+      "status": "active",
+      "evidence": "Observed / medium · exploration, not favorite",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "music",
+      "title": "finding the next sound",
+      "type": "memory",
+      "parent": "culture",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "The strongest listening cluster is emerging UK underground and SoundCloud-adjacent rap: EsDeeKid, whereami, Nemzzz, yukan and Elijah Aike. The profile describes melodic, glossy, floaty sounds; it contains no verified top-artist ranking.",
+      "source_ids": ["source:culture"],
+      "tags": ["music", "UK rap", "EsDeeKid", "Nemzzz", "SoundCloud"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "strategy",
+      "title": "worlds that react",
+      "type": "memory",
+      "parent": "culture",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Strategy and empire-building games appeal through expansion, development and simulated battles, in the territory of Civilization and Total War.",
+      "source_ids": ["source:culture"],
+      "tags": ["games", "strategy", "Civilization", "Total War", "systems"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "football",
+      "title": "a little room for flair",
+      "type": "memory",
+      "parent": "culture",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Technical, expressive football players and nostalgic highlight culture are an explicit interest. Taarabt, Ben Arfa and Boufal illustrate the style; this does not establish club support.",
+      "source_ids": ["source:culture"],
+      "tags": ["football", "flair", "Taarabt", "Ben Arfa", "Boufal"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "reading",
+      "title": "ideas to carry around",
+      "type": "memory",
+      "parent": "culture",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "The profile explicitly records reading Wanting by Luke Burgis, The Creative Act by Rick Rubin and The Psychology of Money by Morgan Housel. Reading is not an endorsement of every thesis.",
+      "source_ids": ["source:culture"],
+      "tags": [
+        "books",
+        "reading",
+        "Wanting",
+        "The Creative Act",
+        "The Psychology of Money"
+      ],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "cities",
+      "title": "Wellington → Melbourne → New York",
+      "type": "memory",
+      "parent": "exploration",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "A life across these cities gives the site its sense of movement, place and looking at familiar things with fresh eyes. This is background context rather than a travel itinerary.",
+      "source_ids": ["source:exploration"],
+      "tags": ["Wellington", "Melbourne", "New York", "cities"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "wandering",
+      "title": "take the long way",
+      "type": "memory",
+      "parent": "exploration",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "NYC neighborhood walks, museums, independent stores and cafes are recurring exploration interests. A researched place should not be presented as somewhere visited or a favorite.",
+      "source_ids": ["source:exploration"],
+      "tags": ["NYC", "walking", "museums", "independent shops", "discovery"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "photography",
+      "title": "learning to notice",
+      "type": "memory",
+      "parent": "exploration",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Photography and city image-making recur alongside short-form creation. The interesting overlap is the attention paid to a street, an object or a small visual detail.",
+      "source_ids": ["source:exploration"],
+      "tags": ["photography", "street", "light", "NYC"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "curation",
+      "title": "a point of view, not one niche",
+      "type": "memory",
+      "parent": "exploration",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Short-form content spans design, style, tech, culture and NYC. The profile describes a desire for a recognizable curation voice and authentic storytelling across those interests.",
+      "source_ids": ["source:exploration"],
+      "tags": ["TikTok", "creator", "curation", "storytelling", "authenticity"],
+      "status": "active",
+      "evidence": "Profile summary · see stated caveats",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "thread:noticing",
+      "title": "attention is the common tool",
+      "type": "memory",
+      "parent": "connections",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Creative interpretation — not a confirmed personal fact.\n\nObservability → photography → thoughtful interfaces. One reads traces, one reads light, one reads a person’s needs. A possible shared practice: notice the detail that makes the whole make sense.",
+      "source_ids": [
+        "source:engineering",
+        "source:exploration",
+        "source:design"
+      ],
+      "tags": [
+        "connection",
+        "attention",
+        "observability",
+        "photography",
+        "design"
+      ],
+      "status": "inferred",
+      "evidence": "Inferred / low · editorial connection",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "thread:material",
+      "title": "from denim to digital",
+      "type": "memory",
+      "parent": "connections",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Creative interpretation — not a confirmed personal fact.\n\nJapanese craft → everyday objects → software with care. Materials, seams, typography and interaction can all reveal the care put into a thing. This is a thematic reading, not a claim that one caused the other.",
+      "source_ids": ["source:design"],
+      "tags": ["connection", "craft", "denim", "software", "materials"],
+      "status": "inferred",
+      "evidence": "Inferred / low · editorial connection",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "thread:worlds",
+      "title": "worlds made of connections",
+      "type": "memory",
+      "parent": "connections",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Creative interpretation — not a confirmed personal fact.\n\nOne Piece → strategy games → radial networks. Lore, interacting rules and visible relationships offer different ways to explore a world larger than the part currently in view. This connection is an interpretation.",
+      "source_ids": ["source:culture", "source:design"],
+      "tags": [
+        "connection",
+        "worldbuilding",
+        "systems",
+        "manga",
+        "games",
+        "radial"
+      ],
+      "status": "inferred",
+      "evidence": "Inferred / low · editorial connection",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "thread:discovery",
+      "title": "the joy of the deep cut",
+      "type": "memory",
+      "parent": "connections",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Creative interpretation — not a confirmed personal fact.\n\nUnderground rap → independent shops → underrated manga. Each rewards following a small clue beyond the obvious recommendation. A possible creative format: one sound, one place and one story from a week of discovery.",
+      "source_ids": ["source:culture", "source:exploration"],
+      "tags": ["connection", "discovery", "music", "manga", "NYC", "curation"],
+      "status": "inferred",
+      "evidence": "Inferred / low · editorial connection",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "thread:light",
+      "title": "collecting light",
+      "type": "memory",
+      "parent": "connections",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Creative interpretation — not a confirmed personal fact.\n\nMonet → street photography → lamps → motion. Light can be atmosphere, subject, object and interaction. A possible creative study: translate the feeling of a city photograph into a small moving interface.",
+      "source_ids": ["source:design", "source:exploration"],
+      "tags": ["connection", "light", "Monet", "photography", "motion"],
+      "status": "inferred",
+      "evidence": "Inferred / low · editorial connection",
+      "scope": "Interests · October 2026 snapshot"
+    },
+    {
+      "id": "thread:taste",
+      "title": "curation as a creative practice",
+      "type": "memory",
+      "parent": "connections",
+      "created_at": "2026-10-30T12:00:00-04:00",
+      "content": "Creative interpretation — not a confirmed personal fact.\n\nFewer, better things → reading → a distinctive creator voice. Selecting what deserves attention can itself be the work. A possible series: what earned a place, and why.",
+      "source_ids": ["source:design", "source:culture", "source:exploration"],
+      "tags": ["connection", "curation", "reading", "style", "quality"],
+      "status": "inferred",
+      "evidence": "Inferred / low · editorial connection",
+      "scope": "Interests · October 2026 snapshot"
+    }
+  ],
+  "edges": [
+    {
+      "from": "thread:noticing",
+      "to": "observability",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:noticing",
+      "to": "photography",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:noticing",
+      "to": "interfaces",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:material",
+      "to": "japanese-craft",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:material",
+      "to": "objects",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:material",
+      "to": "interfaces",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:material",
+      "to": "craftsmanship",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:worlds",
+      "to": "one-piece",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:worlds",
+      "to": "strategy",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:worlds",
+      "to": "motion",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:discovery",
+      "to": "music",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:discovery",
+      "to": "wandering",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:discovery",
+      "to": "manga",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:discovery",
+      "to": "curation",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:light",
+      "to": "monet",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:light",
+      "to": "photography",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:light",
+      "to": "objects",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:light",
+      "to": "motion",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:taste",
+      "to": "style",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:taste",
+      "to": "reading",
+      "type": "may_connect"
+    },
+    {
+      "from": "thread:taste",
+      "to": "curation",
+      "type": "may_connect"
+    },
+    {
+      "from": "observability",
+      "to": "agents",
+      "type": "may_connect",
+      "reason": "Editorial connection · Reliability context and retrieval meet in practical incident-response tooling."
+    },
+    {
+      "from": "observability",
+      "to": "strategy",
+      "type": "may_connect",
+      "reason": "Editorial connection · Both invite understanding interacting systems; a thematic interpretation."
+    },
+    {
+      "from": "observability",
+      "to": "interfaces",
+      "type": "may_connect",
+      "reason": "Editorial connection · Tracing and interface design both make complex behavior legible."
+    },
+    {
+      "from": "agents",
+      "to": "interfaces",
+      "type": "may_connect",
+      "reason": "Editorial connection · The profile connects practical AI with useful, polished interaction."
+    },
+    {
+      "from": "agents",
+      "to": "curation",
+      "type": "may_connect",
+      "reason": "Editorial connection · Retrieval and curation both select useful context; a thematic interpretation."
+    },
+    {
+      "from": "interfaces",
+      "to": "motion",
+      "type": "may_connect",
+      "reason": "Editorial connection · Motion is one of the ways an interface communicates behavior."
+    },
+    {
+      "from": "interfaces",
+      "to": "objects",
+      "type": "may_connect",
+      "reason": "Editorial connection · Care for everyday objects parallels care for everyday software."
+    },
+    {
+      "from": "interfaces",
+      "to": "craftsmanship",
+      "type": "may_connect",
+      "reason": "Editorial connection · Thoughtful design and making things well are explicit values in the profile."
+    },
+    {
+      "from": "motion",
+      "to": "strategy",
+      "type": "may_connect",
+      "reason": "Editorial connection · Reactive visual experiments and simulated worlds share interaction as a medium."
+    },
+    {
+      "from": "motion",
+      "to": "monet",
+      "type": "may_connect",
+      "reason": "Editorial connection · Light and atmosphere connect the visual references to motion studies."
+    },
+    {
+      "from": "motion",
+      "to": "photography",
+      "type": "may_connect",
+      "reason": "Editorial connection · Photography can supply light, composition and atmosphere for visual experiments."
+    },
+    {
+      "from": "craftsmanship",
+      "to": "japanese-craft",
+      "type": "may_connect",
+      "reason": "Editorial connection · The sake-making article and Japanese material culture share attention to process."
+    },
+    {
+      "from": "craftsmanship",
+      "to": "style",
+      "type": "may_connect",
+      "reason": "Editorial connection · Construction and longevity connect craft with deliberate clothing choices."
+    },
+    {
+      "from": "craftsmanship",
+      "to": "objects",
+      "type": "may_connect",
+      "reason": "Editorial connection · Materials and making processes recur in the interest in everyday objects."
+    },
+    {
+      "from": "japanese-craft",
+      "to": "style",
+      "type": "may_connect",
+      "reason": "Editorial connection · Denim and heritage workwear directly overlap these two interests."
+    },
+    {
+      "from": "japanese-craft",
+      "to": "objects",
+      "type": "may_connect",
+      "reason": "Editorial connection · Stationery, kitchen tools and lamps connect craft to everyday use."
+    },
+    {
+      "from": "japanese-craft",
+      "to": "wandering",
+      "type": "may_connect",
+      "reason": "Editorial connection · Independent design shops provide a route into material culture; researched shops are not assumed visited."
+    },
+    {
+      "from": "objects",
+      "to": "wandering",
+      "type": "may_connect",
+      "reason": "Editorial connection · City exploration and independent stores meet around considered objects."
+    },
+    {
+      "from": "objects",
+      "to": "monet",
+      "type": "may_connect",
+      "reason": "Editorial connection · Lighting and Impressionism suggest a shared attention to atmosphere."
+    },
+    {
+      "from": "style",
+      "to": "curation",
+      "type": "may_connect",
+      "reason": "Editorial connection · Intentional clothing choices and a creator point of view both involve selection."
+    },
+    {
+      "from": "style",
+      "to": "wandering",
+      "type": "may_connect",
+      "reason": "Editorial connection · Independent retail and secondhand discovery connect style to city exploration."
+    },
+    {
+      "from": "monet",
+      "to": "photography",
+      "type": "may_connect",
+      "reason": "Editorial connection · The profile’s Monet-inspired NYC imagery links painting, light and city image-making."
+    },
+    {
+      "from": "one-piece",
+      "to": "manga",
+      "type": "may_connect",
+      "reason": "Editorial connection · One Piece sits within the broader anime and manga interest."
+    },
+    {
+      "from": "one-piece",
+      "to": "curation",
+      "type": "may_connect",
+      "reason": "Editorial connection · The profile explicitly connects One Piece lore to short-form content ideas."
+    },
+    {
+      "from": "one-piece",
+      "to": "strategy",
+      "type": "may_connect",
+      "reason": "Editorial connection · Long-running lore and empire simulations both offer connected worlds to explore."
+    },
+    {
+      "from": "manga",
+      "to": "curation",
+      "type": "may_connect",
+      "reason": "Editorial connection · An underrated-manga video series is an explicit content concept in the profile."
+    },
+    {
+      "from": "music",
+      "to": "curation",
+      "type": "may_connect",
+      "reason": "Editorial connection · Emerging music and a broad creator voice share discovery and selection."
+    },
+    {
+      "from": "music",
+      "to": "football",
+      "type": "may_connect",
+      "reason": "Editorial connection · Underground scenes and expressive highlights suggest a taste for distinctive style; this is an interpretation."
+    },
+    {
+      "from": "football",
+      "to": "motion",
+      "type": "may_connect",
+      "reason": "Editorial connection · Flair and responsive movement provide a possible visual reference, not a documented influence."
+    },
+    {
+      "from": "reading",
+      "to": "craftsmanship",
+      "type": "may_connect",
+      "reason": "Editorial connection · The favorite sake-making article is a concrete bridge between reading and craft."
+    },
+    {
+      "from": "reading",
+      "to": "curation",
+      "type": "may_connect",
+      "reason": "Editorial connection · The Creative Act and the creator interest offer a possible reflection on making and selecting."
+    },
+    {
+      "from": "cities",
+      "to": "wandering",
+      "type": "may_connect",
+      "reason": "Editorial connection · The site’s Wellington–Melbourne–New York background gives city exploration personal context."
+    },
+    {
+      "from": "cities",
+      "to": "photography",
+      "type": "may_connect",
+      "reason": "Editorial connection · Place and image-making meet in the profile’s city photography interests."
+    },
+    {
+      "from": "wandering",
+      "to": "photography",
+      "type": "may_connect",
+      "reason": "Editorial connection · Neighborhood exploration supplies subjects for street image-making."
+    },
+    {
+      "from": "wandering",
+      "to": "curation",
+      "type": "may_connect",
+      "reason": "Editorial connection · Store visits, museums and neighborhoods are named short-form content topics."
+    },
+    {
+      "from": "photography",
+      "to": "curation",
+      "type": "may_connect",
+      "reason": "Editorial connection · Photography and short-form storytelling overlap in the creator practice."
+    }
+  ],
+  "recalls": []
+}

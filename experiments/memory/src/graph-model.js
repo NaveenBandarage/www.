@@ -1,4 +1,5 @@
 import { memoryAt } from "./memory.js";
+import { relationshipsFor } from "./relationships.js";
 
 export const LABEL_BUDGET = 100;
 export const PAGE_SIZE = 6;
@@ -179,7 +180,7 @@ export function projectMemory(
     projected.push(more);
     branches.push(branchFor(more, null));
   }
-  const edges = store.edges
+  const edges = relationshipsFor(store, asOf)
       .filter(
         (e) =>
           e.type !== "supported_by" ||
@@ -196,10 +197,58 @@ export function projectMemory(
         edgeIds.add(key);
       }
     }
+  // Route an undiscovered endpoint to its nearest visible ancestor. The route
+  // moves outward as folders open, without changing expansion state.
+  function anchor(id) {
+    let n = byId.get(id);
+    while (n && !positions.has(n.id)) n = byId.get(n.parent);
+    return n && positions.get(n.id);
+  }
+  const routed = [],
+    hidden = new Map(),
+    visibleCounts = new Map();
+  for (const e of edges) {
+    const fromVisible = positions.has(e.from),
+      toVisible = positions.has(e.to);
+    if (e.type !== "supported_by") {
+      for (const [id, other, isVisible] of [
+        [e.from, e.to, toVisible],
+        [e.to, e.from, fromVisible],
+      ]) {
+        const own = anchor(id);
+        if (!own) continue;
+        if (positions.has(id))
+          visibleCounts.set(id, (visibleCounts.get(id) || 0) + 1);
+        if (!isVisible && anchor(other)?.id !== own.id) {
+          const peers = hidden.get(own.id) || new Set();
+          peers.add(other);
+          hidden.set(own.id, peers);
+        }
+      }
+    }
+    if (!fromVisible && !toVisible) continue;
+    const a = anchor(e.from),
+      b = anchor(e.to);
+    if (!a || !b || a.id === b.id) continue;
+    // Sources keep their existing explicit-selection behavior.
+    if (e.type === "supported_by" && (!fromVisible || !toVisible)) continue;
+    routed.push({
+      ...e,
+      from: a.id,
+      to: b.id,
+      originalFrom: e.from,
+      originalTo: e.to,
+      partial: !fromVisible || !toVisible,
+    });
+  }
+  for (const n of projected) {
+    n.hiddenConnections = hidden.get(n.id)?.size || 0;
+    n.connectionCount = visibleCounts.get(n.id) || 0;
+  }
   return {
     nodes: projected,
     branches,
-    edges: edges.filter((e) => positions.has(e.from) && positions.has(e.to)),
+    edges: routed,
     total: available.length,
     limited: projected.length >= LABEL_BUDGET || roots.length > 6,
   };

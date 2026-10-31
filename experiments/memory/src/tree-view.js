@@ -296,6 +296,15 @@ export class TreeView {
               .replace(/\/$/, "")
               .replaceAll("-", " ");
       el.append(text);
+      if (n.hiddenConnections || n.connectionCount) {
+        const badge = document.createElement("small");
+        badge.className = "connection-badge";
+        badge.textContent = n.hiddenConnections
+          ? `↗ ${n.hiddenConnections}`
+          : "↔";
+        badge.setAttribute("aria-hidden", "true");
+        el.append(badge);
+      }
       el.classList.toggle("open", this.open.has(n.id));
       el.classList.toggle(
         "is-stale",
@@ -303,7 +312,12 @@ export class TreeView {
       );
       el.classList.toggle("is-pinned", !!n.pinned);
       el.classList.toggle("is-source", n.type === "source");
-      el.title = n.title;
+      const connectionHint = n.hiddenConnections
+        ? `${n.hiddenConnections} connections beyond this branch. Expand related branches to uncover them.`
+        : n.connectionCount
+          ? `${n.connectionCount} connections in view.`
+          : "";
+      el.title = [n.title, connectionHint].filter(Boolean).join(" · ");
       el.setAttribute(
         "aria-label",
         n.type === "origin"
@@ -314,6 +328,11 @@ export class TreeView {
               ? `Show more in ${n.title}`
               : `Inspect ${n.title}`,
       );
+      if (connectionHint)
+        el.setAttribute(
+          "aria-label",
+          el.getAttribute("aria-label") + ". " + connectionHint,
+        );
       if (n.type === "folder")
         el.setAttribute("aria-expanded", String(this.open.has(n.id)));
     }
@@ -351,26 +370,45 @@ export class TreeView {
     this.buildEdges();
   }
   buildEdges() {
-    this.edgesGroup.replaceChildren();
+    const previous = new Map(this.edgePaths.map((e) => [e.key, e]));
     this.edgePaths = [];
     if (!this.projection) return;
     const edges = this.projection.edges
       .filter(
         (e) =>
           this.links ||
+          (e.type !== "supported_by" && !e.partial) ||
+          e.originalFrom === this.selected ||
+          e.originalTo === this.selected ||
           e.from === this.selected ||
           e.to === this.selected ||
           (this.highlight.has(e.from) && this.highlight.has(e.to)),
       )
+      .sort(
+        (a, b) =>
+          Number(
+            b.originalFrom === this.selected || b.originalTo === this.selected,
+          ) -
+          Number(
+            a.originalFrom === this.selected || a.originalTo === this.selected,
+          ),
+      )
       .slice(0, 30);
+    const routes = new Set();
     for (const e of edges) {
+      const route = [e.from, e.to].sort().join("\0") + ":" + e.type;
+      if (routes.has(route)) continue;
+      routes.add(route);
       const a = this.nodes.find((n) => n.id === e.from),
         b = this.nodes.find((n) => n.id === e.to);
       if (!a || !b) continue;
-      const path = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "path",
-      );
+      const key = route + ":" + !!e.partial;
+      const existing = previous.get(key);
+      const path =
+        existing?.path ||
+        document.createElementNS("http://www.w3.org/2000/svg", "path");
+      previous.delete(key);
+      path.setAttribute("pathLength", "1000");
       path.setAttribute("fill", "none");
       path.setAttribute(
         "stroke",
@@ -379,12 +417,31 @@ export class TreeView {
       path.setAttribute("stroke-width", "1");
       path.setAttribute(
         "stroke-dasharray",
-        e.type === "supported_by" ? "2 5" : "4 7",
+        e.partial ? "3 14" : e.type === "supported_by" ? "3 10" : "6 12",
       );
-      path.setAttribute("opacity", ".6");
+      path.setAttribute("opacity", e.partial ? ".24" : ".5");
+      path.classList.toggle("connection-partial", !!e.partial);
+      if (!existing && !reducedMotion) {
+        path.animate(
+          [
+            {
+              strokeDasharray: "1000 1000",
+              strokeDashoffset: 1000,
+              opacity: 0,
+            },
+            {
+              strokeDasharray: "1000 1000",
+              strokeDashoffset: 0,
+              opacity: e.partial ? 0.24 : 0.5,
+            },
+          ],
+          { duration: 550, easing: "ease-out" },
+        );
+      }
       this.edgesGroup.append(path);
-      this.edgePaths.push({ path, a, b });
+      this.edgePaths.push({ path, a, b, key });
     }
+    for (const old of previous.values()) old.path.remove();
     this.dirty = true;
   }
   fit() {

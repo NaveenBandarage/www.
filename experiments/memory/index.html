@@ -23,6 +23,9 @@
             ><button id="home" title="Center the memory tree">memory</button>
           </div>
           <nav aria-label="Memory controls">
+            <button id="threads-open" class="thread-button" hidden>
+              follow a thread ↗
+            </button>
             <button
               id="timeline-toggle"
               class="icon-button"
@@ -82,6 +85,7 @@
             ><button id="recall-history">Recall history</button
             ><button id="collapse">Collapse branches</button>
             <hr />
+            <button id="personal-open">Open Naveen’s tree…</button>
             <button id="demo-open">Open sample memory…</button
             ><button id="help-open">About this memory explorer</button>
           </div>
@@ -169,7 +173,7 @@
           </aside>
         </div>
         <footer class="status">
-          <span id="agent-label">Orchid <i>· sample</i></span
+          <span id="agent-label">Naveen <i>· interests</i></span
           ><span id="item-count" aria-live="polite">Loading memory…</span
           ><span
             ><button id="status-date" title="Open memory timeline">Now</button

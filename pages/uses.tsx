@@ -146,7 +146,12 @@ export default function Uses() {
                   </LinkExternal>{" "}
                   - I switch between both too frequently.
                 </div>
-                <div>Rex - Simply beautiful software.</div>
+                <div>
+                  <LinkExternal href="https://www.superlogical.com/">
+                    Rex
+                  </LinkExternal>{" "}
+                  - Simply beautiful software.
+                </div>
                 <div>
                   <LinkExternal href="https://www.raycast.com">
                     Raycast

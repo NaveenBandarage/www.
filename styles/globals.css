@@ -2,25 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --sans-font: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 html,
 body {
   @apply bg-gray-50 dark:bg-black;
   @apply text-neutral-800 dark:text-silver;
   @apply antialiased;
   @apply text-base;
-  @apply font-serif;
+  @apply font-sans;
 
   @apply selection:bg-indigo-500 selection:text-white dark:selection:bg-indigo-900;
   text-rendering: optimizeLegibility;
-  font-feature-settings:
-    "kern" on,
-    "liga" on,
-    "cv05" on,
-    "cv10" on;
-
-  /* Safari fallback - use font-weight instead of font-variation-settings when not supported */
   font-weight: 400;
-  font-variation-settings: "opsz" 15;
+  font-optical-sizing: auto;
   overflow-x: hidden;
   overflow-x: clip;
 }
@@ -225,7 +222,7 @@ a[href^="mailto:"] {
   }
 
   .note {
-    @apply font-serif;
+    @apply font-sans;
     @apply [font-variation-settings:'opsz'_7,_'wght'_360];
     @apply text-base-adjusted-sm;
     @apply leading-relaxed;

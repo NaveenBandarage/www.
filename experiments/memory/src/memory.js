@@ -285,7 +285,12 @@ export function validateMemory(input) {
   const edges = (Array.isArray(input.edges) ? input.edges : []).map((e) => {
     if (!byId.has(e.from) || !byId.has(e.to))
       throw Error("Every relationship must refer to existing record ids.");
-    return { from: e.from, to: e.to, type: text(e.type, 80) || "related_to" };
+    return {
+      from: e.from,
+      to: e.to,
+      type: text(e.type, 80) || "related_to",
+      ...(e.reason ? { reason: text(e.reason, 500) } : {}),
+    };
   });
   if (edges.length > 50000)
     throw Error("An export can contain up to 50,000 relationships.");

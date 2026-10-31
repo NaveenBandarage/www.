@@ -1,4 +1,6 @@
 import "./style.css";
+import { relationshipsFor } from "./relationships.js";
+import { initialWorkspace } from "./personal-memory.js";
 import { revealMemory } from "./graph-model.js";
 import { TreeView } from "./tree-view.js";
 import {
@@ -57,6 +59,7 @@ const displayDate = (value) =>
   Number.isFinite(Date.parse(value))
     ? dateFormat.format(new Date(value))
     : "Unknown";
+let personalSeed;
 let store,
   byId = new Map(),
   expanded = new Set(),
@@ -164,9 +167,14 @@ async function redraw() {
     ? " · fictional sample"
     : " · browser local";
   $("#agent-label").append(label);
+  $("#threads-open").hidden = !store.nodes.some((n) =>
+    current(n.id)?.tags.includes("connection"),
+  );
   $("#workspace-caption").textContent =
     asOf === Infinity
-      ? "Open a branch. See what grows."
+      ? store.agent.id === "naveen-interests-2026-10"
+        ? "A few interests. Many possible connections."
+        : "Open a branch. See what grows."
       : `Memory as it was on ${displayDate(new Date(asOf).toISOString())}.`;
   let empty = $(".empty-branches");
   if (!result.nodes.length) {
@@ -244,16 +252,6 @@ async function inspect(id, { focus = false } = {}) {
   }
   lastFocused = document.activeElement;
   selected = id;
-  reveal(id);
-  // Expose supporting episodes and immediate related records without expanding the entire graph.
-  for (const sid of n.source_ids || []) reveal(sid);
-  for (const e of store.edges
-    .filter((e) => e.from === id || e.to === id)
-    .slice(0, 8)) {
-    reveal(e.from);
-    reveal(e.to);
-  }
-  // Related records may share a paginated folder; the selected record wins.
   reveal(id);
   openInspector(
     n.type === "source"
@@ -356,7 +354,7 @@ function renderInspector(n) {
       );
     }
   }
-  const related = store.edges
+  const related = relationshipsFor(store, asOf)
     .filter((e) => e.from === n.id || e.to === n.id)
     .filter((e) => current(e.from) && current(e.to))
     .filter(
@@ -367,6 +365,13 @@ function renderInspector(n) {
     );
   if (related.length) {
     sectionTitle(c, "Relationships");
+    c.append(
+      element(
+        "p",
+        "recall-explainer",
+        "Connections stay tucked in their branches until you open them. Choose a related memory below to go there.",
+      ),
+    );
     for (const e of related) {
       const other = current(e.from === n.id ? e.to : e.from);
       const b = addButton(
@@ -379,7 +384,7 @@ function renderInspector(n) {
         element(
           "small",
           "",
-          `${e.from === n.id ? "→" : "←"} ${e.type.replaceAll("_", " ")}`,
+          `${e.from === n.id ? "→" : "←"} ${e.type.replaceAll("_", " ")}${e.reason ? " · " + e.reason : ""}`,
         ),
       );
     }
@@ -964,8 +969,8 @@ function help(format = false) {
     div.append(pre);
   } else {
     for (const text of [
-      "Open folders to grow the tree. Select a memory to inspect its evidence, relationships, and revisions. The sample workspace is fictional.",
-      "Import JSON to preserve explicit entities and relationships. Markdown headings become memory sections with the original file attached as evidence. No facts or links are inferred by an AI.",
+      "Open folders to grow the tree. Select a memory to inspect its evidence, relationships, and revisions. Naveen’s tree contains selected interest summaries dated October 2026; connecting threads are explicitly marked as interpretations. The separate Orchid sample is fictional.",
+      "Import JSON to preserve explicit entities and relationships. Markdown headings become memory sections with the original file attached as evidence. Imports do not automatically infer new facts or links.",
       "Recall searches memory titles, text, and tags locally, and records the actual results. It does not query a live agent or an embedding service. Import an agent’s retrieval logs to inspect its recorded recalls.",
       "Memories are saved in this browser with IndexedDB. Export JSON to back them up or move them to another device. There is no live agent connection yet.",
       "Use the timeline to inspect earlier states. Corrections preserve original text and add a source; archived memories remain available in earlier snapshots.",
@@ -1088,6 +1093,54 @@ $("#edit-form").onsubmit = async (e) => {
   }
 };
 $("#help-open").onclick = () => help();
+$("#threads-open").onclick = () => {
+  const threads = store.nodes
+    .map((n) => current(n.id))
+    .filter((n) => n?.tags.includes("connection"));
+  help();
+  const c = $("#help-content");
+  c.replaceChildren(
+    element(
+      "p",
+      "dialog-copy",
+      "Follow a connection across branches. These are creative interpretations, not confirmed personal facts.",
+    ),
+  );
+  for (const thread of threads) {
+    addButton(
+      c,
+      thread.title + " ↗",
+      async () => {
+        $("#help-dialog").close();
+        await inspect(thread.id, { focus: true });
+      },
+      "source-link",
+    );
+  }
+};
+$("#personal-open").onclick = () => {
+  setMenu(false);
+  help();
+  const c = $("#help-content");
+  c.replaceChildren(
+    element(
+      "p",
+      "dialog-copy",
+      "Open Naveen’s curated interest tree. This replaces your current browser workspace; export any changes you want to keep first.",
+    ),
+  );
+  addButton(c, "Export current memory ↓", exportMemory, "soft-button");
+  addButton(
+    c,
+    "Open Naveen’s tree",
+    async () => {
+      const seed = (personalSeed ??= await loadPersonalMemory());
+      await replaceWorkspace(structuredClone(seed));
+      $("#help-dialog").close();
+    },
+    "soft-button",
+  );
+};
 $("#demo-open").onclick = () => {
   setMenu(false);
   help();
@@ -1160,6 +1213,12 @@ window.addEventListener("pagehide", (e) => {
     worker.terminate();
   }
 });
+async function loadPersonalMemory() {
+  const response = await fetch(`${import.meta.env.BASE_URL}naveen-memory.json`);
+  if (!response.ok)
+    throw Error("Naveen’s interest tree could not load. Reload to try again.");
+  return validateMemory(await response.json());
+}
 async function boot() {
   try {
     store = await readMemory();
@@ -1168,7 +1227,13 @@ async function boot() {
       "Browser storage is unavailable. You can still explore and export this session.",
     );
   }
-  store ??= validateMemory(demoMemory());
+  // A failed seed fetch must not prevent an existing local workspace from opening.
+  try {
+    personalSeed = await loadPersonalMemory();
+  } catch (error) {
+    if (!store) throw error;
+  }
+  store = initialWorkspace(store, personalSeed);
   try {
     const state = JSON.parse(localStorage.getItem("memory-view") || "null");
     if (state?.agent === store.agent.id) {
