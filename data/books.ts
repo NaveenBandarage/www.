@@ -77,4 +77,12 @@ export const booksData: Book[] = [
     readYear: 2026,
     status: "read",
   },
+  {
+    id: "poor-charlies-almanack",
+    title: "Poor Charlie's Almanack",
+    author: "Charles T. Munger",
+    isbn: "9781953953230",
+    coverSrc: "/books/poor-charlies-almanack.jpg",
+    status: "reading",
+  },
 ];
