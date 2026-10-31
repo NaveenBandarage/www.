@@ -170,8 +170,14 @@ export function validateMemory(input) {
     );
   const ids = new Set(),
     types = new Set(["folder", "memory", "source", "entity"]);
-  const text = (v, max = 100000) =>
-    typeof v === "string" ? v.slice(0, max) : "";
+  const text = (v, max = 100000) => {
+    if (typeof v !== "string") return "";
+    if (v.length > max)
+      throw Error(
+        `A text field exceeds the ${max.toLocaleString("en-US")}-character limit. Shorten it or split the document before importing. Nothing was imported.`,
+      );
+    return v;
+  };
   const stamp = (v, fallback) => {
     if (v === undefined || v === null || v === "") return fallback;
     if (typeof v !== "string" || !Number.isFinite(Date.parse(v)))
@@ -503,4 +509,26 @@ export async function saveMemory(store) {
   } finally {
     db.close();
   }
+}
+
+// Imported workspaces may use arbitrary ids. Reuse the evidence folder we create.
+export function ensureSourceFolder(store, now) {
+  let folder = store.nodes.find(
+    (node) =>
+      node.type === "folder" &&
+      !node.archived_at &&
+      (["episodes", "sources"].includes(node.id) ||
+        (node.parent === null && node.title === "sources/")),
+  );
+  if (!folder) {
+    folder = {
+      id: "sources-" + crypto.randomUUID(),
+      title: "sources/",
+      type: "folder",
+      parent: null,
+      created_at: now,
+    };
+    store.nodes.push(folder);
+  }
+  return folder;
 }

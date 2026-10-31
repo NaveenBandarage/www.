@@ -1086,3 +1086,41 @@ dialog {
     transition: none !important;
   }
 }
+
+.memory-path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 10px;
+  color: #78866b;
+}
+.memory-path button,
+.notice-action {
+  border: 0;
+  background: transparent;
+  padding: 6px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.memory-path button:hover,
+.notice-action:hover {
+  color: #435a32;
+}
+#search-results .search-excerpt {
+  display: block;
+  margin-top: 6px;
+  line-height: 1.6;
+  color: #66725c;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+#search-results button:focus-visible {
+  outline-offset: -2px;
+  background: #edf2e7;
+}
+#notice .notice-action {
+  margin-left: 10px;
+  font-weight: 600;
+}

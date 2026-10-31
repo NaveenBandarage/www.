@@ -1,4 +1,5 @@
 import "./style.css";
+import { revealMemory } from "./graph-model.js";
 import { TreeView } from "./tree-view.js";
 import {
   demoMemory,
@@ -7,6 +8,7 @@ import {
   markdownMemory,
   readMemory,
   saveMemory,
+  ensureSourceFolder,
 } from "./memory.js";
 
 const $ = (s) => document.querySelector(s);
@@ -78,8 +80,10 @@ const view = new TreeView($("#viewport"), {
   },
   onZoom: (z) => ($("#zoom-status").textContent = z + "%"),
 });
-function notice(message) {
-  $("#notice").textContent = message;
+function notice(message, action = null) {
+  $("#notice").replaceChildren(document.createTextNode(message));
+  if (action)
+    addButton($("#notice"), action.label, action.run, "notice-action");
   $("#notice").hidden = !message;
 }
 function run(action) {
@@ -104,22 +108,7 @@ function ancestry(id) {
   return found;
 }
 function reveal(id) {
-  const root = ancestry(id)[0],
-    roots = store.nodes.filter((n) => !n.parent);
-  if (root)
-    pages.__roots = Math.ceil(
-      (roots.findIndex((n) => n.id === root.id) + 1) / 6,
-    );
-  for (const n of ancestry(id).slice(0, -1)) {
-    expanded.add(n.id);
-    const siblings = store.nodes.filter((c) => c.parent === n.id),
-      child = ancestry(id).find((c) => c.parent === n.id);
-    if (child)
-      pages[n.id] = Math.max(
-        pages[n.id] || 1,
-        Math.ceil((siblings.findIndex((s) => s.id === child.id) + 1) / 6),
-      );
-  }
+  ({ expanded, pages } = revealMemory(store, id, { expanded, pages, asOf }));
 }
 function saveView() {
   try {
@@ -217,6 +206,7 @@ function closeInspector() {
 }
 function openInspector(kind) {
   $("#inspector").hidden = false;
+  $("#inspector").scrollTop = 0;
   $("#inspector-kind").textContent = kind;
   $("#inspector-content").className = "inspector-content";
 }
@@ -248,6 +238,7 @@ async function inspect(id, { focus = false } = {}) {
     reveal(id);
     expanded.add(id);
     await redraw();
+    if (focus) view.focus(id);
     return;
   }
   lastFocused = document.activeElement;
@@ -261,6 +252,8 @@ async function inspect(id, { focus = false } = {}) {
     reveal(e.from);
     reveal(e.to);
   }
+  // Related records may share a paginated folder; the selected record wins.
+  reveal(id);
   openInspector(
     n.type === "source"
       ? "ORIGINAL SOURCE"
@@ -270,11 +263,24 @@ async function inspect(id, { focus = false } = {}) {
   );
   renderInspector(n);
   await redraw();
-  if (focus) view.focus(id);
+  if (focus) {
+    view.focus(id);
+    $("#inspector-close").focus({ preventScroll: true });
+  }
 }
 function renderInspector(n) {
   const c = $("#inspector-content");
   c.replaceChildren();
+  const path = element("nav", "memory-path");
+  path.setAttribute("aria-label", "Memory location");
+  for (const folder of ancestry(n.id).slice(0, -1)) {
+    addButton(path, folder.title.replace(/\/$/, ""), async () => {
+      closeInspector();
+      await inspect(folder.id, { focus: true });
+    });
+    path.append(element("span", "", "/"));
+  }
+  if (path.children.length) c.append(path);
   c.append(
     element("h1", "", n.title),
     element("div", "memory-body", n.content || "No content has been added."),
@@ -433,13 +439,23 @@ function renderInspector(n) {
         actions,
         "Archive",
         async () => {
-          original.archived_at = new Date().toISOString();
+          const archivedAt = new Date().toISOString();
+          original.archived_at = archivedAt;
           await persist();
           closeInspector();
           await sync();
-          notice(
-            "Memory archived. Its earlier state is available in the timeline.",
-          );
+          notice("Memory archived. Its history is kept in the timeline.", {
+            label: "Undo",
+            run: async () => {
+              const record = byId.get(n.id);
+              if (record?.archived_at !== archivedAt) return;
+              record.archived_at = null;
+              await persist();
+              await sync();
+              await inspect(n.id, { focus: true });
+              notice("Memory restored.");
+            },
+          });
         },
         "subtle-action",
       );
@@ -489,6 +505,8 @@ function updateTimeline() {
 }
 async function setTime(value) {
   asOf = value;
+  querySerial++;
+  if (!$(".search-box").hidden) run(updateSearch);
   currentRecall = null;
   $("#recall-strip").hidden = true;
   updateTimeline();
@@ -508,7 +526,15 @@ async function jumpRevision(at, id) {
 function setSearch(open) {
   $(".search-box").hidden = !open;
   $("#search-toggle").setAttribute("aria-expanded", String(open));
-  if (open) $("#search").focus();
+  if (open) {
+    $("#search").focus();
+    run(updateSearch);
+  } else {
+    clearTimeout(searchTimer);
+    querySerial++;
+    if ($(".search-box").contains(document.activeElement))
+      $("#search-toggle").focus();
+  }
 }
 let searchTimer;
 async function updateSearch() {
@@ -516,7 +542,16 @@ async function updateSearch() {
     token = ++querySerial,
     results = $("#search-results");
   results.replaceChildren();
-  if (!q) return;
+  if (!q) {
+    results.append(
+      element(
+        "p",
+        "",
+        "Search a title, a phrase, or a tag. ↓ to browse results · Enter to open.",
+      ),
+    );
+    return;
+  }
   const ranked = await request("retrieve", { query: q, asOf });
   if (token !== querySerial) return;
   const ids = new Set(ranked.map((r) => r.id));
@@ -535,7 +570,17 @@ async function updateSearch() {
       await inspect(n.id, { focus: true });
     });
     b.append(
-      element("small", "", `${n.type} · ${n.scope || store.agent.name}`),
+      element(
+        "small",
+        "",
+        `${n.type} · ${
+          ancestry(n.id)
+            .slice(0, -1)
+            .map((folder) => folder.title.replace(/\/$/, ""))
+            .join(" / ") || store.agent.name
+        }`,
+      ),
+      element("span", "search-excerpt", searchExcerpt(n.content, q)),
     );
   }
   if (!results.children.length)
@@ -547,6 +592,34 @@ async function updateSearch() {
       ),
     );
 }
+function searchExcerpt(content = "", query) {
+  const text = content.replace(/\s+/g, " ").trim();
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const matches = terms
+    .map((term) => text.toLowerCase().indexOf(term))
+    .filter((index) => index >= 0);
+  const start = Math.max(0, (matches.length ? Math.min(...matches) : 0) - 35);
+  return (
+    (start ? "…" : "") +
+    text.slice(start, start + 150) +
+    (text.length > start + 150 ? "…" : "")
+  );
+}
+$(".search-box").addEventListener("keydown", (event) => {
+  if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
+  const buttons = [...$("#search-results").querySelectorAll("button")];
+  if (!buttons.length) return;
+  event.preventDefault();
+  const index = buttons.indexOf(document.activeElement);
+  const next =
+    event.key === "ArrowDown"
+      ? (index + 1) % buttons.length
+      : index <= 0
+        ? buttons.length - 1
+        : index - 1;
+  buttons[next].focus();
+});
+
 async function recall() {
   const q = $("#search").value.trim();
   if (!q) {
@@ -776,11 +849,12 @@ async function saveEditor() {
     title = $("#memory-title").value.trim();
   if (!content || !evidence || !title)
     throw Error("Add a title, memory, and source evidence.");
+  const draft = structuredClone(store);
   const now = new Date().toISOString();
   let parent = $("#memory-parent").value;
   if (!parent) {
     parent = "memories-" + crypto.randomUUID();
-    store.nodes.push({
+    draft.nodes.push({
       id: parent,
       title: "memories/",
       type: "folder",
@@ -788,21 +862,9 @@ async function saveEditor() {
       created_at: now,
     });
   }
-  let sources = store.nodes.find(
-    (n) => n.type === "folder" && ["episodes", "sources"].includes(n.id),
-  );
-  if (!sources) {
-    sources = {
-      id: "sources-" + crypto.randomUUID(),
-      title: "sources/",
-      type: "folder",
-      parent: null,
-      created_at: now,
-    };
-    store.nodes.push(sources);
-  }
+  const sources = ensureSourceFolder(draft, now);
   const sid = "source-" + crypto.randomUUID();
-  store.nodes.push({
+  draft.nodes.push({
     id: sid,
     title: editing ? "memory-correction.txt" : "memory-note.txt",
     type: "source",
@@ -815,7 +877,7 @@ async function saveEditor() {
   });
   let id = editing;
   if (editing) {
-    const n = byId.get(editing);
+    const n = draft.nodes.find((node) => node.id === editing);
     (n.revisions ??= []).push({
       at: now,
       content,
@@ -824,7 +886,7 @@ async function saveEditor() {
     });
   } else {
     id = "memory-" + crypto.randomUUID();
-    store.nodes.push({
+    draft.nodes.push({
       id,
       title,
       type: "memory",
@@ -838,7 +900,7 @@ async function saveEditor() {
       tags: [],
     });
   }
-  store = validateMemory(store);
+  store = validateMemory(draft);
   await persist();
   $("#edit-dialog").close();
   await sync();
@@ -970,6 +1032,7 @@ $("#time-now").onclick = () => run(() => setTime(Infinity));
 $("#search-toggle").onclick = () => setSearch($(".search-box").hidden);
 $("#search-close").onclick = () => setSearch(false);
 $("#search").oninput = () => {
+  querySerial++;
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => run(updateSearch), 120);
 };
