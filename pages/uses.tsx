@@ -99,7 +99,7 @@ export default function Uses() {
                 </div>
                 <div>
                   <strong className="text-neutral-800 dark:text-white">
-                    MX Master 3S
+                    MX Master 4
                   </strong>
                   <div className="text-neutral-600 dark:text-neutral-400">
                     Gold standard techbro mouse.
