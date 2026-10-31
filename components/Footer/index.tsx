@@ -1,9 +1,19 @@
-import Link from "next/link";
-
 import { useEffect, useRef, useState } from "react";
 import { getCurrentNewYorkTime } from "../../lib/timeUtils";
 import LastVisitor from "../Home/LastVisitor";
 import SoundToggle from "../SoundToggle";
+import NavigationLinks from "../NavigationLinks";
+
+const navigationItems = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/links", label: "Links" },
+  { href: "/uses", label: "Uses" },
+  { href: "/fun", label: "Fun" },
+  { href: "/photos", label: "Photos" },
+  { href: "/blog", label: "Blog" },
+  { href: "/books", label: "Books" },
+];
 
 function NewYorkClock({ enabled }: { enabled: boolean }) {
   const [currentTime, setCurrentTime] = useState({ label: "", iso: "" });
@@ -81,48 +91,10 @@ export default function Footer() {
         <div className="flex h-full w-full flex-col items-start justify-between gap-6 border-t border-solid border-neutral-500/10 pt-8 pb-8 dark:border-neutral-900 sm:flex-row">
           <div className="min-w-0">
             <nav aria-label="Footer navigation">
-              <ul className="flex flex-wrap gap-x-4 gap-y-2 pb-6">
-                <li>
-                  <Link href="/" className="link-fade">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="link-fade">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/links" className="link-fade">
-                    Links
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/uses" className="link-fade">
-                    Uses
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/fun" className="link-fade">
-                    Fun
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/photos" className="link-fade">
-                    Photos
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog" className="link-fade">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/books" className="link-fade">
-                    Books
-                  </Link>
-                </li>
-              </ul>
+              <NavigationLinks
+                items={navigationItems}
+                className="gap-y-2 pb-6"
+              />
             </nav>
             <div
               className="flex flex-col"

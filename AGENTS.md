@@ -148,6 +148,12 @@ When adding animations:
 - Avoid multi-second delays that hide content or postpone largest contentful paint
 - Consider reduced motion preferences
 
+#### Signature intro exception
+
+- Fresh homepage visits intentionally show a black, full-screen handwritten-name intro, as explicitly requested by the owner. This is an exception to the immediate-visibility guidance above.
+- Keep the homepage server-rendered underneath it. Keep the intro skippable with its button and Escape, bypass it for reduced motion, and do not replay it on client-side navigation.
+- Its CSS fallback and React lifecycle must dismiss together: never acquire or retain scroll, focus, or inert locks after the overlay has disappeared, including when hydration is delayed.
+
 ### Goals & Personal Content
 - Track personal and professional goals publicly
 - Include location context (Wellington → Melbourne → NYC journey)

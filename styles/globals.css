@@ -8,6 +8,7 @@ body {
   @apply text-neutral-800 dark:text-silver;
   @apply antialiased;
   @apply text-base;
+  @apply font-serif;
 
   @apply selection:bg-indigo-500 selection:text-white dark:selection:bg-indigo-900;
   text-rendering: optimizeLegibility;
