@@ -7,17 +7,13 @@ import PhotoLink from "../PhotoLink";
 
 interface PhotoCollectionProps {
   photos: GalleryPhoto[];
-  initialPage?: number;
 }
 const pageSize = 24;
 
-export default function PhotoCollection({
-  photos,
-  initialPage = 1,
-}: PhotoCollectionProps) {
+export default function PhotoCollection({ photos }: PhotoCollectionProps) {
   const groups = photoGroups(photos);
   const router = useRouter();
-  const rawPage = Number(router.query.page ?? initialPage);
+  const rawPage = Number(router.query.page ?? 1);
   const page =
     Number.isInteger(rawPage) && rawPage > 0
       ? Math.min(rawPage, Math.max(1, Math.ceil(groups.length / pageSize)))
@@ -28,7 +24,13 @@ export default function PhotoCollection({
   const hasMore = visible.length < groups.length;
   useEffect(() => {
     const element = sentinel.current;
-    if (!hasMore || !element || !("IntersectionObserver" in window)) return;
+    if (
+      !router.isReady ||
+      !hasMore ||
+      !element ||
+      !("IntersectionObserver" in window)
+    )
+      return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting) || loading.current)

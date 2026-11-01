@@ -1,15 +1,10 @@
-import type { GetServerSideProps } from "next";
 import { SEO } from "../components/SEO";
 import PhotoCollection from "../components/PhotoCollection";
 import PhotoLayout from "../components/PhotoLayout";
 import { galleryPhotos } from "../data/gallery";
 import ScrollReveal from "../components/ScrollReveal";
 
-interface PhotosPageProps {
-  initialPage: number;
-}
-
-export default function PhotosPage({ initialPage }: PhotosPageProps) {
+export default function PhotosPage() {
   return (
     <>
       <SEO
@@ -39,16 +34,10 @@ export default function PhotosPage({ initialPage }: PhotosPageProps) {
             </dd>
           </dl>
           <div className="mt-12 sm:mt-16">
-            <PhotoCollection photos={galleryPhotos} initialPage={initialPage} />
+            <PhotoCollection photos={galleryPhotos} />
           </div>
         </ScrollReveal>
       </PhotoLayout>
     </>
   );
 }
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const page = Number(query.page || 1);
-  return {
-    props: { initialPage: Number.isInteger(page) && page > 0 ? page : 1 },
-  };
-};
