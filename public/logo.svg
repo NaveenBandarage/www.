@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Naveen Bandarage</title>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B7BAC0" />
+      <stop offset="1" stop-color="#8C9098" />
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="256" fill="url(#background)" />
+  <text x="253" y="328" fill="#FFF" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="200" font-weight="400" letter-spacing="-6" text-anchor="middle">NB</text>
+</svg>
