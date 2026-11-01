@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
-import type { CSSProperties } from "react";
 import type { GalleryPhoto } from "../../data/gallery";
 import { photoGroups, photoTransitionName } from "../../lib/photos";
 import PhotoLink from "../PhotoLink";
@@ -10,7 +9,6 @@ interface PhotoCollectionProps {
   photos: GalleryPhoto[];
   initialPage?: number;
 }
-const angles = [-1.5, 0.7, -0.6, 1.2, -0.9, 0.4];
 const pageSize = 24;
 
 export default function PhotoCollection({
@@ -54,46 +52,47 @@ export default function PhotoCollection({
 
   if (!groups.length)
     return (
-      <div className="py-14">
-        <p className="text-sm text-neutral-500 dark:text-silver-dark">
-          Photographs coming soon.
+      <div className="border-t border-neutral-500/10 py-12 dark:border-neutral-900 sm:py-16">
+        <h2 className="text-base text-neutral-800 dark:text-white">
+          A few moments, soon.
+        </h2>
+        <p className="mt-2 text-sm text-neutral-500 dark:text-silver-dark">
+          A collection of photographs is on its way.
         </p>
       </div>
     );
   return (
     <>
-      <ul className="grid grid-cols-2 items-center gap-x-8 gap-y-12 py-12 sm:grid-cols-3 sm:gap-y-16 lg:grid-cols-4">
+      <ul className="grid grid-cols-2 gap-x-5 gap-y-8 border-t border-neutral-500/10 pt-8 dark:border-neutral-900 sm:grid-cols-3 sm:gap-x-8 sm:gap-y-10">
         {visible.map((group, index) => {
           const photo = group.photos[0];
           const isStack = group.photos.length > 1;
           return (
-            <li key={group.key} className="text-center">
+            <li key={group.key} className="min-w-0">
               <PhotoLink
                 href={group.href}
-                className="group inline-flex w-full flex-col items-center rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8"
+                className="group flex w-full flex-col rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-500 dark:focus-visible:outline-silver-dark"
                 aria-label={`View ${group.title}${isStack ? `, ${group.photos.length} photos` : ""}`}
               >
-                <span className="relative flex h-44 w-full items-center justify-center sm:h-48">
+                <span className="relative flex aspect-[4/5] w-full items-center justify-center rounded-sm bg-neutral-100 p-3 dark:bg-neutral-900 sm:p-4">
                   <span
-                    className={`photo-thumbnail photo-print relative block w-fit max-w-[160px] p-1.5 ${isStack ? "photo-stack" : ""}`}
-                    style={
-                      {
-                        "--print-angle": `${angles[index % angles.length]}deg`,
-                        viewTransitionName: photoTransitionName(photo),
-                      } as CSSProperties
-                    }
+                    className="photo-thumbnail relative flex h-full w-full items-center justify-center"
+                    style={{ viewTransitionName: photoTransitionName(photo) }}
                   >
                     <Image
                       src={photo.src}
                       alt={photo.alt}
                       width={photo.width}
                       height={photo.height}
-                      sizes="160px"
-                      className="relative z-10 max-h-40 w-auto max-w-full object-contain sm:max-h-44"
+                      priority={index < 2}
+                      sizes="(min-width: 784px) 202px, (min-width: 640px) calc((100vw - 176px) / 3), calc((100vw - 116px) / 2)"
+                      className="block max-h-full w-auto max-w-full object-contain"
                     />
                   </span>
                 </span>
-                <span className="mt-4 block text-sm">{group.title}</span>
+                <span className="mt-3 block break-words text-sm text-neutral-800 decoration-neutral-300 underline-offset-2 group-hover:underline group-focus-visible:underline dark:text-silver dark:decoration-neutral-700">
+                  {group.title}
+                </span>
                 {isStack ? (
                   <span className="mt-1 block text-xs text-neutral-500 dark:text-silver-dark">
                     {group.photos.length} photos
@@ -106,16 +105,19 @@ export default function PhotoCollection({
       </ul>
       <div
         ref={sentinel}
-        className="py-8 text-center text-xs text-neutral-500 dark:text-silver-dark"
+        className="pt-8 text-sm tabular-nums text-neutral-500 dark:text-silver-dark"
         aria-live="polite"
       >
-        {visible.length} of {groups.length}
+        {visible.length} of {groups.length}{" "}
+        {groups.some((group) => group.photos.length > 1)
+          ? "collections"
+          : "photos"}
       </div>
       {hasMore ? (
         <PhotoLink
           href={`/photos?page=${page + 1}`}
           scroll={false}
-          className="link-fade mx-auto block w-fit text-sm"
+          className="link mt-4 inline-block text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
         >
           More photos
         </PhotoLink>

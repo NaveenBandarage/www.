@@ -15,7 +15,7 @@ export default function PhotoDetail({
 }) {
   const print = (
     <div
-      className="photo-print relative p-2 sm:p-3"
+      className="relative overflow-hidden rounded-sm"
       style={{ viewTransitionName: photoTransitionName(photo) }}
     >
       <Image
@@ -24,14 +24,14 @@ export default function PhotoDetail({
         width={photo.width}
         height={photo.height}
         priority={index === 0}
-        sizes="(min-width: 1024px) 600px, (min-width: 768px) 60vw, 90vw"
+        sizes="(min-width: 784px) 736px, calc(100vw - 48px)"
         className="block h-auto w-full"
       />
     </div>
   );
   return (
-    <article className="photo-detail flex flex-col items-center gap-7 md:flex-row md:items-start md:gap-0">
-      <div className="relative z-10 w-full min-w-0 md:w-[62%]">
+    <article className="flex flex-col gap-6 sm:gap-8">
+      <div className="w-full min-w-0">
         {linked ? (
           <PhotoLink
             href={`/photo/${photoSlug(photo)}`}
@@ -44,7 +44,7 @@ export default function PhotoDetail({
           print
         )}
       </div>
-      <div className="w-full max-w-sm md:mt-10 md:-ml-1 md:w-[38%]">
+      <div className="w-full">
         <PaperCard photo={photo} index={index} />
       </div>
     </article>
