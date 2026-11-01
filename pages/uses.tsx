@@ -118,8 +118,9 @@ export default function Uses() {
                     Apple AirPods Max (1st generation)
                   </strong>
                   <div className="text-neutral-600 dark:text-neutral-400">
-                    When I need to go wireless, I&apos;ll use these and do stuff
-                    on the go. Sucks that they use Lightning, though.
+                    When I need to go wireless, these are my go-to. I wish they
+                    charged over USB-C, but that alone isn&apos;t enough reason to
+                    upgrade.
                   </div>
                 </div>
               </div>
