@@ -1,4 +1,5 @@
 import "./style.css";
+import { createPaintTrail } from "./paint-trail.js";
 import { relationshipsFor } from "./relationships.js";
 import { initialWorkspace } from "./personal-memory.js";
 import { revealMemory } from "./graph-model.js";
@@ -84,6 +85,7 @@ const view = new TreeView($("#viewport"), {
   },
   onZoom: (z) => ($("#zoom-status").textContent = z + "%"),
 });
+createPaintTrail($("#viewport"));
 function notice(message, action = null) {
   $("#notice").replaceChildren(document.createTextNode(message));
   if (action)
