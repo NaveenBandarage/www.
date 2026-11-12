@@ -13,6 +13,7 @@ import NowPlaying from "../components/NowPlaying";
 import InteractionSounds from "../components/InteractionSounds";
 import ThemeProvider from "../components/ThemeProvider";
 import ThemeToggle from "../components/ThemeToggle";
+import LinkPreview from "../components/LinkPreview";
 
 const loadMotionFeatures = () =>
   import("../lib/motionFeatures").then((module) => module.default);
@@ -99,6 +100,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               )}
               <NowPlaying />
             </div>
+            <LinkPreview />
           </LazyMotion>
         </MotionConfig>
 

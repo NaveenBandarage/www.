@@ -469,6 +469,75 @@ a[href^="mailto:"] {
 .photo-thumbnail {
   transition: transform 300ms ease;
 }
+/* The same quiet, cursor-following page cards used in Still. */
+.site-link-preview {
+  @apply pointer-events-none fixed left-0 top-0 z-50;
+  width: min(330px, calc(100vw - 32px));
+  contain: layout style;
+}
+
+.site-preview-card {
+  @apply overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950;
+  max-height: calc(100dvh - 32px);
+  box-shadow: 0 12px 40px #24231c14, 0 3px 8px #24231c0a;
+}
+
+.site-link-preview[data-active="true"] .site-preview-card {
+  pointer-events: auto;
+}
+
+.site-preview-media {
+  @apply relative overflow-hidden border-b border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900;
+  aspect-ratio: 1180 / 760;
+}
+
+.site-preview-placeholder {
+  @apply absolute inset-0 flex items-center justify-center text-[11px] text-neutral-400 dark:text-neutral-500;
+}
+
+.site-preview-media img {
+  @apply relative block h-full w-full object-cover object-top opacity-0;
+  transform: scale(1.015);
+  transition: opacity 220ms ease, transform 320ms cubic-bezier(.25, 1, .5, 1);
+}
+
+.site-preview-media img.is-ready {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.site-preview-unavailable {
+  height: 72px;
+  aspect-ratio: auto;
+}
+
+.site-preview-details {
+  padding: 15px 17px 14px;
+}
+
+.site-preview-host {
+  @apply mb-2 truncate text-[10px] text-neutral-400 dark:text-neutral-500;
+}
+
+.site-preview-title {
+  @apply line-clamp-2 text-[13px] leading-relaxed text-neutral-700 dark:text-silver;
+}
+
+.site-preview-summary {
+  @apply mt-1.5 line-clamp-2 break-words text-[11px] leading-relaxed text-neutral-500 dark:text-silver-dark;
+}
+
+.site-preview-hint {
+  @apply mt-3 text-[9px] text-neutral-400 dark:text-neutral-500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-preview-media img {
+    transform: none;
+    transition: none;
+  }
+}
+
 .group:hover .photo-thumbnail,
 .group:focus-visible .photo-thumbnail {
   transform: translateY(-2px);
