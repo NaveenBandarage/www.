@@ -1,0 +1,75 @@
+.intro {
+  margin: 2rem 0 2.5rem;
+}
+.scene {
+  position: relative;
+  overflow: hidden;
+  height: clamp(240px, 40vw, 290px);
+  background: transparent;
+  isolation: isolate;
+  contain: paint;
+}
+.wallLabel {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  color: #a7b5ac;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+}
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.fallback {
+  position: absolute;
+  display: flex;
+  bottom: 7%;
+  left: -45px;
+  width: max-content;
+}
+.fallback img {
+  flex: 0 0 170px;
+  width: 170px;
+  height: 260px;
+  object-fit: contain;
+  margin-right: -40px;
+}
+.scene[data-ready="true"] .canvas {
+  opacity: 1;
+}
+.scene[data-ready="true"] .fallback {
+  visibility: hidden;
+}
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.65rem;
+  color: #828b85;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+.caption button {
+  min-height: 32px;
+  padding: 0.4rem 0 0.4rem 0.8rem;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: uppercase;
+}
+.caption button:hover:not(:disabled) {
+  color: #b04430;
+}
+.caption button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.caption button:disabled {
+  cursor: default;
+}
