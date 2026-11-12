@@ -11,6 +11,8 @@ import SmoothScroll from "../components/SmoothScroll";
 import SignatureIntro from "../components/SignatureIntro";
 import NowPlaying from "../components/NowPlaying";
 import InteractionSounds from "../components/InteractionSounds";
+import ThemeProvider from "../components/ThemeProvider";
+import ThemeToggle from "../components/ThemeToggle";
 
 const loadMotionFeatures = () =>
   import("../lib/motionFeatures").then((module) => module.default);
@@ -64,36 +66,41 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   return (
-    <InteractionSounds>
-      <MotionConfig reducedMotion="user">
-        <LazyMotion features={loadMotionFeatures} strict>
-          {showIntro ? (
-            <SignatureIntro
-              onComplete={completeIntro}
-              contentRef={contentRef}
-            />
-          ) : null}
-          <div ref={contentRef}>
-            {router.pathname === "/memory" ||
-            router.pathname === "/photos" ||
-            router.pathname.startsWith("/photo/") ||
-            router.pathname.startsWith("/photos/") ? (
-              <Component {...pageProps} />
-            ) : (
-              <AnimatePresence mode="wait">
-                <PageTransition key={router.asPath}>
-                  <Component {...pageProps} />
-                </PageTransition>
-              </AnimatePresence>
-            )}
-            <NowPlaying />
-          </div>
-        </LazyMotion>
-      </MotionConfig>
+    <ThemeProvider>
+      <InteractionSounds>
+        <MotionConfig reducedMotion="user">
+          <LazyMotion features={loadMotionFeatures} strict>
+            {showIntro ? (
+              <SignatureIntro
+                onComplete={completeIntro}
+                contentRef={contentRef}
+              />
+            ) : null}
+            <div ref={contentRef}>
+              <div className="fixed right-6 top-6 z-40 sm:right-8 sm:top-8">
+                <ThemeToggle />
+              </div>
+              {router.pathname === "/memory" ||
+              router.pathname === "/photos" ||
+              router.pathname.startsWith("/photo/") ||
+              router.pathname.startsWith("/photos/") ? (
+                <Component {...pageProps} />
+              ) : (
+                <AnimatePresence mode="wait">
+                  <PageTransition key={router.asPath}>
+                    <Component {...pageProps} />
+                  </PageTransition>
+                </AnimatePresence>
+              )}
+              <NowPlaying />
+            </div>
+          </LazyMotion>
+        </MotionConfig>
 
-      <SmoothScroll />
-      <Analytics />
-      <SpeedInsights />
-    </InteractionSounds>
+        <SmoothScroll />
+        <Analytics />
+        <SpeedInsights />
+      </InteractionSounds>
+    </ThemeProvider>
   );
 }
