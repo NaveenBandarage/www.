@@ -26,6 +26,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const completeIntro = useCallback(() => setIntroFinished(true), []);
   const showIntro = !introFinished && router.pathname === "/";
+  // Full-screen experiments own their top-right controls.
+  const showThemeToggle =
+    router.pathname !== "/memory" && router.pathname !== "/gallery";
 
   useEffect(() => {
     router.events.on("routeChangeStart", completeIntro);
@@ -77,9 +80,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               />
             ) : null}
             <div ref={contentRef}>
-              <div className="fixed right-6 top-6 z-40 sm:right-8 sm:top-8">
-                <ThemeToggle />
-              </div>
+              {showThemeToggle ? (
+                <div className="fixed right-6 top-6 z-40 sm:right-8 sm:top-8">
+                  <ThemeToggle />
+                </div>
+              ) : null}
               {router.pathname === "/memory" ||
               router.pathname === "/photos" ||
               router.pathname.startsWith("/photo/") ||
