@@ -1,0 +1,128 @@
+.toggle {
+  --sky: #f4ede0;
+  position: relative;
+  display: grid;
+  width: 72px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgb(115 115 115 / 18%);
+  border-radius: 999px;
+  background: var(--sky);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 450ms ease,
+    border-color 450ms ease;
+}
+
+:global(.dark) .toggle {
+  --sky: #171c2c;
+  border-color: rgb(165 180 220 / 22%);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid #818cf8;
+  outline-offset: 4px;
+}
+
+.sky {
+  position: relative;
+  width: 58px;
+  height: 32px;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.body {
+  position: absolute;
+  top: 1px;
+  left: 14px;
+  width: 30px;
+  height: 30px;
+  transition:
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 280ms ease;
+}
+
+.sun {
+  color: #b97916;
+  transform: translate(0, 0) rotate(0);
+  opacity: 1;
+}
+
+.moon {
+  color: #dce5ff;
+  transform: translate(20px, 28px) rotate(55deg) scale(0.65);
+  opacity: 0;
+}
+
+:global(.dark) .sun {
+  transform: translate(-20px, 28px) rotate(-65deg) scale(0.65);
+  opacity: 0;
+}
+
+:global(.dark) .moon {
+  transform: translate(0, 0) rotate(0) scale(1);
+  opacity: 1;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(5px);
+  transition:
+    opacity 300ms ease,
+    transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:global(.dark) .stars {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stars span {
+  position: absolute;
+  top: 7px;
+  left: 9px;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #b8c8ec;
+}
+
+.stars span:nth-child(2) {
+  top: 5px;
+  left: 44px;
+  width: 3px;
+  height: 3px;
+}
+.stars span:nth-child(3) {
+  top: 18px;
+  left: 49px;
+}
+
+.horizon {
+  position: absolute;
+  bottom: 1px;
+  left: 8px;
+  width: 42px;
+  height: 1px;
+  background: currentColor;
+  color: #b97916;
+  opacity: 0.22;
+  transition: color 450ms ease;
+}
+
+:global(.dark) .horizon {
+  color: #b8c8ec;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle,
+  .body,
+  .stars,
+  .horizon {
+    transition: none;
+  }
+}
