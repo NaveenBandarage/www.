@@ -45,7 +45,6 @@ export default function ThemeToggle() {
             />
           </svg>
         </span>
-        <span className={styles.horizon} />
       </span>
     </m.button>
   );

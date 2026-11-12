@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "photos:add": "node scripts/add-photo.mjs",
     "spotify:connect": "node --env-file-if-exists=.env.local scripts/connect-spotify.mjs",
     "test:spotify": "node --test tests/music.test.mjs tests/connect-spotify.test.mjs tests/listeningTime.test.mjs",
     "test:links": "node --test tests/linkPreview.test.mjs",

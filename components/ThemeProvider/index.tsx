@@ -29,6 +29,8 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
       root.dataset.themeChanging = "true";
+      // Commit transition styles before changing the palette in the same event.
+      void root.offsetWidth;
       transitionTimer.current = setTimeout(() => {
         delete root.dataset.themeChanging;
       }, 500);

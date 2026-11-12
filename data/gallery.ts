@@ -1,5 +1,7 @@
+import importedPhotos from "./gallery-photos.json";
+
 /**
- * Add gallery images here after copying them into `public/gallery`.
+ * Add gallery images with `bun run photos:add` or manually below.
  *
  * `src` starts at `public`, so `public/gallery/nyc.jpg` becomes
  * `/gallery/nyc.jpg`. Keep the width and height equal to the original image
@@ -23,6 +25,7 @@ export interface GalleryPhoto {
 }
 
 export const galleryPhotos: GalleryPhoto[] = [
+  ...importedPhotos,
   // {
   //   src: "/gallery/nyc.jpg",
   //   alt: "A descriptive caption for the photograph",
