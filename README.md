@@ -56,3 +56,7 @@ in Vercel separately.
 See Spotify's [authorization flow](https://developer.spotify.com/documentation/web-api/tutorials/code-flow),
 [redirect URI requirements](https://developer.spotify.com/documentation/web-api/concepts/redirect_uri),
 and [development-mode requirements](https://developer.spotify.com/documentation/web-api/concepts/quota-modes).
+
+## Japanese movie posters
+
+Set `TMDB_API_KEY` to a TMDB API key in `.env.local` and in the Vercel project environment, then restart or redeploy. The key stays on the server. Search results show Japanese-language posters when they are available in TMDB.
