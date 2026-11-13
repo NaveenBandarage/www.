@@ -53,7 +53,8 @@ export default async function handler(
         );
         url.search = new URLSearchParams({
           api_key: key,
-          include_image_language: "ja",
+          language: "ja",
+          include_image_language: "ja,en",
         }).toString();
         const response = await fetch(url, {
           signal: AbortSignal.timeout(8000),
@@ -68,6 +69,9 @@ export default async function handler(
           title: movie.title,
           year: movie.release_date?.slice(0, 4) || null,
           poster: poster?.file_path || null,
+          englishPoster:
+            images.posters.find((image: Poster) => image.iso_639_1 === "en")
+              ?.file_path || null,
         };
       }),
     );
@@ -77,10 +81,8 @@ export default async function handler(
     );
     return res.status(200).json({ results });
   } catch {
-    return res
-      .status(502)
-      .json({
-        error: "Movie search is temporarily unavailable. Please try again.",
-      });
+    return res.status(502).json({
+      error: "Movie search is temporarily unavailable. Please try again.",
+    });
   }
 }

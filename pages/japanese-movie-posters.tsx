@@ -1,14 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useRef, useState } from "react";
+import { m } from "framer-motion";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
+import styles from "../styles/movie-poster-search.module.css";
+import useReducedMotion from "../lib/useReducedMotion";
 
 type Movie = {
   id: number;
   title: string;
   year: string | null;
   poster: string | null;
+  englishPoster: string | null;
 };
 
 export default function JapaneseMoviePosters() {
@@ -16,7 +20,11 @@ export default function JapaneseMoviePosters() {
   const [results, setResults] = useState<Movie[] | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [showEnglish, setShowEnglish] = useState(false);
+  const reducedMotion = useReducedMotion();
   const request = useRef(0);
+  const selectedMovie = results?.find((movie) => movie.id === selectedId);
 
   async function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,6 +34,8 @@ export default function JapaneseMoviePosters() {
     setLoading(true);
     setError("");
     setResults(null);
+    setSelectedId(null);
+    setShowEnglish(false);
     try {
       const response = await fetch(
         `/api/japanese-movie-posters?q=${encodeURIComponent(title)}`,
@@ -33,7 +43,10 @@ export default function JapaneseMoviePosters() {
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.error || "Search failed. Please try again.");
-      if (current === request.current) setResults(data.results);
+      if (current === request.current) {
+        setResults(data.results);
+        setSelectedId(data.results[0]?.id ?? null);
+      }
     } catch (err) {
       if (current === request.current)
         setError(
@@ -62,31 +75,66 @@ export default function JapaneseMoviePosters() {
         >
           ← Fun
         </Link>
-        <h1 className="mt-6 text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white">
+        <m.h1
+          initial={reducedMotion ? false : { opacity: 0.85, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+          className="mt-6 text-center text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white"
+        >
           Japanese movie posters
-        </h1>
-        <p className="mt-3 text-neutral-500 dark:text-silver-dark">
-          Find a film and see its Japanese poster.
-        </p>
-        <form onSubmit={search} className="mt-8 flex gap-3" role="search">
+        </m.h1>
+        <form
+          onSubmit={search}
+          className={`${styles.search} mt-8`}
+          role="search"
+        >
           <label htmlFor="movie-search" className="sr-only">
             Movie title
           </label>
+          {!query && (
+            <span className={styles.placeholder} aria-hidden="true">
+              <span>Search </span>
+              <span className={styles.exampleWindow}>
+                <span className={styles.examples}>
+                  <span>Spirited Away</span>
+                  <span>Interstellar</span>
+                  <span>Perfect Days</span>
+                  <span>Past Lives</span>
+                  <span>Spirited Away</span>
+                </span>
+              </span>
+            </span>
+          )}
           <input
             id="movie-search"
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             maxLength={100}
-            placeholder="Search for a movie"
-            className="min-w-0 flex-1 rounded-md border border-neutral-300 bg-transparent px-4 py-3 text-neutral-800 placeholder:text-neutral-400 focus:outline-2 focus:outline-offset-2 focus:outline-neutral-500 dark:border-neutral-700 dark:text-white"
+            autoComplete="off"
+            className={styles.input}
           />
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            className="rounded-md bg-neutral-800 px-5 py-3 text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900"
+            aria-label="Search movies"
+            className={styles.submit}
           >
-            Search
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+              width="20"
+              height="20"
+            >
+              <path
+                d="M12 19V5m0 0-6 6m6-6 6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
         </form>
         <div className="mt-8" aria-live="polite" aria-busy={loading}>
@@ -101,42 +149,114 @@ export default function JapaneseMoviePosters() {
               No movies found. Try another title.
             </p>
           )}
-          {results && results.length > 0 && (
-            <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6">
-              {results.map((movie) => (
-                <article key={movie.id}>
-                  {movie.poster ? (
+          {selectedMovie && (
+            <m.article
+              key={selectedMovie.id}
+              initial={reducedMotion ? false : { opacity: 0.85, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className={styles.result}
+            >
+              <div className={styles.resultHeader}>
+                <div>
+                  <h2 className="text-neutral-800 dark:text-white">
+                    {selectedMovie.title}
+                  </h2>
+                  {selectedMovie.year && (
+                    <p className="mt-1 text-sm text-neutral-500 dark:text-silver-dark">
+                      {selectedMovie.year}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  className={styles.compare}
+                  onClick={() => setShowEnglish(!showEnglish)}
+                  aria-pressed={showEnglish}
+                >
+                  {showEnglish ? "Hide English" : "See English"}
+                </button>
+              </div>
+              <div
+                className={`${styles.posters} ${showEnglish ? styles.comparing : ""}`}
+              >
+                <div>
+                  {showEnglish && (
+                    <p className={styles.posterLabel}>Japanese</p>
+                  )}
+                  {selectedMovie.poster ? (
                     <a
-                      href={`https://image.tmdb.org/t/p/original${movie.poster}`}
+                      href={`https://image.tmdb.org/t/p/original${selectedMovie.poster}`}
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={`View the Japanese poster for ${movie.title}`}
+                      aria-label={`View the Japanese poster for ${selectedMovie.title}`}
                     >
                       <Image
-                        src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
-                        alt={`Japanese poster for ${movie.title}`}
+                        src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster}`}
+                        alt={`Japanese poster for ${selectedMovie.title}`}
                         width={500}
                         height={750}
                         unoptimized
-                        className="aspect-[2/3] w-full rounded-sm object-cover"
+                        className={styles.poster}
                       />
                     </a>
                   ) : (
-                    <div className="flex aspect-[2/3] items-center justify-center rounded-sm bg-neutral-100 p-4 text-center text-sm text-neutral-500 dark:bg-neutral-800 dark:text-silver-dark">
+                    <div className={styles.missingPoster}>
                       No Japanese poster available
                     </div>
                   )}
-                  <h2 className="mt-3 text-sm text-neutral-800 dark:text-white">
-                    {movie.title}
-                  </h2>
-                  {movie.year && (
-                    <p className="mt-1 text-sm text-neutral-500 dark:text-silver-dark">
-                      {movie.year}
-                    </p>
-                  )}
-                </article>
-              ))}
-            </div>
+                </div>
+                {showEnglish && (
+                  <div>
+                    <p className={styles.posterLabel}>English</p>
+                    {selectedMovie.englishPoster ? (
+                      <a
+                        href={`https://image.tmdb.org/t/p/original${selectedMovie.englishPoster}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`View the English poster for ${selectedMovie.title}`}
+                      >
+                        <Image
+                          src={`https://image.tmdb.org/t/p/w500${selectedMovie.englishPoster}`}
+                          alt={`English poster for ${selectedMovie.title}`}
+                          width={500}
+                          height={750}
+                          unoptimized
+                          className={styles.poster}
+                        />
+                      </a>
+                    ) : (
+                      <div className={styles.missingPoster}>
+                        No English poster available
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              {results && results.length > 1 && (
+                <div className="mt-7 text-sm text-neutral-500 dark:text-silver-dark">
+                  <label htmlFor="movie-match">
+                    Looking for another movie?{" "}
+                  </label>
+                  <select
+                    id="movie-match"
+                    value={selectedMovie.id}
+                    onChange={(event) => {
+                      setSelectedId(Number(event.target.value));
+                      setShowEnglish(false);
+                    }}
+                    className={styles.matches}
+                  >
+                    {results.map((movie) => (
+                      <option key={movie.id} value={movie.id}>
+                        {movie.title}
+                        {movie.year ? ` (${movie.year})` : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </m.article>
           )}
         </div>
         <section
