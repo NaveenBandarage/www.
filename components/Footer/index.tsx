@@ -13,6 +13,7 @@ const navigationItems = [
   { href: "/photos", label: "Photos" },
   { href: "/blog", label: "Blog" },
   { href: "/books", label: "Books" },
+  { href: "/movies", label: "Seen" },
 ];
 
 function NewYorkClock({ enabled }: { enabled: boolean }) {
