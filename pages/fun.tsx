@@ -34,6 +34,17 @@ export default function Fun() {
                 A living tree of agent memories. Open a folder, follow its
                 roots, and see what gets remembered.
               </p>
+              <div className="mt-8">
+                <Link
+                  href="/japanese-movie-posters"
+                  className="link-fade text-neutral-800 dark:text-white"
+                >
+                  Japanese movie posters ↗
+                </Link>
+                <p className="mt-2 text-neutral-500 dark:text-silver-dark">
+                  Search for a film and explore its Japanese posters.
+                </p>
+              </div>
             </div>
           </div>
         </ScrollReveal>
