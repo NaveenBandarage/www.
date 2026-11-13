@@ -60,6 +60,9 @@ function MovieRow({
   const titleId = useId();
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [nearbyPosters, setNearbyPosters] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   function updateScroll() {
     const element = row.current;
@@ -77,6 +80,47 @@ function MovieRow({
     observer.observe(element);
     updateScroll();
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const element = row.current;
+    if (!element || !("IntersectionObserver" in window)) return;
+
+    const posterObserver = new IntersectionObserver(
+      (entries) => {
+        const ids = entries
+          .filter((entry) => entry.isIntersecting)
+          .map((entry) => (entry.target as HTMLElement).dataset.movieId)
+          .filter((id): id is string => Boolean(id));
+        if (ids.length === 0) return;
+        setNearbyPosters((previous) => {
+          const next = new Set(previous);
+          ids.forEach((id) => next.add(id));
+          return next.size === previous.size ? previous : next;
+        });
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) posterObserver.unobserve(entry.target);
+        });
+      },
+      { root: element, rootMargin: "0px 600px" },
+    );
+    const rowObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          element
+            .querySelectorAll("[data-movie-id]")
+            .forEach((card) => posterObserver.observe(card));
+        } else {
+          posterObserver.disconnect();
+        }
+      },
+      { rootMargin: "600px 0px" },
+    );
+    rowObserver.observe(element);
+    return () => {
+      rowObserver.disconnect();
+      posterObserver.disconnect();
+    };
   }, []);
 
   function scrollRow(direction: number) {
@@ -143,7 +187,11 @@ function MovieRow({
         aria-label={`${label} films, scroll horizontally`}
       >
         {films.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} preloadPoster />
+          <MovieCard
+            key={movie.id}
+            movie={movie}
+            preloadPoster={nearbyPosters.has(movie.id)}
+          />
         ))}
       </ul>
       <dialog
@@ -241,7 +289,7 @@ function MovieCard({
   );
 
   return (
-    <li className={styles.card}>
+    <li className={styles.card} data-movie-id={movie.id}>
       {movie.href ? (
         <a href={movie.href} className={styles.cardLink}>
           {content}
