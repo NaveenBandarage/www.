@@ -1,0 +1,356 @@
+.page {
+  min-height: 100vh;
+  background: #000;
+  color: #eee;
+  color-scheme: dark;
+}
+:global(html):has(.page),
+:global(body):has(.page) {
+  background: #000;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  font-size: 14px;
+}
+.home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a0a0a0;
+}
+.name {
+  display: none;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+.home:hover,
+.name:hover {
+  color: #fff;
+}
+.pageLabel {
+  color: #808080;
+  font-size: 13px;
+}
+.introduction {
+  margin-top: 44px;
+}
+.introduction h1 {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.introduction p {
+  margin-top: 9px;
+  color: #939393;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.collection {
+  margin-top: 54px;
+  padding-bottom: 32px;
+}
+.year + .year {
+  margin-top: 48px;
+}
+.yearHeading {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 19px;
+}
+.yearHeading h2 {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.yearHeading span {
+  color: #808080;
+  font-size: 12px;
+}
+.row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 132px;
+  gap: 16px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 0 0 14px;
+  margin: 0;
+  list-style: none;
+  scrollbar-color: #444 transparent;
+  scrollbar-width: thin;
+}
+.row:focus-visible,
+.cardLink:focus-visible,
+.home:focus-visible,
+.name:focus-visible {
+  outline: 2px solid #aaa;
+  outline-offset: 4px;
+}
+.card {
+  min-width: 0;
+}
+.cardLink {
+  display: block;
+  border-radius: 5px;
+}
+.poster {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #1a1a1a;
+}
+.poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.posterTitle {
+  padding: 16px;
+  color: #888;
+  font-size: 13px;
+  text-align: center;
+}
+.movieTitle {
+  display: block;
+  margin-top: 10px;
+  color: #e6e6e6;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.watchedDate {
+  display: block;
+  margin-top: 3px;
+  color: #888;
+  font-size: 12px;
+}
+.theatre {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-top: 3px;
+  margin-left: -8px;
+  border-radius: 6px;
+  color: #999;
+}
+.theatre:hover,
+.theatre:focus-visible {
+  color: #eee;
+}
+.theatre:focus-visible {
+  outline: 2px solid #aaa;
+  outline-offset: 1px;
+}
+.theatreTooltip {
+  position: absolute;
+  z-index: 2;
+  bottom: calc(100% + 4px);
+  left: 0;
+  width: max-content;
+  padding: 6px 9px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #222;
+  color: #eee;
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.theatre:hover .theatreTooltip,
+.theatre:focus-visible .theatreTooltip {
+  opacity: 1;
+  visibility: visible;
+}
+.empty {
+  margin: 54px 0 32px;
+  color: #939393;
+  font-size: 14px;
+}
+.page footer,
+.page footer a,
+.page footer div,
+.page footer p,
+.page footer time,
+.page footer button {
+  color: #888;
+}
+.page footer a:hover,
+.page footer button:hover,
+.page footer a[aria-current="page"] {
+  color: #eee;
+}
+.page footer nav a > span {
+  background: #ffffff12;
+}
+.page footer > div > div {
+  border-color: #1c1c1c;
+}
+@media (min-width: 640px) {
+  .header {
+    margin-top: 2px;
+  }
+  .name {
+    display: inline;
+  }
+  .home {
+    position: absolute;
+    right: calc(100% + 48px);
+    white-space: nowrap;
+  }
+  .row {
+    grid-auto-columns: 160px;
+    gap: 20px;
+  }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .home {
+    position: static;
+  }
+}
+
+.yearHeading {
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.yearTitle {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+.rowControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.viewAll {
+  padding: 7px 6px;
+  color: #aaa;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.viewAll:hover {
+  color: #fff;
+}
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #333;
+  border-radius: 50%;
+  color: #ddd;
+  font-size: 16px;
+}
+.arrow:hover:not(:disabled) {
+  background: #222;
+  border-color: #777;
+}
+.arrow:disabled {
+  opacity: 0.3;
+}
+.viewAll:focus-visible,
+.arrow:focus-visible,
+.close:focus-visible {
+  outline: 2px solid #aaa;
+  outline-offset: 3px;
+}
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: min(820px, calc(100% - 32px));
+  max-width: none;
+  max-height: min(85dvh, 900px);
+  margin: auto;
+  padding: 28px;
+  border: 1px solid #303030;
+  border-radius: 18px;
+  background: #111;
+  color: #eee;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color-scheme: dark;
+}
+.dialog::backdrop {
+  background: #000c;
+  backdrop-filter: blur(8px);
+}
+.dialogHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.dialogHeader h2 {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+.dialogHeader p {
+  margin-top: 5px;
+  color: #939393;
+  font-size: 12px;
+}
+.close {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #aaa;
+  font-size: 26px;
+  line-height: 1;
+}
+.close:hover {
+  background: #242424;
+  color: #fff;
+}
+.dialogGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 16px;
+  margin: 28px 0 0;
+  padding: 0 0 12px;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .dialogGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px 20px;
+  }
+}
+@media (max-width: 420px) {
+  .yearHeading {
+    align-items: flex-start;
+  }
+  .rowControls {
+    gap: 2px;
+  }
+  .arrow {
+    width: 30px;
+    height: 30px;
+  }
+  .dialog {
+    padding: 22px;
+  }
+}
+
+.trackingNote {
+  margin: 0 0 24px;
+  color: #939393;
+  font-size: 13px;
+  line-height: 1.6;
+}
