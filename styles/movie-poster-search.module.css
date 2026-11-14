@@ -118,6 +118,23 @@
   color: #525252;
   font-size: 0.75rem;
   line-height: 1rem;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .compare:hover {
+    background: #f5f5f5;
+  }
+  :global(.dark) .compare:hover {
+    background: #262626;
+  }
+}
+
+.compare:active {
+  transform: scale(0.97);
 }
 
 .compare:focus-visible,
@@ -127,6 +144,7 @@
 }
 
 .posters {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 360px);
   justify-content: center;
@@ -231,6 +249,12 @@
   }
   .submit {
     transition: none;
+  }
+  .compare {
+    transition: none;
+  }
+  .compare:active {
+    transform: none;
   }
   .submit:not(:disabled):active {
     transform: none;

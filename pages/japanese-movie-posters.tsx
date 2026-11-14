@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useRef, useState } from "react";
-import { m } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import styles from "../styles/movie-poster-search.module.css";
@@ -14,6 +14,26 @@ type Movie = {
   poster: string | null;
   englishPoster: string | null;
 };
+
+const previewMovies: Movie[] =
+  process.env.NODE_ENV === "development"
+    ? [
+        {
+          id: 129,
+          title: "Spirited Away",
+          year: "2001",
+          poster: "/8TEs6twIANAc2qiU8m17JO8Ujcx.jpg",
+          englishPoster: "/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
+        },
+        {
+          id: 27205,
+          title: "Inception",
+          year: "2010",
+          poster: "/qzb0slJerd5bQgJxteJ5oAmfp09.jpg",
+          englishPoster: "/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",
+        },
+      ]
+    : [];
 
 export default function JapaneseMoviePosters() {
   const [query, setQuery] = useState("");
@@ -137,6 +157,29 @@ export default function JapaneseMoviePosters() {
             </svg>
           </button>
         </form>
+        {previewMovies.length > 0 && (
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs text-neutral-500 dark:text-silver-dark">
+            <span>Local preview:</span>
+            {previewMovies.map((movie) => (
+              <button
+                key={movie.id}
+                type="button"
+                className="underline underline-offset-4"
+                onClick={() => {
+                  request.current += 1;
+                  setQuery(movie.title);
+                  setError("");
+                  setLoading(false);
+                  setResults([movie]);
+                  setSelectedId(movie.id);
+                  setShowEnglish(false);
+                }}
+              >
+                {movie.title}
+              </button>
+            ))}
+          </div>
+        )}
         <div className="mt-8" aria-live="polite" aria-busy={loading}>
           {loading && (
             <p className="text-neutral-500 dark:text-silver-dark">Searching…</p>
@@ -151,7 +194,6 @@ export default function JapaneseMoviePosters() {
           )}
           {selectedMovie && (
             <m.article
-              key={selectedMovie.id}
               initial={reducedMotion ? false : { opacity: 0.85, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
@@ -171,7 +213,7 @@ export default function JapaneseMoviePosters() {
                 <button
                   type="button"
                   className={styles.compare}
-                  onClick={() => setShowEnglish(!showEnglish)}
+                  onClick={() => setShowEnglish((visible) => !visible)}
                   aria-pressed={showEnglish}
                 >
                   {showEnglish ? "Hide English" : "See English"}
@@ -180,45 +222,24 @@ export default function JapaneseMoviePosters() {
               <div
                 className={`${styles.posters} ${showEnglish ? styles.comparing : ""}`}
               >
-                <div>
+                <m.div
+                  layout={!reducedMotion}
+                  transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
+                >
                   {showEnglish && (
                     <p className={styles.posterLabel}>Japanese</p>
                   )}
-                  {selectedMovie.poster ? (
-                    <a
-                      href={`https://image.tmdb.org/t/p/original${selectedMovie.poster}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`View the Japanese poster for ${selectedMovie.title}`}
-                    >
-                      <Image
-                        src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster}`}
-                        alt={`Japanese poster for ${selectedMovie.title}`}
-                        width={500}
-                        height={750}
-                        unoptimized
-                        className={styles.poster}
-                      />
-                    </a>
-                  ) : (
-                    <div className={styles.missingPoster}>
-                      No Japanese poster available
-                    </div>
-                  )}
-                </div>
-                {showEnglish && (
-                  <div>
-                    <p className={styles.posterLabel}>English</p>
-                    {selectedMovie.englishPoster ? (
+                  <m.div layout={!reducedMotion}>
+                    {selectedMovie.poster ? (
                       <a
-                        href={`https://image.tmdb.org/t/p/original${selectedMovie.englishPoster}`}
+                        href={`https://image.tmdb.org/t/p/original${selectedMovie.poster}`}
                         target="_blank"
                         rel="noreferrer"
-                        aria-label={`View the English poster for ${selectedMovie.title}`}
+                        aria-label={`View the Japanese poster for ${selectedMovie.title}`}
                       >
                         <Image
-                          src={`https://image.tmdb.org/t/p/w500${selectedMovie.englishPoster}`}
-                          alt={`English poster for ${selectedMovie.title}`}
+                          src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster}`}
+                          alt={`Japanese poster for ${selectedMovie.title}`}
                           width={500}
                           height={750}
                           unoptimized
@@ -227,11 +248,51 @@ export default function JapaneseMoviePosters() {
                       </a>
                     ) : (
                       <div className={styles.missingPoster}>
-                        No English poster available
+                        No Japanese poster available
                       </div>
                     )}
-                  </div>
-                )}
+                  </m.div>
+                </m.div>
+                <AnimatePresence initial={false} mode="popLayout">
+                  {showEnglish && (
+                    <m.div
+                      key="english"
+                      layout={!reducedMotion}
+                      initial={reducedMotion ? false : { opacity: 0, x: 12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={
+                        reducedMotion ? { opacity: 0 } : { opacity: 0, x: 8 }
+                      }
+                      transition={{
+                        duration: reducedMotion ? 0 : 0.24,
+                        ease: [0.23, 1, 0.32, 1],
+                      }}
+                    >
+                      <p className={styles.posterLabel}>English</p>
+                      {selectedMovie.englishPoster ? (
+                        <a
+                          href={`https://image.tmdb.org/t/p/original${selectedMovie.englishPoster}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`View the English poster for ${selectedMovie.title}`}
+                        >
+                          <Image
+                            src={`https://image.tmdb.org/t/p/w500${selectedMovie.englishPoster}`}
+                            alt={`English poster for ${selectedMovie.title}`}
+                            width={500}
+                            height={750}
+                            unoptimized
+                            className={styles.poster}
+                          />
+                        </a>
+                      ) : (
+                        <div className={styles.missingPoster}>
+                          No English poster available
+                        </div>
+                      )}
+                    </m.div>
+                  )}
+                </AnimatePresence>
               </div>
               {results && results.length > 1 && (
                 <div className="mt-7 text-sm text-neutral-500 dark:text-silver-dark">
