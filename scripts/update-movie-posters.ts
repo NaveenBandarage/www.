@@ -7,6 +7,7 @@ const posters: Record<string, string> = JSON.parse(
 );
 const aliases: Record<string, { query: string; title: string; year?: number }> =
   {
+    "i-am-rocky": { query: "i am rocky", title: "I Play Rocky", year: 2026 },
     seven: { query: "se7en", title: "Seven", year: 1995 },
     "glass-onion": { query: "glass onion", title: "Glass Onion", year: 2022 },
     "wake-up-dead-man": {
