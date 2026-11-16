@@ -20,6 +20,12 @@ export type Movie = MovieDetails & {
 
 export const movies: Movie[] = [
   {
+    id: "i-am-rocky",
+    title: "I Am Rocky",
+    watchedDate: "2026-11-15",
+    seenInTheatres: true,
+  },
+  {
     id: "godzilla-minus-zero",
     title: "Godzilla Minus Zero",
     watchedDate: "2026-11-05",
