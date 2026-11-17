@@ -23,6 +23,26 @@ scores against `lighthouserc.js`. CI uploads these reports as workflow artifacts
 Use `LIGHTHOUSE_BASE_URL` to audit an already-running server or
 `LIGHTHOUSE_RUNS=1` for a quick local check.
 
+## Images in blog posts
+
+Put images in `public/blog/` (a folder per post keeps them organized), then use
+the built-in `BlogImage` component in the MDX post:
+
+```mdx
+<BlogImage
+  src="/blog/everything-is-a-lot/photo.jpg"
+  alt="A description of the photo"
+  width="1600"
+  height="1200"
+/>
+```
+
+Use the image's actual pixel dimensions and a meaningful description. Next.js
+resizes the image for the reader's screen and loads it lazily by default. For
+an image immediately visible at the top of a post, add `priority` to load it
+early. Images should be local, or hosted on a domain allowed in `next.config.js`.
+Regular Markdown images still work but do not receive these optimizations.
+
 ## Spotify now playing
 
 The bottom-right text shows “Naveen is vibing to [song]” during playback, or
