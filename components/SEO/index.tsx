@@ -123,8 +123,8 @@ export function SEO({ seo }: { seo?: SEOProps }) {
         <link
           rel="alternate"
           type="application/rss+xml"
-          title="RSS feed"
-          href={`${baseUrl}/posts/rss`}
+          title="Naveen Bandarage's Blog RSS feed"
+          href={`${baseUrl}/rss.xml`}
         />
       </Head>
     </>

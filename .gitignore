@@ -10,6 +10,7 @@ out/
 build/
 dist/
 public/memory-explorer/
+public/rss.xml
 
 # Production
 /build
