@@ -20,6 +20,9 @@ const BlogIndex = ({ posts }: BlogIndexProps) => {
             <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
               Blog
             </h1>
+            <a href="/rss.xml" className="link link-sm">
+              RSS feed
+            </a>
           </header>
         </ScrollReveal>
         <ScrollReveal initiallyVisible delay={0.05} duration={0.3} distance={8}>

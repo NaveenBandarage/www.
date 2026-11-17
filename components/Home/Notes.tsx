@@ -18,9 +18,6 @@ export default function Notes() {
         <Link href="/notes" className="link link-sm mr-3">
           View all
         </Link>
-        <a className="link link-sm" href="/rss/notes.xml">
-          RSS
-        </a>
       </dd>
     </dl>
   );
