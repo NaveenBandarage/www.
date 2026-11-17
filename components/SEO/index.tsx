@@ -87,6 +87,7 @@ export function SEO({ seo }: { seo?: SEOProps }) {
                 jobTitle: "Software Engineer",
                 image: defaultSEO.openGraph.images[0].url,
                 sameAs: [
+                  "https://bsky.app/profile/naveenbandarage.com",
                   "https://twitter.com/naveenbandarage",
                   "https://www.linkedin.com/in/naveenbandarage",
                 ],
