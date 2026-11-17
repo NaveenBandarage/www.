@@ -5,6 +5,9 @@ import formatDate from "../../lib/formatDate";
 import { SEO } from "../SEO";
 import { ClockIcon } from "../Icons";
 import ScrollReveal from "../ScrollReveal";
+import BlogImage from "./BlogImage";
+
+const mdxComponents = { BlogImage };
 
 const BlogLayout = ({ meta, source, readingTime }) => {
   const router = useRouter();
@@ -39,7 +42,7 @@ const BlogLayout = ({ meta, source, readingTime }) => {
                 </span>
               </div>
               <div className="prose-custom">
-                <MDXRemote {...source} />
+                <MDXRemote {...source} components={mdxComponents} />
               </div>
             </dd>
             <dt className="list-title">
