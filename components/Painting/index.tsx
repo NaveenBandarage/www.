@@ -216,15 +216,21 @@ export default function Painting() {
     [reducedMotion],
   );
 
+  const renderRef = useRef(render);
+  renderRef.current = render;
+
+  useEffect(() => {
+    source.current ??= sampleScene();
+    render(source.current);
+    return () => cancelAnimationFrame(frame.current);
+  }, [render]);
+
   useEffect(() => {
     const activeLoad = loadId;
-    source.current = sampleScene();
-    render(source.current);
     return () => {
-      cancelAnimationFrame(frame.current);
       activeLoad.current++;
     };
-  }, [render]);
+  }, []);
 
   function upload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -244,13 +250,15 @@ export default function Painting() {
       next.width = WIDTH;
       next.height = HEIGHT;
       const c = next.getContext("2d")!;
+      c.fillStyle = "#f6f3ed";
+      c.fillRect(0, 0, WIDTH, HEIGHT);
       const scale = Math.max(WIDTH / image.width, HEIGHT / image.height);
       const w = image.width * scale,
         h = image.height * scale;
       c.drawImage(image, (WIDTH - w) / 2, (HEIGHT - h) / 2, w, h);
       source.current = next;
       setError("");
-      render(next);
+      renderRef.current(next);
     };
     image.onerror = () => {
       URL.revokeObjectURL(url);
