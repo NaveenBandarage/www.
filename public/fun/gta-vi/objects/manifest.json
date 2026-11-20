@@ -1,0 +1,170 @@
+{
+  "wing-left": {
+    "x": 503.5,
+    "y": 414.0,
+    "w": 627,
+    "h": 366,
+    "source": "eagle"
+  },
+  "wing-right": {
+    "x": 1099.5,
+    "y": 402.0,
+    "w": 603,
+    "h": 366,
+    "source": "eagle"
+  },
+  "eagle-body": {
+    "x": 802.0,
+    "y": 638.5,
+    "w": 360,
+    "h": 523,
+    "source": "eagle"
+  },
+  "uncle-sam": {
+    "x": 592.5424,
+    "y": 133.5484,
+    "w": 324.2615,
+    "h": 380.9032,
+    "source": "eagle-open"
+  },
+  "liberty": {
+    "x": 990.6053,
+    "y": 134.7097,
+    "w": 271.9613,
+    "h": 373.9355,
+    "source": "eagle-open"
+  },
+  "revolver": {
+    "x": 336.0,
+    "y": 84.0,
+    "w": 350,
+    "h": 168,
+    "source": "eagle"
+  },
+  "speedboat": {
+    "x": 239.2252,
+    "y": 389.0323,
+    "w": 552.0581,
+    "h": 299.6129,
+    "source": "eagle-open"
+  },
+  "muscle-car": {
+    "x": 1363.6804,
+    "y": 407.6129,
+    "w": 483.4867,
+    "h": 288.0,
+    "source": "eagle-open"
+  },
+  "hammerhead": {
+    "x": 315.5,
+    "y": 751.5,
+    "w": 449,
+    "h": 297,
+    "source": "eagle"
+  },
+  "swordfish": {
+    "x": 1221.0,
+    "y": 734.5,
+    "w": 506,
+    "h": 329,
+    "source": "eagle"
+  },
+  "flamingo-left": {
+    "x": 563.5,
+    "y": 496.5,
+    "w": 357,
+    "h": 349,
+    "source": "flamingos"
+  },
+  "flamingo-right": {
+    "x": 871.5,
+    "y": 411.5,
+    "w": 199,
+    "h": 467,
+    "source": "flamingos"
+  },
+  "statue": {
+    "x": 1517.5,
+    "y": 408.5,
+    "w": 165,
+    "h": 441,
+    "source": "flamingos"
+  },
+  "greyhound": {
+    "x": 1260.0,
+    "y": 565.0,
+    "w": 200,
+    "h": 200,
+    "source": "flamingos"
+  },
+  "pug": {
+    "x": 1317.0,
+    "y": 457.5,
+    "w": 258,
+    "h": 389,
+    "source": "chaos"
+  },
+  "skull": {
+    "x": 274.0,
+    "y": 448.5,
+    "w": 144,
+    "h": 215,
+    "source": "chaos"
+  },
+  "freedom-man": {
+    "x": 780.5,
+    "y": 498.0,
+    "w": 339,
+    "h": 764,
+    "source": "chaos"
+  },
+  "woman-left": {
+    "x": 563.0,
+    "y": 668.0,
+    "w": 240,
+    "h": 386,
+    "source": "chaos"
+  },
+  "woman-right": {
+    "x": 1089.0,
+    "y": 557.0,
+    "w": 518,
+    "h": 426,
+    "source": "chaos"
+  },
+  "gold-coin": {
+    "x": 1226.0,
+    "y": 264.5,
+    "w": 166,
+    "h": 163,
+    "source": "chaos"
+  },
+  "rifle-boy": {
+    "x": 308.5,
+    "y": 549.0,
+    "w": 409,
+    "h": 344,
+    "source": "jungle-open"
+  },
+  "tiger": {
+    "x": 1401.0,
+    "y": 526.0,
+    "w": 388,
+    "h": 496,
+    "source": "jungle-open"
+  },
+  "reading-woman": {
+    "x": 143.5,
+    "y": 503.5,
+    "w": 287,
+    "h": 595,
+    "source": "flamingos"
+  },
+  "saloon-woman": {
+    "x": 809.8789,
+    "y": 69.0968,
+    "w": 240.5811,
+    "h": 428.5161,
+    "source": "eagle-open"
+  }
+}

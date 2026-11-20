@@ -27,9 +27,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const completeIntro = useCallback(() => setIntroFinished(true), []);
   const showIntro = !introFinished && router.pathname === "/";
+  const isGtaExperiment = router.pathname === "/gta-6";
   // Full-screen experiments own their top-right controls.
   const showThemeToggle =
-    router.pathname !== "/memory" && router.pathname !== "/gallery";
+    !isGtaExperiment &&
+    router.pathname !== "/memory" &&
+    router.pathname !== "/gallery";
 
   useEffect(() => {
     router.events.on("routeChangeStart", completeIntro);
@@ -86,7 +89,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                   <ThemeToggle />
                 </div>
               ) : null}
-              {router.pathname === "/memory" ||
+              {isGtaExperiment ||
+              router.pathname === "/memory" ||
               router.pathname === "/photos" ||
               router.pathname.startsWith("/photo/") ||
               router.pathname.startsWith("/photos/") ? (
@@ -98,13 +102,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                   </PageTransition>
                 </AnimatePresence>
               )}
-              <NowPlaying />
+              {!isGtaExperiment ? <NowPlaying /> : null}
             </div>
-            <LinkPreview />
+            {!isGtaExperiment ? <LinkPreview /> : null}
           </LazyMotion>
         </MotionConfig>
 
-        <SmoothScroll />
+        {!isGtaExperiment ? <SmoothScroll /> : null}
         <Analytics />
         <SpeedInsights />
       </InteractionSounds>
