@@ -15,7 +15,7 @@ export function Main({ children, centered = false }: MainProps) {
           : undefined
       }
     >
-      <main className="m:px-0 flex justify-center px-6 pt-6 sm:pt-12">
+      <main className="m:px-0 flex justify-center px-6 pt-24 lg:pt-12">
         <article className="w-full max-w-main grow">{children}</article>
       </main>
       <Footer />

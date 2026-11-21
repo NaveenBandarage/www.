@@ -1,175 +1,37 @@
-import React from "react";
+import Link from "next/link";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
-import { LinkExternal } from "../components/Links";
-import ScrollReveal from "../components/ScrollReveal";
+import UsesGallery from "../components/UsesGallery";
+import UsesScene from "../components/UsesScene";
+import styles from "../components/UsesGallery/gallery.module.css";
 
 export default function Uses() {
   return (
-    <>
+    <div className={styles.page} data-uses-page>
       <SEO
         seo={{
           title: "Naveen Bandarage - Uses",
+          description: "The hardware, software, and everyday things I use.",
           path: "/uses",
         }}
       />
       <Main>
-        <ScrollReveal delay={0.05}>
-          <header>
-            <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
-              Uses
-            </h1>
-          </header>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.1}>
-          <div className="prose prose-neutral dark:prose-invert max-w-none">
-            <p className="text-neutral-600 dark:text-neutral-400">
-              A collection of hardware and software I use daily to build,
-              create, and stay productive. Will be updated as I change things.
-            </p>
-          </div>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.14}>
-          <dl className="list-container">
-            <dt className="list-title">
-              <h3 className="text-neutral-500 dark:text-silver-dark">Laptop</h3>
-            </dt>
-            <dd className="list-content">
-              <div className="space-y-2">
-                <div>
-                  <strong className="text-neutral-800 dark:text-white">
-                    MacBook Pro 14&quot;
-                  </strong>
-                </div>
-                <div className="text-neutral-600 dark:text-neutral-400">
-                  M3 Pro, 36GB RAM, 512GB SSD
-                </div>
-              </div>
-            </dd>
-          </dl>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.18}>
-          <dl className="list-container">
-            <dt className="list-title">
-              <h3 className="text-neutral-500 dark:text-silver-dark">Monitor</h3>
-            </dt>
-            <dd className="list-content">
-              <div className="space-y-2">
-                <div>
-                  <strong className="text-neutral-800 dark:text-white">
-                    Apple Studio Display with Nano-texture Glass (2026)
-                  </strong>
-                </div>
-                <div className="text-neutral-600 dark:text-neutral-400">
-                  60Hz is a bummer, but this display is genuinely a piece of
-                  art.
-                </div>
-              </div>
-            </dd>
-          </dl>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.22}>
-          <dl className="list-container">
-            <dt className="list-title">
-              <h3 className="text-neutral-500 dark:text-silver-dark">
-                Peripherals
-              </h3>
-            </dt>
-            <dd className="list-content">
-              <div className="space-y-4">
-                <div>
-                  <strong className="text-neutral-800 dark:text-white">
-                    Lofree Flow 2
-                  </strong>
-                  <div className="text-neutral-600 dark:text-neutral-400">
-                    Looks and sounds amazing.
-                  </div>
-                </div>
-                <div>
-                  <strong className="text-neutral-800 dark:text-white">
-                    Edifier M60
-                  </strong>
-                  <div className="text-neutral-600 dark:text-neutral-400">
-                    Simply amazing speakers.
-                  </div>
-                </div>
-                <div>
-                  <strong className="text-neutral-800 dark:text-white">
-                    MX Master 4
-                  </strong>
-                  <div className="text-neutral-600 dark:text-neutral-400">
-                    Gold standard techbro mouse.
-                  </div>
-                </div>
-                <div>
-                  <strong className="text-neutral-800 dark:text-white">
-                    Wired Apple Earphones
-                  </strong>
-                  <div className="text-neutral-600 dark:text-neutral-400">
-                    Literally can&apos;t beat a classic.
-                  </div>
-                </div>
-                <div>
-                  <strong className="text-neutral-800 dark:text-white">
-                    Apple AirPods Max (1st generation)
-                  </strong>
-                  <div className="text-neutral-600 dark:text-neutral-400">
-                    When I need to go wireless, these are my go-to. I wish they
-                    charged over USB-C, but that alone isn&apos;t enough reason to
-                    upgrade.
-                  </div>
-                </div>
-              </div>
-            </dd>
-          </dl>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.26}>
-          <dl className="list-container">
-            <dt className="list-title">
-              <h3 className="text-neutral-500 dark:text-silver-dark">
-                Software
-              </h3>
-            </dt>
-            <dd className="list-content">
-              <div className="space-y-2">
-                <div>
-                  <LinkExternal href="https://openai.com/codex/">
-                    Codex
-                  </LinkExternal>{" "}
-                  /{" "}
-                  <LinkExternal href="https://chatgpt.com">
-                    ChatGPT
-                  </LinkExternal>{" "}
-                  - I switch between both too frequently.
-                </div>
-                <div>
-                  <LinkExternal href="https://www.superlogical.com/">
-                    Rex
-                  </LinkExternal>{" "}
-                  - Simply beautiful software.
-                </div>
-                <div>
-                  <LinkExternal href="https://www.raycast.com">
-                    Raycast
-                  </LinkExternal>{" "}
-                  - Spotlight just doesn&apos;t cut it.
-                </div>
-                <div>
-                  <LinkExternal href="https://www.diabrowser.com/">
-                    Dia
-                  </LinkExternal>{" "}
-                  - Goated browser, and I&apos;m a big fan of them.
-                </div>
-              </div>
-            </dd>
-          </dl>
-        </ScrollReveal>
+        <header className={styles.header}>
+          <Link href="/" className={styles.home}>
+            <span aria-hidden="true">↖</span> Home
+          </Link>
+          <Link href="/" className={styles.name}>
+            Naveen Bandarage
+          </Link>
+          <span className={styles.pageLabel}>Uses</span>
+        </header>
+        <div className={styles.introduction}>
+          <h1>Things I use</h1>
+          <p>The things I reach for every day, on and off my desk.</p>
+        </div>
+        <UsesScene />
+        <UsesGallery />
       </Main>
-    </>
+    </div>
   );
 }

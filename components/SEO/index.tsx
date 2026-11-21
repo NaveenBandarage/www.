@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { DefaultSeo } from "next-seo";
 import React from "react";
+import { useTheme } from "../ThemeProvider";
 
 export const baseUrl = "https://naveenbandarage.com";
 
@@ -36,6 +37,7 @@ export interface SEOProps {
 }
 
 export function SEO({ seo }: { seo?: SEOProps }) {
+  const { theme } = useTheme();
   return (
     <>
       <DefaultSeo
@@ -93,6 +95,7 @@ export function SEO({ seo }: { seo?: SEOProps }) {
                 jobTitle: "Software Engineer",
                 ...(!seo?.article && { image: defaultSEO.openGraph.images[0].url }),
                 sameAs: [
+                  "https://bsky.app/profile/naveenbandarage.com",
                   "https://twitter.com/naveenbandarage",
                   "https://www.linkedin.com/in/naveenbandarage",
                 ],
@@ -102,16 +105,25 @@ export function SEO({ seo }: { seo?: SEOProps }) {
         />
 
         <meta name="author" content="Naveen Bandarage" />
-        <meta
-          name="theme-color"
-          content="#DFDFDE"
-          media="(prefers-color-scheme: light)"
-        />
-        <meta
-          name="theme-color"
-          content="#000"
-          media="(prefers-color-scheme: dark)"
-        />
+        {theme ? (
+          <meta
+            name="theme-color"
+            content={theme === "dark" ? "#000000" : "#f9fafb"}
+          />
+        ) : (
+          <>
+            <meta
+              name="theme-color"
+              content="#f9fafb"
+              media="(prefers-color-scheme: light)"
+            />
+            <meta
+              name="theme-color"
+              content="#000000"
+              media="(prefers-color-scheme: dark)"
+            />
+          </>
+        )}
         <meta
           name="google-site-verification"
           content="xISZxUJo1e-8oVJhupfam7uFwrDyn6H2kzS_dfqv7f0"

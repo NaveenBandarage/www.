@@ -129,9 +129,14 @@ svg {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  cursor: grab;
+  cursor: url("/paint-cursor.svg") 4 27, crosshair;
   touch-action: none;
   background: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  #viewport {
+    cursor: grab;
+  }
 }
 #viewport.dragging {
   cursor: grabbing;
@@ -144,12 +149,21 @@ svg {
   width: 100%;
   height: 100%;
 }
-#connections {
+#viewport canvas:not(.paint-trail) {
   z-index: 1;
+  /* A soft, offset shadow lifts the branches above the paint. */
+  filter: drop-shadow(0 3px 3px rgba(65, 79, 49, 0.24));
+}
+#viewport canvas.paint-trail {
+  pointer-events: none;
+  z-index: 0;
+}
+#connections {
+  z-index: 2;
   pointer-events: none;
 }
 #labels {
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
 }
 .tree-label {

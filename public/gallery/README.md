@@ -1,43 +1,19 @@
 # Photographs
 
-Copy your own photographs into this directory and add them to `data/gallery.ts`.
-Both `/photos` (prints and paper details) and `/gallery` (fullscreen slideshow)
-use the same collection. No reference-site photographs are included.
+Keep the photos you want to publish in this repo. From the project root, run:
 
-```ts
-{
-  src: "/gallery/your-photo.jpg",
-  alt: "Describe what is visible for screen reader users",
-  title: "A moment worth keeping",
-  width: 3024,
-  height: 4032,
-  location: "New York",
-  date: "2026-10-01",
-  camera: "Your camera",
-  exposure: "ƒ/2.8 · 1/125s · ISO 400",
-  palette: ["#25221e", "#c8b5a3", "#826855"],
-}
+```sh
+bun run photos:add -- /path/to/photo.jpg --title "Evening on Broadway" --alt "People crossing Broadway at dusk"
 ```
 
-Only publish location details you want visible. Optional metadata is omitted
-when absent. Image dimensions should match the original file.
+The command creates a web-sized WebP in `public/gallery` and adds its dimensions and details to `data/gallery-photos.json`. New photos appear first on both `/photos` and `/gallery`. Commit both files and push to publish. Keep your original photos somewhere separate as a backup; this command leaves them untouched.
 
-## Photo pages and stacks
+Optional flags:
 
-Each photo has its own `/photo/<slug>` page. Supply an optional unique `slug`;
-otherwise the image filename is used. Use URL-safe slugs and distinct filenames.
-Photos appear in the order listed. Group related photos by adding the same
-stack to each entry:
-
-```ts
-slug: "evening-on-broadway",
-stack: { slug: "new-york-walk", title: "New York walk" },
-iso: "ISO 400 · 0 EV",
-coordinates: "Only include coordinates you want public",
+```sh
+--location "New York" --date 2026-10-01 --slug evening-on-broadway --stack "New York walk"
 ```
 
-A stack appears as one layered print on `/photos` and opens a vertical sequence
-at `/photos/stack/new-york-walk`. Each print in that sequence links to its own
-photo page. The index progressively reveals 24 entries at a time, retaining the
-page count in the URL. Supported browsers animate prints between pages; reduced
-motion preferences disable that animation.
+Give related photos the same `--stack` name to show them as one layered set. Use a different `--slug` if a title is already in use. Edit the JSON file to change captions, reorder entries, or add optional fields such as `camera`, `exposure`, and `palette`; remove an entry and its image to remove a photo. Existing manually entered photos in `data/gallery.ts` continue to work.
+
+The generated image is resized to at most 2400 pixels on its longest side and its embedded metadata is removed. The title, alt text, location, and date you enter are public. The repo is a convenient home for a curated collection, but a large photo archive will make Git history and deployments grow; keep full-resolution originals in a separate backup.

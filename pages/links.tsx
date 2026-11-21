@@ -95,6 +95,13 @@ export default function Links() {
             <dd className="list-content">
               <div className="pb-2 last-of-type:pb-0">
                 <div>
+                  <AnimatedLink href="https://bsky.app/profile/naveenbandarage.com">
+                    Bluesky
+                  </AnimatedLink>
+                  <time className="time">@naveenbandarage.com</time>
+                  <br />
+                </div>
+                <div>
                   <AnimatedLink href="//x.com/naveenbandarage">
                     X/Twitter
                   </AnimatedLink>

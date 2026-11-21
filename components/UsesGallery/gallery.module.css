@@ -1,0 +1,485 @@
+.page {
+  min-height: 100vh;
+  background: #000;
+  color: #eee;
+  color-scheme: dark;
+}
+:global(html):has(.page),
+:global(body):has(.page) {
+  background: #000;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  font-size: 14px;
+}
+.name {
+  display: none;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+.pageLabel {
+  color: #808080;
+  font-size: 13px;
+}
+.home {
+  color: #a0a0a0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.home:hover,
+.name:hover {
+  color: #fff;
+}
+.introduction {
+  margin-top: 44px;
+}
+.introduction h1 {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.introduction p {
+  margin-top: 9px;
+  color: #939393;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.collection {
+  padding-bottom: 32px;
+}
+.filters {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.filter {
+  cursor: pointer;
+}
+.filter > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  border-radius: 999px;
+  padding: 7px 13px;
+  color: #969696;
+  font-size: 14px;
+  transition:
+    background 150ms,
+    color 150ms;
+}
+.filter small {
+  font-size: 11px;
+  color: #737373;
+  font-variant-numeric: tabular-nums;
+}
+.filter:hover > span {
+  color: #eee;
+}
+.filter input:checked + span {
+  color: #eee;
+  background: #202020;
+}
+.filter input:checked + span small {
+  color: #aaa;
+}
+.filter input:focus-visible + span {
+  outline: 2px solid #aaa;
+  outline-offset: 3px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 20px;
+  padding: 0;
+  margin: 32px 0 0;
+  list-style: none;
+}
+.item {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border-radius: 8px;
+  outline-offset: 8px;
+}
+.item:focus-visible,
+.home:focus-visible,
+.name:focus-visible,
+.visit:focus-visible {
+  outline: 2px solid #aaa;
+  outline-offset: 6px;
+}
+.thumbnail {
+  display: grid;
+  place-items: center;
+  height: 112px;
+  margin-bottom: 13px;
+}
+.thumbnail img {
+  object-fit: contain;
+  transition: transform 180ms ease;
+}
+.product {
+  width: auto;
+  height: auto;
+  max-width: 112px;
+  max-height: 100px;
+}
+.appIcon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 15px;
+}
+@media (hover: hover) {
+  .item:hover .thumbnail img {
+    transform: translateY(-4px);
+  }
+}
+.itemName {
+  display: block;
+  color: #e6e6e6;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.brand {
+  display: block;
+  color: #888;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 2px;
+}
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: min(440px, calc(100vw - 40px));
+  max-height: calc(100dvh - 48px);
+  margin: auto;
+  padding: 32px;
+  overflow: auto;
+  border: 1px solid #282828;
+  border-radius: 18px;
+  background: #111;
+  color: #eee;
+  box-shadow: 0 24px 100px #0008;
+  color-scheme: dark;
+}
+.dialog::backdrop {
+  background: #000b;
+  backdrop-filter: blur(8px);
+}
+.close {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  font-size: 26px;
+  font-weight: 300;
+  color: #999;
+  border-radius: 50%;
+}
+.close:hover {
+  background: #242424;
+  color: #fff;
+}
+.close:focus-visible {
+  outline: 2px solid #aaa;
+}
+.detailImage {
+  height: 220px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 28px;
+}
+.detailImage .product {
+  max-width: 260px;
+  max-height: 210px;
+}
+.detailImage .appIcon {
+  width: 112px;
+  height: 112px;
+  border-radius: 26px;
+}
+.detailBrand {
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.dialog h2 {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+.note {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-top: 14px;
+}
+.visit {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 26px;
+  font-size: 14px;
+}
+.visit:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.page footer {
+  color: #888;
+}
+.page footer a,
+.page footer div,
+.page footer p,
+.page footer time,
+.page footer button {
+  color: #888;
+}
+.page footer a:hover,
+.page footer button:hover,
+.page footer a[aria-current="page"] {
+  color: #eee;
+}
+.page footer nav a > span {
+  background: #ffffff12;
+}
+.page footer > div > div {
+  border-color: #1c1c1c;
+}
+@media (min-width: 640px) {
+  .header {
+    margin-top: 2px;
+  }
+  .name {
+    display: inline;
+  }
+  .home {
+    position: absolute;
+    right: calc(100% + 48px);
+    white-space: nowrap;
+  }
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 42px;
+  }
+}
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .home {
+    position: static;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .thumbnail img,
+  .filter > span {
+    transition: none;
+  }
+  .item:hover .thumbnail img {
+    transform: none;
+  }
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px 24px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 155px;
+  border-bottom: 1px solid #353535;
+  color: #aaa;
+  font-size: 20px;
+}
+.search:focus-within {
+  border-color: #b5b5b5;
+}
+.search input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 0;
+  outline: none;
+  background: transparent;
+  color: #eee;
+  font-size: 13px;
+}
+.search input::placeholder {
+  color: #858585;
+}
+.empty {
+  margin: 48px 0;
+  color: #aaa;
+  font-size: 14px;
+}
+.dialog {
+  width: min(820px, calc(100vw - 40px));
+  padding: 40px;
+  opacity: 0;
+  transform: translateY(10px) scale(0.985);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease,
+    display 220ms allow-discrete,
+    overlay 220ms allow-discrete;
+}
+.dialog[open] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.dialog::backdrop {
+  opacity: 0;
+  transition:
+    opacity 220ms ease,
+    display 220ms allow-discrete,
+    overlay 220ms allow-discrete;
+}
+.dialog[open]::backdrop {
+  opacity: 1;
+}
+@starting-style {
+  .dialog[open] {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  .dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+.detailContent {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 36px;
+  align-items: center;
+  min-height: 350px;
+  animation: detail-enter 240ms ease both;
+}
+.detailImage {
+  height: 320px;
+  margin: 0;
+}
+.detailImage .product {
+  max-width: 100%;
+  max-height: 280px;
+}
+.detailImage .appIcon {
+  width: 150px;
+  height: 150px;
+  border-radius: 30px;
+}
+.detailCopy {
+  max-width: 330px;
+}
+.detailBrand {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+}
+.detailNavigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #282828;
+  color: #888;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.detailNavigation div {
+  display: flex;
+  gap: 8px;
+}
+.detailNavigation button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #303030;
+  border-radius: 50%;
+  color: #ddd;
+  font-size: 18px;
+  transition:
+    border-color 160ms,
+    background 160ms;
+}
+.detailNavigation button:hover:not(:disabled) {
+  background: #222;
+  border-color: #666;
+}
+.detailNavigation button:focus-visible {
+  outline: 2px solid #aaa;
+  outline-offset: 3px;
+}
+.detailNavigation button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+@keyframes detail-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 639px) {
+  .toolbar {
+    align-items: stretch;
+  }
+  .search {
+    margin-left: 13px;
+    width: min(220px, 100%);
+  }
+  .dialog {
+    padding: 28px;
+  }
+  .detailContent {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    min-height: 0;
+  }
+  .detailImage {
+    height: 200px;
+  }
+  .detailImage .product {
+    max-width: 220px;
+    max-height: 190px;
+  }
+  .detailImage .appIcon {
+    width: 100px;
+    height: 100px;
+  }
+  .detailNavigation {
+    margin-top: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialog,
+  .dialog::backdrop,
+  .detailNavigation button {
+    transition: none;
+  }
+  .detailContent {
+    animation: none;
+  }
+}

@@ -23,16 +23,6 @@ export default function PhotosPage() {
           </header>
         </ScrollReveal>
         <ScrollReveal initiallyVisible delay={0.05} duration={0.3} distance={8}>
-          <dl className="list-container">
-            <dt className="list-title">
-              <h2 className="text-neutral-500 dark:text-silver-dark">
-                Things I notice
-              </h2>
-            </dt>
-            <dd className="list-content">
-              Small moments, places and things that catch my eye.
-            </dd>
-          </dl>
           <div className="mt-12 sm:mt-16">
             <PhotoCollection photos={galleryPhotos} />
           </div>

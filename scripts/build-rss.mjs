@@ -23,6 +23,6 @@ const items = posts.map(({ slug, title, description, date }) => {
   return `    <item>\n      <title>${escapeXml(title)}</title>\n      <link>${escapeXml(url)}</link>\n      <guid isPermaLink="true">${escapeXml(url)}</guid>\n      <pubDate>${date.toUTCString()}</pubDate>\n      <description>${escapeXml(description)}</description>\n    </item>`;
 }).join("\n");
 
-const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n  <channel>\n    <title>Naveen Bandarage's Blog</title>\n    <link>${siteUrl}/blog</link>\n    <description>Writing by Naveen Bandarage.</description>\n    <language>en</language>\n    <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml" />\n${items}\n  </channel>\n</rss>\n`;
+const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n  <channel>\n    <title>Naveen Bandarage's Blog</title>\n    <link>${siteUrl}/blog</link>\n    <description>Writing by Naveen Bandarage.</description>\n    <language>en</language>\n    <image>\n      <url>${siteUrl}/site-icon.png</url>\n      <title>Naveen Bandarage's Blog</title>\n      <link>${siteUrl}/blog</link>\n    </image>\n    <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml" />\n${items}\n  </channel>\n</rss>\n`;
 await writeFile("public/rss.xml", xml);
 console.log(`Generated RSS feed with ${posts.length} posts.`);

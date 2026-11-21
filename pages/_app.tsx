@@ -11,6 +11,9 @@ import SmoothScroll from "../components/SmoothScroll";
 import SignatureIntro from "../components/SignatureIntro";
 import NowPlaying from "../components/NowPlaying";
 import InteractionSounds from "../components/InteractionSounds";
+import ThemeProvider from "../components/ThemeProvider";
+import ThemeToggle from "../components/ThemeToggle";
+import LinkPreview from "../components/LinkPreview";
 
 const loadMotionFeatures = () =>
   import("../lib/motionFeatures").then((module) => module.default);
@@ -25,6 +28,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const completeIntro = useCallback(() => setIntroFinished(true), []);
   const showIntro = !introFinished && router.pathname === "/";
   const isGtaExperiment = router.pathname === "/gta-6";
+  // Full-screen experiments own their top-right controls.
+  const showThemeToggle =
+    !isGtaExperiment &&
+    router.pathname !== "/memory" &&
+    router.pathname !== "/gallery";
 
   useEffect(() => {
     router.events.on("routeChangeStart", completeIntro);
@@ -65,37 +73,45 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   return (
-    <InteractionSounds>
-      <MotionConfig reducedMotion="user">
-        <LazyMotion features={loadMotionFeatures} strict>
-          {showIntro ? (
-            <SignatureIntro
-              onComplete={completeIntro}
-              contentRef={contentRef}
-            />
-          ) : null}
-          <div ref={contentRef}>
-            {isGtaExperiment ||
-            router.pathname === "/memory" ||
-            router.pathname === "/photos" ||
-            router.pathname.startsWith("/photo/") ||
-            router.pathname.startsWith("/photos/") ? (
-              <Component {...pageProps} />
-            ) : (
-              <AnimatePresence mode="wait">
-                <PageTransition key={router.asPath}>
-                  <Component {...pageProps} />
-                </PageTransition>
-              </AnimatePresence>
-            )}
-            {!isGtaExperiment ? <NowPlaying /> : null}
-          </div>
-        </LazyMotion>
-      </MotionConfig>
+    <ThemeProvider>
+      <InteractionSounds>
+        <MotionConfig reducedMotion="user">
+          <LazyMotion features={loadMotionFeatures} strict>
+            {showIntro ? (
+              <SignatureIntro
+                onComplete={completeIntro}
+                contentRef={contentRef}
+              />
+            ) : null}
+            <div ref={contentRef}>
+              {showThemeToggle ? (
+                <div className="fixed right-6 top-6 z-40 sm:right-8 sm:top-8">
+                  <ThemeToggle />
+                </div>
+              ) : null}
+              {isGtaExperiment ||
+              router.pathname === "/memory" ||
+              router.pathname === "/photos" ||
+              router.pathname.startsWith("/photo/") ||
+              router.pathname.startsWith("/photos/") ? (
+                <Component {...pageProps} />
+              ) : (
+                <AnimatePresence mode="wait">
+                  <PageTransition key={router.asPath}>
+                    <Component {...pageProps} />
+                  </PageTransition>
+                </AnimatePresence>
+              )}
+              {!isGtaExperiment ? <NowPlaying /> : null}
+            </div>
+            {!isGtaExperiment ? <LinkPreview /> : null}
+          </LazyMotion>
+        </MotionConfig>
 
-      {!isGtaExperiment ? <SmoothScroll /> : null}
-      <Analytics />
-      <SpeedInsights />
-    </InteractionSounds>
+        {!isGtaExperiment ? <SmoothScroll /> : null}
+        <Analytics />
+        <SpeedInsights />
+      </InteractionSounds>
+    </ThemeProvider>
   );
 }
