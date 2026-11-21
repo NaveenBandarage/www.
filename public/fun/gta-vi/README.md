@@ -13,7 +13,9 @@ illustrations support it through depth and parallax. Controls remain still.
 
 `components/GtaLoading/motion.ts` describes one continuous dolly and its aim,
 using shape-preserving cubic interpolation through measured reference beats.
-Velocity is continuous across anchors; the camera does not stop at every scene.
+Velocity is continuous across anchors; a short smoothing kernel softens changes
+in acceleration. Redundant anchors are removed so the camera carries speed
+through the garden, arches and medallion instead of braking at each composition.
 The five compositions occupy fixed depth planes. Projection carries foreground
 pieces past the camera, then the same scenery reappears on the backward flight.
 The retreating lens keeps the artwork full-screen until an aspect-correct star
@@ -31,7 +33,9 @@ aperture closes it out; the composition does not recede into a small island.
 | 11.2–14s       | Star and glowing Rockstar-style mark          | Glow settles to the final still                              |
 
 `sequence.ts` projects every object from that shared camera and its own depth.
-Foliage has a small breeze; coins, wings, and flames have restrained local motion.
+Foliage sways from its stems, ring layers counter-rotate with the flight, oranges
+and flowers drift, coins turn, and wings and flamingos move around their bases.
+The tableau retains a slow dolly while flames continue their uneven flicker.
 Figures and signage stay assembled. A single playhead drives numeric object poses
 on each animation frame, outside React's render cycle. The small interface effects
 use the Web Animations API. Playback and frame study draw the same poses; all
@@ -50,7 +54,11 @@ sprite cache, capped at 1024 pixels on its longest side. One viewport-sized Canv
 The drawing buffer is capped at 5 million pixels and 2× display density. This
 avoids the nested animated DOM layers that caused missing and sliced artwork
 during live playback. The closing star clips the drawing inside Canvas, without
-an animated CSS clipping ancestor. SVG sources contain no embedded bitmap images.
+an animated CSS clipping ancestor. Its scale uses one continuous curve, with a
+warm-to-purple neon outline. Only the fast opening and reverse use a second
+half-frame shutter sample; scenic passages stay at one draw per tick. The extra
+buffer has the same viewport bounds and is reused. SVG sources contain no
+embedded bitmap images.
 Traced SVGs have explicit view boxes and transparent edge padding. Opening figures
 come from an uncropped frame, preserving the hat, crown and central woman. The
 opening composition uses the full 16:9 frame instead of its earlier cropped plate.

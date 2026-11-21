@@ -1,4 +1,4 @@
-import { cameraAt, STAR_PATH } from "./motion";
+import { cameraAt, irisAt, STAR_PATH } from "./motion";
 import {
   PIECES,
   WORLDS,
@@ -57,6 +57,7 @@ const scenes = [...WORLDS].reverse().map((world) => ({
     })),
 }));
 const RAD = Math.PI / 180;
+const shutterBuffers = new WeakMap<HTMLCanvasElement, HTMLCanvasElement>();
 
 export function drawScene(
   canvas: HTMLCanvasElement,
@@ -80,6 +81,41 @@ export function drawScene(
     canvas.width = pixelWidth;
     canvas.height = pixelHeight;
   }
+  const speed = Math.abs(cameraAt(frame + 0.5).z - cameraAt(frame - 0.5).z);
+  if (!reduced && speed > 65 && frame > 111 && frame < 670) {
+    // Two short shutter samples soften the fast fly-throughs. Only the rush
+    // uses a second pass; the longer scenic passages remain one draw per tick.
+    let buffer = shutterBuffers.get(canvas);
+    if (!buffer) {
+      buffer = document.createElement("canvas");
+      shutterBuffers.set(canvas, buffer);
+    }
+    if (buffer.width !== pixelWidth || buffer.height !== pixelHeight) {
+      buffer.width = pixelWidth;
+      buffer.height = pixelHeight;
+    }
+    const buffered = buffer.getContext("2d", { alpha: false });
+    if (buffered) {
+      paintArtwork(ctx, width, height, dpr, frame - 0.5, reduced);
+      paintArtwork(buffered, width, height, dpr, frame, reduced);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.globalAlpha = 0.78;
+      ctx.drawImage(buffer, 0, 0);
+      ctx.globalAlpha = 1;
+      return;
+    }
+  }
+  paintArtwork(ctx, width, height, dpr, frame, reduced);
+}
+
+function paintArtwork(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  dpr: number,
+  frame: number,
+  reduced: boolean,
+) {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.globalAlpha = 1;
   ctx.fillStyle = "#211f2d";
@@ -95,18 +131,9 @@ export function drawScene(
   let irisScale = 4,
     irisOpacity = 0;
   if (!reduced && frame >= 651 && frame < 682) {
-    if (frame < 659) {
-      const t = (frame - 651) / 8;
-      irisScale = 4 + (0.95 - 4) * t;
-      irisOpacity = 0.8 * t;
-    } else if (frame < 674) {
-      const t = (frame - 659) / 15;
-      irisScale = 0.95 + (0.008 - 0.95) * t;
-      irisOpacity = 0.8 + 0.2 * t;
-    } else {
-      irisScale = 0.008;
-      irisOpacity = 1 - (frame - 674) / 8;
-    }
+    const iris = irisAt(frame);
+    irisScale = iris.scale;
+    irisOpacity = iris.opacity;
     aperture = new Path2D();
     aperture.addPath(
       new Path2D(STAR_PATH),
@@ -156,7 +183,16 @@ export function drawScene(
   ctx.restore();
   if (aperture && irisOpacity > 0) {
     ctx.globalAlpha = irisOpacity;
-    ctx.strokeStyle = "#f98fdc";
+    const glow = ctx.createLinearGradient(
+      800 - 800 * irisScale,
+      450 - 800 * irisScale,
+      800 + 800 * irisScale,
+      450 + 800 * irisScale,
+    );
+    glow.addColorStop(0, "#ffc477");
+    glow.addColorStop(0.45, "#ff9cce");
+    glow.addColorStop(1, "#b645f5");
+    ctx.strokeStyle = glow;
     ctx.lineWidth = 12 * irisScale;
     ctx.shadowColor = "#d954dd";
     ctx.shadowBlur = 9 * dpr * fit;

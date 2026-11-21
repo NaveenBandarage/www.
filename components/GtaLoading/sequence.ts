@@ -104,6 +104,9 @@ function ring(
       {
         rotation: (theta * 180) / Math.PI + (kind === "palm-frond" ? 45 : 90),
         orbit: { theta, radius, direction: depth % 2 === 0 ? 1 : -1 },
+        ...(kind === "palm" || kind === "palm-frond"
+          ? { origin: "50% 85%" }
+          : {}),
       },
     );
   }
@@ -165,8 +168,8 @@ ring("cloud", "flamingos", 7, 520, 470, 20, 0.4);
 add("panorama", "flamingos", 800, 450, 1800, 1020, 26);
 add("portal", "flamingos", 800, 440, 870, 870, -4);
 add("medallion", "flamingos", 800, 440, 870, 870, 1);
-cutout("flamingo-left", "flamingos", -10);
-cutout("flamingo-right", "flamingos", -9);
+cutout("flamingo-left", "flamingos", -10, { origin: "50% 95%" });
+cutout("flamingo-right", "flamingos", -9, { origin: "50% 95%" });
 add("greyhound", "flamingos", 1320, 630, 300, 270, 4);
 add("reading-woman", "flamingos", 160, 590, 370, 680, -3);
 add("statue", "flamingos", 1450, 360, 200, 580, 12);
@@ -208,10 +211,13 @@ export interface PiecePose {
   scaleY: number;
   opacity: number;
 }
+const referenceCameras = new Map(
+  WORLDS.map((world) => [world.id, cameraAt(world.referenceFrame)]),
+);
 const sizes = new Map(
   WORLDS.map((world) => [
     world.id,
-    (world.distance - cameraAt(world.referenceFrame).z) / FOCAL_LENGTH,
+    (world.distance - referenceCameras.get(world.id)!.z) / FOCAL_LENGTH,
   ]),
 );
 const beats: Record<string, [number, number]> = {
@@ -247,6 +253,7 @@ export function worldPoseAt(
     opacity:
       view.opacity *
       (world.id === "chaos" ? ramp(1750, 2050, view.z) : 1) *
+      (world.id === "flamingos" ? ramp(175, 300, view.gap) : 1) *
       (world.id === "architecture" ? ramp(220, 480, view.gap) : 1),
   };
 }
@@ -267,7 +274,7 @@ export function piecePoseAt(
     };
   const world = worlds.get(piece.world)!;
   const gap = Math.max(120, world.distance - camera.z);
-  const ratio = gap / Math.max(70, gap + piece.depth * 3);
+  const ratio = gap / Math.max(70, gap + piece.depth * 5);
   let x = (piece.x - camera.x) * (ratio - 1),
     y = (piece.y - camera.y) * (ratio - 1);
   let rotation = piece.rotation,
@@ -275,25 +282,56 @@ export function piecePoseAt(
     tilt = 0;
   const t = frame / FPS,
     phase = piece.x * 0.017 + piece.y * 0.013;
-  const travel = ramp(-1200, 200, camera.z - world.distance);
+  // Position follows the lens on both journeys; local motion continues while
+  // the camera lingers. Using a saturated entrance ramp here froze the rings.
+  const flight = Math.atan(
+    (camera.z - referenceCameras.get(world.id)!.z) / 900,
+  );
   if (piece.orbit) {
     const { theta, radius, direction } = piece.orbit;
-    const angle = theta + travel * 0.065 * direction;
-    x += (Math.cos(angle) - Math.cos(theta)) * radius;
-    y += (Math.sin(angle) - Math.sin(theta)) * radius * 0.75;
-    rotation += travel * 3.7 * direction;
+    const drift = Math.sin(t * 0.55 + theta) * 0.035;
+    const turn = (flight * 0.16 + drift) * direction;
+    const angle = theta + turn;
+    const breathing = 1 + Math.sin(t * 0.8 + theta * 2) * 0.014;
+    x += (Math.cos(angle) * breathing - Math.cos(theta)) * radius;
+    y += (Math.sin(angle) * breathing - Math.sin(theta)) * radius * 0.75;
+    rotation += (turn * 180) / Math.PI;
   }
   if (piece.kind === "palm" || piece.kind === "palm-frond") {
-    rotation += Math.sin(t * 0.7 + phase) * 1.2;
-    x += Math.sin(t * 0.6 + phase) * 3;
+    rotation +=
+      Math.sin(t * 1.15 + phase) * 3.2 + Math.sin(t * 1.9 + phase * 0.7) * 0.9;
+    x += Math.sin(t * 0.85 + phase) * 7;
+    y += Math.cos(t * 1.1 + phase) * 4;
+    sy *= 1 + Math.sin(t * 1.3 + phase) * 0.018;
   } else if (piece.kind === "flame") {
-    sy *= 1 + Math.sin(t * 5 + phase) * 0.025;
-    rotation += Math.sin(t * 3 + phase) * 0.6;
+    sy *=
+      1 + Math.sin(t * 6 + phase) * 0.065 + Math.sin(t * 10.7 + phase) * 0.02;
+    rotation += Math.sin(t * 3.2 + phase) * 2.2;
+    y += Math.sin(t * 4.3 + phase) * 5;
   } else if (piece.kind === "gold-coin") {
-    tilt = Math.sin(t * 0.65 + phase) * 5;
+    tilt = Math.sin(t * 1.35 + phase) * 32;
+    rotation += Math.sin(t * 0.85 + phase) * 8;
+    y += Math.sin(t * 1.2 + phase) * 9;
+  } else if (piece.kind === "orange" || piece.kind === "blossom") {
+    x += Math.sin(t * 0.95 + phase) * 5;
+    y += Math.cos(t * 1.25 + phase) * 8;
+    rotation += Math.sin(t * 0.8 + phase) * 5;
+  } else if (piece.kind === "gold-snake") {
+    rotation += Math.sin(t * 0.9 + phase) * 3;
+    x += Math.sin(t * 1.2 + phase) * 9;
+    y += Math.cos(t * 0.8 + phase) * 8;
+  } else if (
+    piece.kind === "flamingo-left" ||
+    piece.kind === "flamingo-right"
+  ) {
+    const side = piece.kind === "flamingo-left" ? 1 : -1;
+    rotation += Math.sin(t * 1.1 + side * 0.6) * 1.6 * side;
+    y += Math.sin(t * 1.1 + side * 0.6) * 3;
   } else if (piece.kind === "wing-left" || piece.kind === "wing-right") {
     rotation +=
-      (piece.kind === "wing-left" ? 1 : -1) * Math.sin(t * 0.45) * 0.9;
+      (piece.kind === "wing-left" ? 1 : -1) *
+      (Math.sin(t * 1.1) * 1.4 + flight * 2.2);
+    sy *= 1 + Math.sin(t * 1.1) * 0.012;
   }
   const opacity =
     piece.kind === "medallion" || piece.kind === "panorama"

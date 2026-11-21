@@ -48,8 +48,20 @@ export const ramp = (start: number, end: number, value: number) => {
   return t * t * (3 - 2 * t);
 };
 
-const track = (values: [number, number][]) =>
-  smoothTrack(values.map(([frame, value]) => ({ frame, value })));
+const track = (values: [number, number][]) => {
+  const sample = smoothTrack(
+    values.map(([frame, value]) => ({ frame, value })),
+  );
+  // A short shutter-shaped kernel softens acceleration changes at measured
+  // beats without introducing a fresh ease-out at every scene boundary.
+  return (frame: number) =>
+    (sample(frame - 3) +
+      4 * sample(frame - 1.5) +
+      6 * sample(frame) +
+      4 * sample(frame + 1.5) +
+      sample(frame + 3)) /
+    16;
+};
 
 // Measured beats in the supplied 00:07–00:21 cut. One dolly goes forwards,
 // breathes on the freedom tableau, then retraces ALL the earlier scenery.
@@ -59,21 +71,14 @@ const dolly = track([
   [116, -2400],
   [129, -1450],
   [149, -1300],
-  [166, -1100],
   [187, -670],
-  [216, -350],
   [245, -50],
-  [273, 160],
-  [305, 480],
   [337, 850],
-  [364, 1170],
-  [389, 1460],
-  [419, 1540],
+  [389, 1390],
   [441, 1670],
-  [471, 2040],
   [493, 2310],
-  [516, 2380],
-  [563, 2400],
+  [516, 2325],
+  [563, 2375],
   [606, 2425],
   [614, 2420],
   [621, 2250],
@@ -91,8 +96,9 @@ const aimX = track([
   [337, 850],
   [389, 810],
   [441, 800],
-  [516, 790],
-  [606, 800],
+  [516, 786],
+  [563, 800],
+  [606, 815],
   [644, 835],
   [669, 800],
   [840, 800],
@@ -107,7 +113,8 @@ const aimY = track([
   [389, 440],
   [441, 420],
   [493, 450],
-  [606, 450],
+  [540, 444],
+  [606, 431],
   [644, 420],
   [669, 450],
   [840, 450],
@@ -159,3 +166,17 @@ export function project(distance: number, frame: number) {
 
 export const STAR_PATH =
   "M12 1.5 14.6 8.8 22.4 9.1 16.3 14 18.4 21.5 12 17.1 5.6 21.5 7.7 14 1.6 9.1 9.4 8.8Z";
+
+const irisSize = track([
+  [648, 4.8],
+  [651, 4],
+  [659, 0.95],
+  [674, 0.008],
+  [682, 0.008],
+]);
+export function irisAt(frame: number) {
+  return {
+    scale: irisSize(frame),
+    opacity: ramp(651, 659, frame) * (1 - ramp(674, 682, frame)),
+  };
+}

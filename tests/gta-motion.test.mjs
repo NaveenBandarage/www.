@@ -6,6 +6,7 @@ import {
   project,
   smoothTrack,
   FOCAL_LENGTH,
+  irisAt,
 } from "../components/GtaLoading/motion";
 import {
   PIECES,
@@ -113,5 +114,52 @@ describe("GTA camera flight", () => {
         }
       }
     }
+  });
+
+  test("the scenic flight carries speed and the tableau keeps approaching", () => {
+    for (let frame = 150; frame < 490; frame += 0.5) {
+      assert.ok(
+        cameraAt(frame + 0.5).z - cameraAt(frame - 0.5).z > 2,
+        `Camera settled during the flight at ${frame}`,
+      );
+    }
+    const tableau = WORLDS.find((world) => world.id === "chaos");
+    const growth =
+      worldPoseAt(tableau, 606).scale / worldPoseAt(tableau, 516).scale;
+    assert.ok(growth > 1.07 && growth < 1.15);
+    const flamingos = WORLDS.find((world) => world.id === "flamingos");
+    for (const frame of [516, 540, 580, 606])
+      assert.ok(
+        worldPoseAt(flamingos, frame).opacity < 0.001,
+        `The previous scene ghosts over the tableau at ${frame}`,
+      );
+  });
+
+  test("secondary motion remains alive in the hold and stationary in reduced motion", () => {
+    for (const kind of ["flame", "gold-coin", "wing-left", "poster"]) {
+      const piece = PIECES.find((p) => p.world === "chaos" && p.kind === kind);
+      const start = piecePoseAt(piece, 540);
+      const end = piecePoseAt(piece, 580);
+      assert.ok(Math.abs(start.rotation - end.rotation) > 0.1, kind);
+      assert.deepEqual(
+        piecePoseAt(piece, 540, true),
+        piecePoseAt(piece, 580, true),
+      );
+    }
+  });
+
+  test("the closing star decelerates continuously through its handoff", () => {
+    let previous = irisAt(651).scale;
+    for (let frame = 651; frame <= 682; frame += 0.1) {
+      const iris = irisAt(frame);
+      assert.ok(iris.scale > 0 && iris.scale <= previous + 1e-8);
+      assert.ok(iris.opacity >= 0 && iris.opacity <= 1);
+      previous = iris.scale;
+    }
+    const delta = 0.001;
+    const center = irisAt(659).scale;
+    const before = (center - irisAt(659 - delta).scale) / delta;
+    const after = (irisAt(659 + delta).scale - center) / delta;
+    assert.ok(Math.abs(before - after) < 0.001);
   });
 });
