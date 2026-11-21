@@ -33,13 +33,21 @@ export interface SEOProps {
   description?: string;
   image?: string;
   path?: string;
+  article?: boolean;
 }
 
 export function SEO({ seo }: { seo?: SEOProps }) {
   const { theme } = useTheme();
   return (
     <>
-      <DefaultSeo {...{ ...defaultSEO, ...seo }} />
+      <DefaultSeo
+        {...{ ...defaultSEO, ...seo }}
+        openGraph={
+          seo?.article
+            ? { ...defaultSEO.openGraph, type: "article", url: `${baseUrl}${seo.path}`, images: [] }
+            : defaultSEO.openGraph
+        }
+      />
       <Head>
         <meta name="googlebot" content="index,follow" />
         <link
@@ -78,14 +86,14 @@ export function SEO({ seo }: { seo?: SEOProps }) {
               "@type": "WebSite",
               name: defaultSEO.title,
               url: baseUrl,
-              image: defaultSEO.openGraph.images[0].url,
+              ...(!seo?.article && { image: defaultSEO.openGraph.images[0].url }),
               author: {
                 "@context": "http://schema.org",
                 "@type": "Person",
                 name: defaultSEO.title,
                 url: baseUrl,
                 jobTitle: "Software Engineer",
-                image: defaultSEO.openGraph.images[0].url,
+                ...(!seo?.article && { image: defaultSEO.openGraph.images[0].url }),
                 sameAs: [
                   "https://bsky.app/profile/naveenbandarage.com",
                   "https://twitter.com/naveenbandarage",

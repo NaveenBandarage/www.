@@ -6,6 +6,7 @@ import { SEO } from "../SEO";
 import { ClockIcon } from "../Icons";
 import ScrollReveal from "../ScrollReveal";
 import BlogImage from "./BlogImage";
+import ReadingBar from "./ReadingBar";
 
 const mdxComponents = { BlogImage };
 
@@ -14,7 +15,7 @@ const BlogLayout = ({ meta, source, readingTime }) => {
 
   return (
     <>
-      <SEO seo={meta} />
+      <SEO seo={{ ...meta, article: true }} />
       <Main>
         <ScrollReveal delay={0.05}>
           <div className="flex w-full flex-col justify-between sm:flex-row">
@@ -41,7 +42,7 @@ const BlogLayout = ({ meta, source, readingTime }) => {
                   {readingTime}
                 </span>
               </div>
-              <div className="prose-custom">
+              <div id="blog-reading-content" className="prose-custom">
                 <MDXRemote {...source} components={mdxComponents} />
               </div>
             </dd>
@@ -64,6 +65,8 @@ const BlogLayout = ({ meta, source, readingTime }) => {
           </dl>
         </ScrollReveal>
       </Main>
+      <div aria-hidden="true" className="h-24" />
+      <ReadingBar key={meta.path} title={meta.title} readingTime={readingTime} />
     </>
   );
 };
