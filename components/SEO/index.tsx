@@ -15,7 +15,7 @@ export const defaultSEO = {
     site_name: "Naveen Bandarage",
     images: [
       {
-        url: `${baseUrl}/logo.png`,
+        url: `${baseUrl}/site-icon.png`,
         alt: "Naveen Bandarage",
       },
     ],
@@ -32,12 +32,20 @@ export interface SEOProps {
   description?: string;
   image?: string;
   path?: string;
+  article?: boolean;
 }
 
 export function SEO({ seo }: { seo?: SEOProps }) {
   return (
     <>
-      <DefaultSeo {...{ ...defaultSEO, ...seo }} />
+      <DefaultSeo
+        {...{ ...defaultSEO, ...seo }}
+        openGraph={
+          seo?.article
+            ? { ...defaultSEO.openGraph, type: "article", url: `${baseUrl}${seo.path}`, images: [] }
+            : defaultSEO.openGraph
+        }
+      />
       <Head>
         <meta name="googlebot" content="index,follow" />
         <link
@@ -57,7 +65,7 @@ export function SEO({ seo }: { seo?: SEOProps }) {
           sizes="16x16"
           href="/favicon-16x16.png"
         />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
 
         {/* Need to see if its worth having an svg version */}
         {/* <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" /> */}
@@ -76,14 +84,14 @@ export function SEO({ seo }: { seo?: SEOProps }) {
               "@type": "WebSite",
               name: defaultSEO.title,
               url: baseUrl,
-              image: defaultSEO.openGraph.images[0].url,
+              ...(!seo?.article && { image: defaultSEO.openGraph.images[0].url }),
               author: {
                 "@context": "http://schema.org",
                 "@type": "Person",
                 name: defaultSEO.title,
                 url: baseUrl,
                 jobTitle: "Software Engineer",
-                image: defaultSEO.openGraph.images[0].url,
+                ...(!seo?.article && { image: defaultSEO.openGraph.images[0].url }),
                 sameAs: [
                   "https://twitter.com/naveenbandarage",
                   "https://www.linkedin.com/in/naveenbandarage",
@@ -111,8 +119,8 @@ export function SEO({ seo }: { seo?: SEOProps }) {
         <link
           rel="alternate"
           type="application/rss+xml"
-          title="RSS feed"
-          href={`${baseUrl}/posts/rss`}
+          title="Naveen Bandarage's Blog RSS feed"
+          href={`${baseUrl}/rss.xml`}
         />
       </Head>
     </>

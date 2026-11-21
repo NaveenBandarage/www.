@@ -10,6 +10,8 @@ out/
 build/
 dist/
 public/memory-explorer/
+public/rss.xml
+.substack-export/
 
 # Production
 /build

@@ -17,7 +17,7 @@ export default function Home({ latestPosts }) {
           path: "/",
         }}
       />
-      <Main>
+      <Main centered>
         <div className="relative">
           <div
             aria-hidden

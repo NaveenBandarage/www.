@@ -27,6 +27,9 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [{ source: "/posts/rss", destination: "/rss.xml", permanent: true }];
+  },
   async headers() {
     const headers = [
       { key: "X-Content-Type-Options", value: "nosniff" },
@@ -49,7 +52,13 @@ const nextConfig = {
       });
     }
 
-    return [{ source: "/(.*)", headers }];
+    return [
+      { source: "/(.*)", headers },
+      {
+        source: "/rss.xml",
+        headers: [{ key: "Content-Type", value: "application/rss+xml; charset=utf-8" }],
+      },
+    ];
   },
 };
 

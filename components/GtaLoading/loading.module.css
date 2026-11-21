@@ -1,0 +1,365 @@
+.experiment {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  isolation: isolate;
+  background: #211f2d;
+  color: #fff;
+  color-scheme: dark;
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.burst {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: calc(50% - 90px);
+  left: calc(50% - 90px);
+  color: #f0aacf;
+  opacity: 0;
+  filter: drop-shadow(0 0 25px #b127b1);
+}
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.055;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' d='M0 0h140v140H0z'/%3E%3C/svg%3E");
+}
+.stars {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: clamp(130px, 15vw, 230px);
+  gap: 5px;
+  margin-left: clamp(-115px, -7.5vw, -65px);
+  margin-top: -13px;
+  color: #fff;
+}
+
+.stars > span {
+  position: relative;
+  flex: 1;
+  filter: drop-shadow(0 0 4px #fc75c380);
+}
+
+.starWhite {
+  position: absolute;
+  inset: 0;
+  color: white;
+  opacity: 0;
+}
+
+.stars > span:nth-child(1),
+.stars > span:nth-child(2) {
+  filter: drop-shadow(0 0 6px #ffad7190);
+}
+
+.stars svg,
+.burst svg,
+.spark svg {
+  display: block;
+  width: 100%;
+}
+
+.spark {
+  position: absolute;
+  top: calc(50% - 9px);
+  left: calc(50% - 9px);
+  width: 18px;
+  opacity: 0;
+}
+
+.streaks {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  opacity: 0;
+}
+.streaks {
+  width: 150vmax;
+  height: 150vmax;
+  margin: -75vmax 0 0 -75vmax;
+  color: #f1e7c5;
+}
+
+.mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(90px, 10vw, 145px);
+  aspect-ratio: 1;
+  margin-top: clamp(-72.5px, -5vw, -45px);
+  margin-left: clamp(-72.5px, -5vw, -45px);
+  opacity: 0;
+}
+
+.logo,
+.glow {
+  position: absolute;
+  inset: 0;
+}
+
+.logo svg,
+.glow svg {
+  width: 100%;
+  height: 100%;
+}
+
+.logo {
+  color: #fff;
+}
+
+.glow {
+  border-radius: 18%;
+  color: #ff8bdc;
+  background: conic-gradient(
+    from 30deg,
+    #5a48ff55,
+    #ef25ff66,
+    #fe71d86b,
+    #ffba6c55,
+    #5a48ff55
+  );
+  box-shadow:
+    -12px -7px 28px #ffb55a44,
+    10px 12px 30px #e328ed55;
+  filter: blur(9px);
+  opacity: 0.7;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    #17142045 100%
+  );
+  pointer-events: none;
+}
+
+.experiment[data-still="true"] .stars {
+  opacity: 0;
+}
+
+.experiment[data-still="true"] .mark {
+  opacity: 1;
+}
+
+.header,
+.footer {
+  position: absolute;
+  right: max(32px, env(safe-area-inset-right));
+  left: max(32px, env(safe-area-inset-left));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+
+.header {
+  top: max(20px, env(safe-area-inset-top));
+}
+
+.footer {
+  bottom: max(22px, env(safe-area-inset-bottom));
+}
+
+.back,
+.controls button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  color: #f5f0f5b8;
+  text-shadow: 0 1px 8px #211f2d;
+  transition: color 150ms ease;
+}
+
+.back {
+  padding-right: 12px;
+}
+
+.title,
+.note {
+  color: #f5f0f57a;
+  text-shadow: 0 1px 8px #211f2d;
+}
+
+.title span {
+  margin: 0 10px;
+  opacity: 0.45;
+}
+
+.controls {
+  display: flex;
+  gap: 24px;
+}
+
+.controls button {
+  min-width: 44px;
+  gap: 6px;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+}
+
+.controls button span {
+  color: #f9a1d5;
+}
+
+.controls button:disabled {
+  cursor: wait;
+  opacity: 0.4;
+}
+
+.experiment a:focus-visible,
+.experiment button:focus-visible {
+  outline: 1px solid #ffb4e6;
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
+.progress {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: #ffffff08;
+}
+
+.progress > div {
+  height: 100%;
+  background: #ffb1d789;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.error {
+  position: absolute;
+  right: 24px;
+  bottom: 90px;
+  left: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: #e9c2dd;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .back:hover,
+  .controls button:hover {
+    color: #fff;
+  }
+}
+
+@media (max-width: 640px) {
+  .header,
+  .footer {
+    right: max(20px, env(safe-area-inset-right));
+    left: max(20px, env(safe-area-inset-left));
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+
+  .controls {
+    gap: 18px;
+  }
+
+  .note {
+    display: none;
+  }
+
+  .vignette {
+    background: linear-gradient(
+      #211f2d 0%,
+      transparent 30%,
+      transparent 70%,
+      #211f2d 100%
+    );
+  }
+}
+
+.study {
+  position: absolute;
+  z-index: 3;
+  bottom: max(90px, calc(env(safe-area-inset-bottom) + 76px));
+  left: max(32px, env(safe-area-inset-left));
+  right: max(32px, env(safe-area-inset-right));
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid #ffffff20;
+  border-radius: 5px;
+  background: #211f2de8;
+}
+.study input {
+  min-width: 0;
+  width: 100%;
+  accent-color: #e8a9d3;
+  cursor: pointer;
+}
+.study button {
+  min-width: 36px;
+  min-height: 44px;
+  color: #e9c7dd;
+}
+.study output {
+  flex-shrink: 0;
+  width: 115px;
+  font-family: monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.study output span {
+  display: block;
+  color: #b3a4b6;
+  font-size: 10px;
+}
+@media (max-width: 640px) {
+  .controls {
+    gap: 13px;
+  }
+  .controls button {
+    letter-spacing: 0.07em;
+  }
+  .study {
+    left: 20px;
+    right: 20px;
+    gap: 7px;
+    padding: 8px;
+  }
+  .study output {
+    width: 76px;
+    font-size: 11px;
+  }
+  .study button {
+    min-width: 28px;
+  }
+}

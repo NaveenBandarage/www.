@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "substack": "node --env-file-if-exists=.env.local scripts/substack.mjs",
+    "test:substack": "node --test tests/substack.test.mjs",
     "spotify:connect": "node --env-file-if-exists=.env.local scripts/connect-spotify.mjs",
     "test:spotify": "node --test tests/music.test.mjs tests/connect-spotify.test.mjs tests/listeningTime.test.mjs",
-    "dev": "node scripts/build-memory.mjs && next dev",
-    "build": "node scripts/build-memory.mjs && next build",
+    "dev": "node scripts/build-memory.mjs && node scripts/build-rss.mjs && next dev",
+    "build": "node scripts/build-memory.mjs && node scripts/build-rss.mjs && next build",
     "build:memory": "node scripts/build-memory.mjs",
     "test:memory": "node --test experiments/memory/tests/*.test.js",
     "analyze": "node scripts/build-memory.mjs && ANALYZE=true next build",
@@ -34,8 +36,11 @@
     "next-sitemap": "4.2.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "remark-mdx": "3.1.1",
+    "remark-parse": "11.0.0",
     "sanitize-html": "2.18.1",
-    "sharp": "0.35.5"
+    "sharp": "0.35.5",
+    "unified": "11.0.5"
   },
   "overrides": {
     "flatted": "^3.4.4",
