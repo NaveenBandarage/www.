@@ -189,6 +189,7 @@ export const movies: Movie[] = [
     watchedDate: "2022-05-01",
     seenInTheatres: true,
   },
+  { id: "trap", title: "Trap", releaseYear: 2024, seenInTheatres: false },
   { id: "batman-begins", title: "Batman Begins" },
   { id: "the-dark-knight", title: "The Dark Knight" },
   { id: "the-dark-knight-rises", title: "The Dark Knight Rises" },
