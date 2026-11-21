@@ -45,7 +45,7 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      meta,
+      meta: { ...meta, path: `/blog/${encodeURIComponent(params.slug)}` },
       source,
       readingTime,
     },
