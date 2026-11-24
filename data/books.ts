@@ -85,4 +85,11 @@ export const booksData: Book[] = [
     coverSrc: "/books/poor-charlies-almanack.jpg",
     status: "reading",
   },
+  {
+    id: "kitchen-confidential",
+    title: "Kitchen Confidential",
+    author: "Anthony Bourdain",
+    isbn: "9780060899226",
+    status: "reading",
+  },
 ];
