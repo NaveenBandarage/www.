@@ -570,3 +570,184 @@ a[href^="mailto:"] {
     animation: none;
   }
 }
+
+/* The article reader keeps its place in view without covering the text. */
+.reading-bar {
+  position: fixed;
+  z-index: 50;
+  left: 50%;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: min(37rem, calc(100% - 2rem));
+  padding: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.35rem;
+  background: rgba(28, 27, 25, 0.96);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
+  color: #f4f1ed;
+  backdrop-filter: blur(16px);
+  transform: translateX(-50%);
+  animation: reading-bar-enter 300ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+@keyframes reading-bar-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+.reading-bar__play {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.9rem;
+  background: #55564a;
+  color: white;
+  font-size: 1rem;
+  transition:
+    transform 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 150ms ease;
+}
+.reading-bar__play:focus-visible,
+.reading-bar__skip:focus-visible,
+.reading-bar__progress:focus-visible {
+  outline: 2px solid #f0b495;
+  outline-offset: 3px;
+}
+.reading-bar__content {
+  min-width: 0;
+  flex: 1;
+}
+.reading-bar__title,
+.reading-bar__subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reading-bar__title {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.reading-bar__subtitle {
+  margin-top: 0.15rem;
+  color: #b3aaa2;
+  font-size: 0.75rem;
+}
+.reading-bar__track {
+  position: relative;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+}
+.reading-bar__segments {
+  display: flex;
+  gap: 3px;
+  width: 100%;
+  height: 4px;
+}
+.reading-bar__segment {
+  min-width: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #494540;
+}
+.reading-bar__segment > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #c88366;
+  transform-origin: left;
+}
+.reading-bar__progress {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.reading-bar__track:focus-within {
+  outline: 2px solid #f0b495;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.reading-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+.reading-bar__skip {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.75rem;
+  color: #beb5ad;
+  font-size: 0.68rem;
+  border-radius: 0.55rem;
+  transition:
+    transform 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 150ms ease,
+    color 150ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .reading-bar__play:hover {
+    background: #6a6b5d;
+  }
+  .reading-bar__skip:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+}
+.reading-bar__play:active:not(:focus-visible),
+.reading-bar__skip:active:not(:disabled):not(:focus-visible) {
+  transform: scale(0.94);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-bar {
+    animation: none;
+  }
+  .reading-bar__play,
+  .reading-bar__skip {
+    transition: none;
+  }
+  .reading-bar__play:active,
+  .reading-bar__skip:active {
+    transform: none;
+  }
+}
+.reading-bar__skip:disabled {
+  opacity: 0.3;
+}
+.reading-bar__percent {
+  min-width: 2.5rem;
+  text-align: right;
+  color: #b3aaa2;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 480px) {
+  .reading-bar {
+    gap: 0.55rem;
+  }
+  .reading-bar__play {
+    width: 2.9rem;
+    height: 2.9rem;
+  }
+  .reading-bar__skip {
+    width: 1.8rem;
+  }
+  .reading-bar__percent {
+    min-width: 2rem;
+  }
+}
+body:has(.reading-bar) aside[aria-label="Naveen’s Spotify"] {
+  bottom: max(6rem, calc(env(safe-area-inset-bottom) + 5rem));
+}
