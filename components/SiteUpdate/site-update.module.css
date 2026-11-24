@@ -1,0 +1,116 @@
+.viewport {
+  overflow: clip;
+  pointer-events: none;
+  padding: max(5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 1rem
+    max(1rem, env(safe-area-inset-left));
+}
+
+.notification {
+  display: block;
+  margin-left: auto;
+  pointer-events: auto;
+  width: min(20rem, 100%);
+  overflow: hidden;
+  color: #101010;
+  background: rgba(194, 195, 197, 0.94);
+  border-radius: 1.1rem;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(24px);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: arrive 280ms ease-out both;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 2.6rem;
+  padding: 0.4rem 0.75rem;
+}
+
+.header {
+  background: rgba(255, 255, 255, 0.48);
+  color: #525252;
+  font-size: 0.8125rem;
+}
+
+.appName {
+  flex: 1;
+  text-transform: uppercase;
+}
+
+.icon {
+  display: grid;
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  border-radius: 0.43rem;
+  background: linear-gradient(#5bfa72, #00b822);
+}
+
+.icon span {
+  position: relative;
+  width: 72%;
+  height: 60%;
+  border-radius: 50%;
+  background: white;
+}
+
+.icon span::after {
+  position: absolute;
+  bottom: -0.05rem;
+  left: 0.19rem;
+  width: 0.37rem;
+  height: 0.34rem;
+  background: white;
+  clip-path: polygon(35% 0, 100% 25%, 0 100%);
+  content: "";
+}
+
+.summary {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  font-size: 0.9375rem;
+}
+
+.summary span {
+  color: #4a4a4a;
+  font-size: 0.75rem;
+}
+
+.action {
+  color: #454545;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.notification:focus-visible {
+  outline: 2px solid #245bc4;
+  outline-offset: 3px;
+}
+
+.body {
+  padding: 0.5rem 0.75rem 0.65rem;
+  font-size: 0.875rem;
+  background: rgba(255, 255, 255, 0.22);
+  overflow-wrap: anywhere;
+}
+
+.body p {
+  margin: 0.2rem 0 0;
+}
+
+@keyframes arrive {
+  from {
+    transform: translateX(calc(100% + max(1rem, env(safe-area-inset-right))));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification {
+    animation: none;
+  }
+}
