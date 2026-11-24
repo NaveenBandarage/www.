@@ -2,6 +2,20 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Only production deployments from main should announce an update.
+  env: {
+    NEXT_PUBLIC_SITE_UPDATE_ID:
+      process.env.VERCEL_ENV === "production" &&
+      process.env.VERCEL_GIT_COMMIT_REF === "main"
+        ? process.env.VERCEL_GIT_COMMIT_SHA || ""
+        : "",
+    NEXT_PUBLIC_SITE_UPDATE_PATH: process.env.SITE_UPDATE_PATH || "",
+    NEXT_PUBLIC_SITE_UPDATE_MESSAGE:
+      process.env.VERCEL_ENV === "production" &&
+      process.env.VERCEL_GIT_COMMIT_REF === "main"
+        ? process.env.SITE_UPDATE_MESSAGE || "Hey! I’ve made a few updates to the site. Take a look around 🙂"
+        : "",
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
