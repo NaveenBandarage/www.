@@ -1216,7 +1216,7 @@ window.addEventListener("pagehide", (e) => {
   }
 });
 async function loadPersonalMemory() {
-  const response = await fetch(`${import.meta.env.BASE_URL}naveen-memory.json`);
+  const response = await fetch(`${import.meta.env.BASE_URL}naveen-memory.json`, { cache: "no-cache" });
   if (!response.ok)
     throw Error("Naveen’s interest tree could not load. Reload to try again.");
   return validateMemory(await response.json());
@@ -1236,6 +1236,7 @@ async function boot() {
     if (!store) throw error;
   }
   store = initialWorkspace(store, personalSeed);
+  await persist().catch(() => {});
   try {
     const state = JSON.parse(localStorage.getItem("memory-view") || "null");
     if (state?.agent === store.agent.id) {

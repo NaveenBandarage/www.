@@ -36,8 +36,11 @@
     "next-sitemap": "4.2.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "remark-mdx": "3.1.1",
+    "remark-parse": "11.0.0",
     "sanitize-html": "2.18.1",
-    "sharp": "0.35.5"
+    "sharp": "0.35.5",
+    "unified": "11.0.5"
   },
   "overrides": {
     "flatted": "^3.4.4",

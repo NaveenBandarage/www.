@@ -6,6 +6,7 @@ interface BlogImageProps {
   width: number | `${number}`;
   height: number | `${number}`;
   priority?: boolean;
+  caption?: string;
 }
 
 export default function BlogImage({
@@ -14,8 +15,9 @@ export default function BlogImage({
   width,
   height,
   priority = false,
+  caption,
 }: BlogImageProps) {
-  return (
+  const image = (
     <Image
       src={src}
       alt={alt}
@@ -25,5 +27,14 @@ export default function BlogImage({
       style={{ width: "100%", height: "auto" }}
       priority={priority}
     />
+  );
+
+  return caption ? (
+    <figure>
+      {image}
+      <figcaption>{caption}</figcaption>
+    </figure>
+  ) : (
+    image
   );
 }
