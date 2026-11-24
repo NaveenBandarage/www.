@@ -971,7 +971,7 @@ function help(format = false) {
     div.append(pre);
   } else {
     for (const text of [
-      "Open folders to grow the tree. Select a memory to inspect its evidence, relationships, and revisions. Naveen’s tree contains selected interest summaries dated October 2026; connecting threads are explicitly marked as interpretations. The separate Orchid sample is fictional.",
+      "Open folders to grow the tree. Select a memory to inspect its evidence, relationships, and revisions. Naveen’s tree includes published site content and selected interest summaries dated October 2026; connecting threads are explicitly marked as interpretations. The separate Orchid sample is fictional.",
       "Import JSON to preserve explicit entities and relationships. Markdown headings become memory sections with the original file attached as evidence. Imports do not automatically infer new facts or links.",
       "Recall searches memory titles, text, and tags locally, and records the actual results. It does not query a live agent or an embedding service. Import an agent’s retrieval logs to inspect its recorded recalls.",
       "Memories are saved in this browser with IndexedDB. Export JSON to back them up or move them to another device. There is no live agent connection yet.",
@@ -1075,7 +1075,10 @@ $("#memory-file").onchange = async (e) => {
 $("#import-confirm").onclick = () =>
   run(async () => {
     if (!pendingImport) return;
-    await replaceWorkspace(pendingImport);
+    await replaceWorkspace({
+      ...pendingImport,
+      agent: { ...pendingImport.agent, imported: true },
+    });
     $("#import-dialog").close();
     notice("Memory imported and saved in this browser.");
   });
@@ -1216,7 +1219,7 @@ window.addEventListener("pagehide", (e) => {
   }
 });
 async function loadPersonalMemory() {
-  const response = await fetch(`${import.meta.env.BASE_URL}naveen-memory.json`);
+  const response = await fetch(`${import.meta.env.BASE_URL}naveen-memory.json`, { cache: "no-cache" });
   if (!response.ok)
     throw Error("Naveen’s interest tree could not load. Reload to try again.");
   return validateMemory(await response.json());
@@ -1236,6 +1239,8 @@ async function boot() {
     if (!store) throw error;
   }
   store = initialWorkspace(store, personalSeed);
+  // Persist refreshed site records, while keeping the explorer usable if storage fails.
+  await persist().catch(() => {});
   try {
     const state = JSON.parse(localStorage.getItem("memory-view") || "null");
     if (state?.agent === store.agent.id) {
