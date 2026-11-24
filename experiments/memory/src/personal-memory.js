@@ -3,7 +3,7 @@ import { demoMemory, validateMemory } from "./memory.js";
 // Website records have stable IDs; visitor-created records remain browser-local.
 export function initialWorkspace(saved, seed) {
   if (!saved) return structuredClone(seed);
-  if (!seed) return saved;
+  if (!seed || saved.agent.imported) return saved;
   if (JSON.stringify(saved) === JSON.stringify(validateMemory(demoMemory())))
     return structuredClone(seed);
   if (saved.agent.id !== seed.agent.id) return saved;
@@ -44,7 +44,7 @@ export function initialWorkspace(saved, seed) {
     }
   }
   for (const node of draft.nodes) {
-    if (node.type === "memory" && node.id.startsWith("website:") && !incomingIds.has(node.id) && ["Published blog post", "Published website content"].includes(node.kind) && !node.archived_at) {
+    if (node.type === "memory" && node.id.startsWith("website:") && !incomingIds.has(node.id) && (["Published blog post", "Published website content"].includes(node.kind) || node.id.startsWith("website:book:")) && !node.archived_at) {
       node.archived_at = new Date().toISOString();
       node.kind = "Removed published content";
     }

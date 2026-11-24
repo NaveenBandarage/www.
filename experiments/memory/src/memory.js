@@ -333,6 +333,7 @@ export function validateMemory(input) {
       id: text(input.agent?.id, 160) || "imported-agent",
       name: text(input.agent?.name, 100) || "My agent",
       demo: input.agent?.demo === true,
+      ...(input.agent?.imported === true ? { imported: true } : {}),
     },
     nodes: normalized,
     edges,

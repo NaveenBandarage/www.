@@ -45,6 +45,7 @@
   "overrides": {
     "flatted": "^3.4.4",
     "sharp": "0.35.5",
+    "unified": "11.0.5",
     "undici": "^6.29.1",
     "tinyglobby": "^0.2.17",
     "yaml": "^2.9.0",
