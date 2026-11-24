@@ -20,6 +20,17 @@ export type Movie = MovieDetails & {
 
 export const movies: Movie[] = [
   {
+    id: "the-only-living-pickpocket-in-new-york",
+    title: "The Only Living Pickpocket in New York",
+    watchedDate: "2026-11-22",
+    seenInTheatres: true,
+  },
+  {
+    id: "operation-fortune-ruse-de-guerre",
+    title: "Operation Fortune: Ruse de Guerre",
+    watchedDate: "2026-11-21",
+  },
+  {
     id: "i-am-rocky",
     title: "I Am Rocky",
     watchedDate: "2026-11-15",
@@ -189,7 +200,6 @@ export const movies: Movie[] = [
     watchedDate: "2022-05-01",
     seenInTheatres: true,
   },
-  { id: "trap", title: "Trap", releaseYear: 2024, seenInTheatres: false },
   { id: "batman-begins", title: "Batman Begins" },
   { id: "the-dark-knight", title: "The Dark Knight" },
   { id: "the-dark-knight-rises", title: "The Dark Knight Rises" },
@@ -393,6 +403,7 @@ export const movies: Movie[] = [
   { id: "american-fiction", title: "American Fiction" },
   { id: "top-gun-maverick", title: "Top Gun: Maverick" },
   { id: "the-menu", title: "The Menu" },
+  { id: "trap-2024", title: "Trap", releaseYear: 2024, watchedYear: 2024, seenInTheatres: false },
   {
     id: "the-mitchells-vs-the-machines",
     title: "The Mitchells vs. the Machines",

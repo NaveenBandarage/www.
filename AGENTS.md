@@ -128,6 +128,18 @@ When adding animations:
 4. Add to appropriate index files if needed
 5. Consider responsive design and dark mode
 
+### Keeping the memory explorer current
+
+When adding, changing, or removing meaningful public site content, treat `/memory` as part of the same change. This includes posts, films seen, books, photographs, experiments, projects, personal updates, and new content types—not just files already handled by the generator.
+
+1. Review the meaning and provenance of the changed content and inspect the existing memory build (`scripts/build-memory.mjs`, `scripts/memory-posts.mjs`, and `scripts/memory-site.mjs`). Determine whether the generated personal tree already represents it accurately and can track future additions, edits, and removals.
+2. If it does not, extend the memory integration as part of the task. Prefer using the same public content source as the website, with stable IDs, useful labels and context, and links to the actual public source. Avoid one-off duplicated lists that will drift. A small, explicitly maintained editorial record is appropriate when a meaningful connection or summary cannot be derived reliably; keep its evidence and update it when the source changes.
+3. Preserve what the source actually says, including dates, uncertainty, and distinctions such as watched versus ticket purchased. Do not turn a mention, search result, or inference into a personal fact; mark interpretations as inferred. Do not add private drafts, credentials, visitor data, or unpublished personal information to the public memory tree.
+4. Keep existing visitors' local corrections, pins, archives, and imported workspaces safe. Do not edit generated files in `public/memory-explorer/` as the source of truth. Avoid introducing a live AI service or an external dependency just to update memory unless the task explicitly calls for one.
+5. Run `bun run build:memory` and `bun run test:memory`, and inspect representative generated records for the change, including their sources and relevant additions, updates, and removals. Add focused tests when extending extraction or synchronization. Report any content that cannot be kept in sync and why.
+
+This review applies when an agent works on site content; it does not run on its own when someone edits files without an agent. The generator refreshes supported sources on development startup and deployment; while a dev server is running, rebuild memory and refresh `/memory` after content changes.
+
 ### API Endpoints
 - Keep endpoints simple and focused
 - Use TypeScript for request/response types

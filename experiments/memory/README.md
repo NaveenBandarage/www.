@@ -10,7 +10,7 @@ portfolio at `/memory`. The `Fun` page links to it. The default workspace is a c
 editorial connections across engineering, design, culture and city exploration.
 Use **follow a thread** to inspect a connection and visit its supporting interests.
 The original fictional Orchid workspace remains available in Memory options.
-There is no live agent connection.
+Published blog posts, public page text, Fun experiments, the films seen list, and structured collections such as books also appear in the tree with source links. There is no live agent connection.
 
 The Next.js page uses the SEO component and a full-viewport layout. A same-origin iframe
 keeps the standalone Three.js app’s CSS, document shortcuts, and rendering loop
@@ -33,8 +33,9 @@ The dev and production build scripts first bundle this app with Vite into
 on deployment. Three.js is loaded only by this page’s iframe. Its worker and
 example JSON use the same `/memory-explorer/` base path.
 
-After editing the standalone source during development, run `bun run build:memory`
-and refresh the page. Next.js changes reload normally.
+The memory build reads published `.mdx` files in `posts/`, literal page text in top-level `pages/`, Fun links, the bookshelf and movie lists, the photo collection, and literal titled records in public page arrays. New records and edits appear on the next build or deployment; removed records are archived. During development, run `bun run build:memory` and refresh after changes. Drafts, API responses, dynamically generated content, and text hidden inside separately imported components are not automatically extracted. The films seen branch reads `data/movies.ts` and preserves viewing dates, ticket dates, theatre flags and date notes as recorded. A film mentioned or searched elsewhere is not assumed watched.
+
+When an agent changes public site content, the repository's `AGENTS.md` instructs it to check memory coverage and extend the integration for new content sources. This complements the build-time extraction: the agent review happens during agent-assisted development, not automatically for edits made without an agent. The explorer does not have a live AI connection.
 
 ## Use
 
@@ -54,7 +55,7 @@ not original chat transcripts. Connections carry `inferred` status and `may_conn
 edges; researched media and products are not promoted to favorites or ownership.
 Private finances, health details and personal plans are excluded.
 
-Untouched Orchid starter data upgrades to the personal tree. Edited samples and
+Untouched Orchid starter data upgrades to the personal tree. The personal tree refreshes its published-site records on load while preserving local corrections, pins, and archives. Edited samples and
 imported workspaces stay intact; use **Memory options → Open Naveen’s tree** to
 replace a local workspace explicitly, with an export option first.
 
