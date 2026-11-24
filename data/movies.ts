@@ -403,7 +403,7 @@ export const movies: Movie[] = [
   { id: "american-fiction", title: "American Fiction" },
   { id: "top-gun-maverick", title: "Top Gun: Maverick" },
   { id: "the-menu", title: "The Menu" },
-  { id: "trap-2024", title: "Trap", releaseYear: 2024, watchedYear: 2024 },
+  { id: "trap-2024", title: "Trap", releaseYear: 2024, watchedYear: 2024, seenInTheatres: false },
   {
     id: "the-mitchells-vs-the-machines",
     title: "The Mitchells vs. the Machines",
