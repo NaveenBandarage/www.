@@ -10,6 +10,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScroll from "../components/SmoothScroll";
 import SignatureIntro from "../components/SignatureIntro";
 import NowPlaying from "../components/NowPlaying";
+import SiteUpdate from "../components/SiteUpdate";
 import InteractionSounds from "../components/InteractionSounds";
 import ThemeProvider from "../components/ThemeProvider";
 import ThemeToggle from "../components/ThemeToggle";
@@ -84,6 +85,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               />
             ) : null}
             <div ref={contentRef}>
+              {!showIntro && router.pathname === "/" ? <SiteUpdate /> : null}
               {showThemeToggle ? (
                 <div className="fixed right-6 top-6 z-40 sm:right-8 sm:top-8">
                   <ThemeToggle />

@@ -168,3 +168,14 @@ in Vercel separately.
 See Spotify's [authorization flow](https://developer.spotify.com/documentation/web-api/tutorials/code-flow),
 [redirect URI requirements](https://developer.spotify.com/documentation/web-api/concepts/redirect_uri),
 and [development-mode requirements](https://developer.spotify.com/documentation/web-api/concepts/quota-modes).
+
+## Japanese movie posters
+
+Set `TMDB_API_KEY` to a TMDB API key in `.env.local` and in the Vercel project environment, then restart or redeploy. The key stays on the server. Search results show Japanese-language posters when they are available in TMDB.
+
+### Homepage update message
+
+Set `SITE_UPDATE_PATH` to the changed page’s path (for example, `/photos`) and
+`SITE_UPDATE_MESSAGE` to the announcement text before a production deployment
+from `main`. The homepage banner links to that path and is hidden when no valid
+site path is configured. Use `/?previewUpdate` in development to try it.
