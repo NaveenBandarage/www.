@@ -12,13 +12,31 @@ export function initialWorkspace(saved, seed) {
   const incoming = seed.nodes.filter((node) => node.id.startsWith("website:"));
   const incomingIds = new Set(incoming.map((node) => node.id));
   const byId = new Map(draft.nodes.map((node) => [node.id, node]));
+  const syncedAt = new Date().toISOString();
   for (const node of incoming) {
     const previous = byId.get(node.id);
     if (!previous) {
       draft.nodes.push(structuredClone(node));
     } else {
-      // Revisions, pins and visitor archives belong to the visitor.
+      // Compare with the last website version, preserving visitor revisions.
+      const websiteVersion = previous.revisions.filter((revision) => revision.origin === "website").at(-1) || previous;
+      if (previous.type !== "folder" && (
+        websiteVersion.content !== node.content ||
+        JSON.stringify(websiteVersion.source_ids) !== JSON.stringify(node.source_ids) ||
+        websiteVersion.status !== node.status
+      )) {
+        previous.revisions.push({
+          at: syncedAt,
+          content: node.content,
+          source_ids: node.source_ids,
+          status: node.status,
+          origin: "website",
+        });
+      }
       Object.assign(previous, node, {
+        content: previous.content,
+        source_ids: previous.source_ids,
+        status: previous.status,
         revisions: previous.revisions,
         pinned: previous.pinned,
         archived_at: previous.kind === "Removed published content" || previous.kind === "Removed published blog post" ? null : previous.archived_at,

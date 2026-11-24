@@ -215,6 +215,7 @@ export function validateMemory(input) {
           .map((r) => ({
             at: stamp(r.at, created),
             content: text(r.content),
+            ...(r.origin === "website" ? { origin: "website" } : {}),
             source_ids: Array.isArray(r.source_ids)
               ? r.source_ids.filter((x) => typeof x === "string")
               : [],
