@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { addPublishedPosts } from "../../../scripts/memory-posts.mjs";
 import { initialWorkspace } from "../src/personal-memory.js";
-import { validateMemory, retrieve } from "../src/memory.js";
+import { validateMemory, retrieve, memoryAt } from "../src/memory.js";
 
 const base = { agent: { id: "personal", name: "Naveen" }, nodes: [{ id: "sources", type: "folder", title: "sources/" }], edges: [] };
 const post = (body) => `---\ntitle: My writing\ndate: "2026-11-17"\n---\n\n${body}\n`;
@@ -25,7 +25,13 @@ test("published posts are searchable and retain source provenance on updates", a
     const next = validateMemory(await addPublishedPosts(base, dir));
     const merged = initialWorkspace(first, next);
     const updated = merged.nodes.find((n) => n.id === record.id);
-    assert.match(updated.content, /newer discovery/);
+    assert.match(updated.content, /bright discovery/);
+    assert.match(memoryAt(updated).content, /newer discovery/);
+    const changedAt = Date.parse(updated.revisions.find((r) => r.origin === "website").at);
+    assert.match(memoryAt(updated, changedAt - 1).content, /My local correction/);
+    const source = merged.nodes.find((n) => n.id === record.source_ids[0]);
+    assert.match(memoryAt(source, changedAt - 1).content, /bright discovery/);
+    assert.match(memoryAt(source).content, /newer discovery/);
     assert.equal(updated.pinned, true);
     assert.equal(updated.revisions[0].content, "My local correction");
     assert.equal(merged.nodes.filter((n) => n.id.startsWith("website:post:")).length, 2);
