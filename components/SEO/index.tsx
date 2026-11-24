@@ -16,7 +16,7 @@ export const defaultSEO = {
     site_name: "Naveen Bandarage",
     images: [
       {
-        url: `${baseUrl}/logo.png`,
+        url: `${baseUrl}/site-icon.png`,
         alt: "Naveen Bandarage",
       },
     ],
@@ -59,7 +59,7 @@ export function SEO({ seo }: { seo?: SEOProps }) {
           sizes="16x16"
           href="/favicon-16x16.png"
         />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
 
         {/* Need to see if its worth having an svg version */}
         {/* <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" /> */}

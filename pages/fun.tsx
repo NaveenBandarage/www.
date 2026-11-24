@@ -36,9 +36,17 @@ export default function Fun() {
               </p>
               <div className="mt-8">
                 <Link
-                  href="/painting"
+                  href="/gta-6"
                   className="link-fade text-neutral-800 dark:text-white"
                 >
+                  GTA 6 ↗
+                </Link>
+                <p className="mt-2 text-neutral-500 dark:text-silver-dark">
+                  A recreation of the loading intro. An experiment in motion.
+                </p>
+              </div>
+              <div className="mt-8">
+                <Link href="/painting" className="link-fade text-neutral-800 dark:text-white">
                   Painting ↗
                 </Link>
                 <p className="mt-2 text-neutral-500 dark:text-silver-dark">
