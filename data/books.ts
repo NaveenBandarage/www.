@@ -90,6 +90,14 @@ export const booksData: Book[] = [
     title: "Kitchen Confidential",
     author: "Anthony Bourdain",
     isbn: "9780060899226",
+    readYear: 2026,
+    status: "read",
+  },
+  {
+    id: "what-i-talk-about-when-i-talk-about-running",
+    title: "What I Talk About When I Talk About Running",
+    author: "Haruki Murakami",
+    isbn: "9780307389831",
     status: "reading",
   },
 ];
