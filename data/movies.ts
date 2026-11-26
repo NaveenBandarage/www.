@@ -393,6 +393,7 @@ export const movies: Movie[] = [
   { id: "batman-v-superman", title: "Batman v Superman: Dawn of Justice" },
   { id: "inception", title: "Inception" },
   { id: "interstellar", title: "Interstellar" },
+  { id: "wolfs", title: "Wolfs" },
   { id: "the-pursuit-of-happyness", title: "The Pursuit of Happyness" },
   { id: "the-phoenician-scheme", title: "The Phoenician Scheme" },
   { id: "asteroid-city", title: "Asteroid City" },
