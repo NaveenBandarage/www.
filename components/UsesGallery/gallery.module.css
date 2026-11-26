@@ -229,10 +229,34 @@
   display: inline-flex;
   align-items: center;
   gap: 16px;
-  margin-top: 26px;
   font-size: 14px;
 }
+.detailLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 26px;
+}
 .visit:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.amazon {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  color: #bbb;
+}
+.disclosure {
+  margin-top: 48px;
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: right;
+}
+.amazon:hover {
   color: #fff;
   text-decoration: underline;
   text-underline-offset: 4px;

@@ -4,6 +4,7 @@ import { SEO } from "../components/SEO";
 import UsesGallery from "../components/UsesGallery";
 import UsesScene from "../components/UsesScene";
 import styles from "../components/UsesGallery/gallery.module.css";
+import { AMAZON_DISCLOSURE } from "../lib/affiliate";
 
 export default function Uses() {
   return (
@@ -31,6 +32,7 @@ export default function Uses() {
         </div>
         <UsesScene />
         <UsesGallery />
+        <p className={styles.disclosure}>{AMAZON_DISCLOSURE}</p>
       </Main>
     </div>
   );
