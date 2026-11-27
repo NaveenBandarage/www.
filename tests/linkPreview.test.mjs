@@ -81,3 +81,32 @@ test("internal links retain useful titles and a published-page preview", () => {
     "https://naveenbandarage.com/blog",
   );
 });
+
+test("blog row previews keep the title separate from date and reading time", () => {
+  const anchor = {
+    ...link("/blog/the-pen-is-my-green-goblin-mask", {
+      "data-preview-title": "The pen is my green goblin mask.",
+      "data-preview-description": "On struggling to get back into journaling.",
+      "data-preview-meta": "Nov 23, 2026 · 2 minutes",
+    }),
+    textContent: "The pen is my green goblin mask.2 minutesNov 23, 2026",
+  };
+  const preview = getLinkPreview(anchor, current);
+  assert.equal(preview.title, "The pen is my green goblin mask.");
+  assert.equal(preview.metadata, "Nov 23, 2026 · 2 minutes");
+  assert.equal(preview.summary, "On struggling to get back into journaling.");
+});
+
+test("empty preview attributes preserve the defaults for ordinary links", () => {
+  const preview = getLinkPreview(
+    link("https://example.com/", {
+      "data-preview-title": " ",
+      "data-preview-description": " ",
+      "data-preview-meta": " ",
+    }),
+    current,
+  );
+  assert.equal(preview.title, "Example link");
+  assert.equal(preview.summary, "example.com");
+  assert.equal(preview.metadata, undefined);
+});

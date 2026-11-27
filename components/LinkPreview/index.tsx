@@ -313,10 +313,10 @@ export default function LinkPreview() {
             <div className="site-preview-details">
               <div className="site-preview-host">{preview.host}</div>
               <div className="site-preview-title">{preview.title}</div>
+              {preview.metadata ? (
+                <div className="site-preview-meta">{preview.metadata}</div>
+              ) : null}
               <div className="site-preview-summary">{preview.summary}</div>
-              <div className="site-preview-hint">
-                {preview.host === "Email" ? "Open email" : "Open page"} ↗
-              </div>
             </div>
           </m.div>
         ) : null}

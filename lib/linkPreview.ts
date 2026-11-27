@@ -3,6 +3,7 @@ export interface Preview {
   host: string;
   title: string;
   summary: string;
+  metadata?: string;
   screenshot?: string;
 }
 
@@ -84,8 +85,14 @@ export function getLinkPreview(
   return {
     url: url.href,
     host,
-    title: (internal && pageTitles[url.pathname]) || label || host,
+    title:
+      link.getAttribute("data-preview-title")?.trim() ||
+      (internal && pageTitles[url.pathname]) ||
+      label ||
+      host,
+    metadata: link.getAttribute("data-preview-meta")?.trim() || undefined,
     summary:
+      link.getAttribute("data-preview-description")?.trim() ||
       link.getAttribute("title") ||
       (internal
         ? "From my corner of the internet."

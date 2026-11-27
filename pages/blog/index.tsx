@@ -41,6 +41,7 @@ export async function getStaticProps() {
   const postsWithReadingTime: YearTabPost[] = posts.map((post) => ({
     slug: post.slug,
     title: post.title,
+    description: post.description,
     date: post.date,
     readingTime: post.content ? calculateReadingTime(post.content) : undefined,
   }));
