@@ -15,7 +15,7 @@ const BlogLayout = ({ meta, source, readingTime }) => {
 
   return (
     <>
-      <SEO seo={meta} />
+      <SEO seo={{ ...meta, article: true }} />
       <Main>
         <ScrollReveal delay={0.05}>
           <div className="flex w-full flex-col justify-between sm:flex-row">

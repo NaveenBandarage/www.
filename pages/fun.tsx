@@ -56,6 +56,17 @@ export default function Fun() {
                   Search for a film and explore its Japanese posters.
                 </p>
               </div>
+              <div className="mt-8">
+                <Link
+                  href="/art-recreation"
+                  className="link-fade text-neutral-800 dark:text-white"
+                >
+                  Art recreation ↗
+                </Link>
+                <p className="mt-2 text-neutral-500 dark:text-silver-dark">
+                  An old engraving brought to life, one candle flicker at a time.
+                </p>
+              </div>
             </div>
           </div>
         </ScrollReveal>

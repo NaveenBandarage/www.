@@ -1,0 +1,206 @@
+.artwork {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  aspect-ratio: 960 / 767;
+  background: #d3c7a9;
+  box-shadow: 0 0 0 1px rgb(41 37 28 / 12%);
+}
+
+.engraving {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.glow,
+.wick,
+.grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.glow {
+  mix-blend-mode: screen;
+  animation: glow 3.7s linear infinite;
+}
+
+.flameAnchor {
+  position: absolute;
+  /* All placement uses the same 960 × 767 coordinate system as the plate.
+     The bottom of the flame stays attached to the wick at (476, 397). */
+  left: 45%;
+  top: 31.1604%;
+  width: 9.1667%;
+  height: 22.425%;
+  pointer-events: none;
+}
+
+.flameSway {
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 91.86%;
+  animation: sway 4.9s linear infinite;
+}
+
+.flame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 91.86%;
+  animation: flicker 1.7s linear infinite;
+}
+
+.flameHeart {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: heart 2.3s linear infinite;
+}
+
+.grain {
+  mix-blend-mode: soft-light;
+}
+
+.pauseButton {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: -0.625rem;
+  border-radius: 2px;
+  touch-action: manipulation;
+}
+
+.pauseButton:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.reducedMotionNote {
+  display: none;
+}
+
+.artwork[data-paused="true"] .flameSway,
+.artwork[data-paused="true"] .flame,
+.artwork[data-paused="true"] .flameHeart,
+.artwork[data-paused="true"] .glow {
+  animation-play-state: paused;
+}
+
+/* Different, non-matching periods keep the flame from reading as a pendulum.
+   Only transform and opacity change; the dense SVG plate never animates. */
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-1deg);
+  }
+  17% {
+    transform: rotate(1.8deg);
+  }
+  31% {
+    transform: rotate(-0.6deg);
+  }
+  48% {
+    transform: rotate(2.5deg);
+  }
+  63% {
+    transform: rotate(0.4deg);
+  }
+  79% {
+    transform: rotate(-2deg);
+  }
+  91% {
+    transform: rotate(0.8deg);
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1, 1) skewX(-1deg);
+  }
+  13% {
+    transform: scale(0.95, 1.025) skewX(0.5deg);
+  }
+  28% {
+    transform: scale(1.025, 0.975) skewX(-1.5deg);
+  }
+  41% {
+    transform: scale(0.98, 1.045) skewX(1deg);
+  }
+  57% {
+    transform: scale(1.035, 0.985) skewX(-0.5deg);
+  }
+  72% {
+    transform: scale(0.96, 1.015) skewX(1.5deg);
+  }
+  89% {
+    transform: scale(1.01, 0.99) skewX(-1deg);
+  }
+}
+
+@keyframes heart {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scaleY(0.96);
+  }
+  23% {
+    opacity: 0.9;
+    transform: scaleY(1.04);
+  }
+  47% {
+    opacity: 0.64;
+    transform: scaleY(0.98);
+  }
+  68% {
+    opacity: 0.85;
+    transform: scaleY(1.06);
+  }
+  86% {
+    opacity: 0.74;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  19% {
+    opacity: 0.9;
+  }
+  38% {
+    opacity: 0.65;
+  }
+  52% {
+    opacity: 0.85;
+  }
+  73% {
+    opacity: 0.6;
+  }
+  88% {
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pauseButton {
+    display: none;
+  }
+
+  .reducedMotionNote {
+    display: inline;
+  }
+
+  .flameSway,
+  .flame,
+  .flameHeart,
+  .glow {
+    animation: none;
+  }
+}
