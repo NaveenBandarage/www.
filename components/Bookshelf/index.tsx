@@ -3,6 +3,7 @@ import { m, useAnimationControls } from "framer-motion";
 import useReducedMotion from "../../lib/useReducedMotion";
 import { useState } from "react";
 import type { Book } from "../../data/books";
+import { amazonBookUrl } from "../../lib/affiliate";
 
 interface BookshelfProps {
   books: Book[];
@@ -211,6 +212,15 @@ export default function Bookshelf({ books }: BookshelfProps) {
               >
                 {selectedBook.title}
                 <span className="mt-1 block">{selectedBook.author}</span>
+                <a
+                  href={amazonBookUrl(selectedBook.isbn)}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  className="mt-2 inline-block text-neutral-600 underline underline-offset-2 hover:text-neutral-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:text-silver dark:hover:text-white"
+                >
+                  Buy on Amazon ↗
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
               </figcaption>
             </figure>
           ) : null}
@@ -224,13 +234,13 @@ export default function Bookshelf({ books }: BookshelfProps) {
                   const isSelected = book.id === selectedBook?.id;
 
                   return (
-                    <li key={book.id}>
+                    <li key={book.id} className="flex items-start gap-1">
                       <button
                         type="button"
                         onClick={() => setSelectedBookId(book.id)}
                         aria-pressed={isSelected}
                         aria-controls="selected-book-cover"
-                        className={`group -mx-3 flex w-[calc(100%+1.5rem)] items-start gap-3 rounded-md px-3 py-4 text-left motion-safe:transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500 dark:focus-visible:outline-silver-dark ${isSelected ? "bg-neutral-500/[0.05] dark:bg-white/[0.04]" : "hover:bg-neutral-500/[0.03] dark:hover:bg-white/[0.02]"}`}
+                        className={`group -ml-3 flex min-w-0 flex-1 items-start gap-3 rounded-md px-3 py-4 text-left motion-safe:transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-500 dark:focus-visible:outline-silver-dark ${isSelected ? "bg-neutral-500/[0.05] dark:bg-white/[0.04]" : "hover:bg-neutral-500/[0.03] dark:hover:bg-white/[0.02]"}`}
                       >
                         <span
                           className="time w-5 shrink-0 pt-0.5 text-xs"
@@ -269,6 +279,15 @@ export default function Bookshelf({ books }: BookshelfProps) {
                           className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${isSelected ? "bg-neutral-500 dark:bg-silver-dark" : "bg-transparent"}`}
                         />
                       </button>
+                      <a
+                        href={amazonBookUrl(book.isbn)}
+                        target="_blank"
+                        rel="noopener noreferrer sponsored"
+                        aria-label={`Buy ${book.title} on Amazon (opens in a new tab)`}
+                        className="mt-4 shrink-0 rounded px-1 py-0.5 text-xs text-neutral-500 hover:text-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:text-silver-dark dark:hover:text-white"
+                      >
+                        Amazon ↗
+                      </a>
                     </li>
                   );
                 })}

@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import useReducedMotion from "../../lib/useReducedMotion";
 import { usesItems } from "../../lib/uses";
 import type { UsesCategory, UsesItem } from "../../lib/uses";
+import { amazonSearchUrl } from "../../lib/affiliate";
 import styles from "./gallery.module.css";
 
 const categories = [
@@ -202,15 +203,28 @@ export default function UsesGallery() {
                 <p className={styles.note} id={noteId}>
                   {selected.note}
                 </p>
-                <a
-                  href={selected.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.visit}
-                >
-                  Visit {selected.brand} <span aria-hidden="true">↗</span>
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
+                <div className={styles.detailLinks}>
+                  <a
+                    href={selected.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.visit}
+                  >
+                    Visit {selected.brand} <span aria-hidden="true">↗</span>
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                  {!selected.software && selected.category !== "Wardrobe" ? (
+                    <a
+                      href={amazonSearchUrl(`${selected.brand} ${selected.name}`)}
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                      className={styles.amazon}
+                    >
+                      Buy on Amazon <span aria-hidden="true">↗</span>
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  ) : null}
+                </div>
               </div>
             </div>
             <div className={styles.detailNavigation}>
