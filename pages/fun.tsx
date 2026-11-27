@@ -46,6 +46,14 @@ export default function Fun() {
                 </p>
               </div>
               <div className="mt-8">
+                <Link href="/painting" className="link-fade text-neutral-800 dark:text-white">
+                  Painting ↗
+                </Link>
+                <p className="mt-2 text-neutral-500 dark:text-silver-dark">
+                  Turn a photo into a textured palette knife painting.
+                </p>
+              </div>
+              <div className="mt-8">
                 <Link
                   href="/japanese-movie-posters"
                   className="link-fade text-neutral-800 dark:text-white"
