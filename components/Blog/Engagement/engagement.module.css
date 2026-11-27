@@ -1,0 +1,75 @@
+.reaction {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 160ms cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.emoji {
+  display: inline-block;
+  font-size: 20px;
+  line-height: 1;
+  transition: transform 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.reaction[aria-pressed="true"] {
+  border-color: #a3a3a3;
+  background: #f5f5f5;
+  color: #262626;
+}
+
+:global(.dark) .reaction[aria-pressed="true"] {
+  border-color: #737373;
+  background: #262626;
+  color: #fff;
+}
+
+.reaction[aria-pressed="true"] .emoji {
+  transform: translateY(-1px) rotate(-8deg) scale(1.08);
+}
+
+.selection {
+  position: absolute;
+  right: 0;
+  top: -4px;
+  display: grid;
+  width: 14px;
+  height: 14px;
+  place-items: center;
+  border-radius: 50%;
+  background: #525252;
+  color: #fff;
+  font-size: 9px;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.reaction[aria-pressed="true"] .selection {
+  opacity: 1;
+}
+
+/* Match the site's out-expo token. Keep hover off touch devices. */
+@media (hover: hover) and (pointer: fine) {
+  .reaction:not(:disabled):not([aria-disabled="true"]):hover {
+    transform: translateY(-2px);
+  }
+}
+
+.reaction:not(:disabled):not([aria-disabled="true"]):active {
+  transform: scale(0.97);
+}
+
+/* Keyboard activation stays immediate, with a visible native focus treatment. */
+.reaction:focus-visible,
+.reaction:focus-visible .emoji,
+.reaction:focus-visible .selection {
+  transition: none;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section .reaction,
+  .section .emoji {
+    transition: none;
+    transform: none;
+  }
+}

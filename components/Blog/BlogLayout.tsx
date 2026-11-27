@@ -7,6 +7,7 @@ import { ClockIcon } from "../Icons";
 import ScrollReveal from "../ScrollReveal";
 import BlogImage from "./BlogImage";
 import ReadingBar from "./ReadingBar";
+import BlogEngagement from "./Engagement";
 
 const mdxComponents = { BlogImage };
 
@@ -45,6 +46,10 @@ const BlogLayout = ({ meta, source, readingTime }) => {
               <div id="blog-reading-content" className="prose-custom">
                 <MDXRemote {...source} components={mdxComponents} />
               </div>
+              <BlogEngagement
+                key={meta.path}
+                slug={decodeURIComponent(meta.path.slice("/blog/".length))}
+              />
             </dd>
             <dt className="list-title">
               <h3>Date</h3>
@@ -66,7 +71,11 @@ const BlogLayout = ({ meta, source, readingTime }) => {
         </ScrollReveal>
       </Main>
       <div aria-hidden="true" className="h-24" />
-      <ReadingBar key={meta.path} title={meta.title} readingTime={readingTime} />
+      <ReadingBar
+        key={meta.path}
+        title={meta.title}
+        readingTime={readingTime}
+      />
     </>
   );
 };
