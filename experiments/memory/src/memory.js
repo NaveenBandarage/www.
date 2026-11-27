@@ -1,5 +1,6 @@
 export const SCHEMA_VERSION = 1;
 export const ROOT_ID = "memory-root";
+export const UNKNOWN_MEMORY_DATE = "1970-01-01T00:00:00.000Z";
 const date = (day, hour = "12:00") => `2026-10-${day}T${hour}:00-04:00`;
 export function demoMemory() {
   const folder = (id, title, parent = null, day = 20) => ({
@@ -209,7 +210,7 @@ export function validateMemory(input) {
     if (!types.has(n.type)) throw Error(`Unsupported record type for ${n.id}.`);
     if (typeof n.title !== "string" || !n.title.trim())
       throw Error(`Add a title to ${n.id}.`);
-    const created = stamp(n.created_at, "1970-01-01T00:00:00.000Z");
+    const created = stamp(n.created_at, UNKNOWN_MEMORY_DATE);
     const revisions = Array.isArray(n.revisions)
       ? n.revisions
           .map((r) => ({

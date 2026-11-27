@@ -3,6 +3,7 @@ import { createPaintTrail } from "./paint-trail.js";
 import { relationshipsFor } from "./relationships.js";
 import { initialWorkspace } from "./personal-memory.js";
 import { revealMemory } from "./graph-model.js";
+import { displayDate, memoryTimeline, memoryTimestamp } from "./timeline.js";
 import { TreeView } from "./tree-view.js";
 import {
   demoMemory,
@@ -50,23 +51,15 @@ function request(type, payload = {}) {
     worker.postMessage({ id, type, ...payload });
   });
 }
-const dateFormat = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-  timeZone: "America/New_York",
-});
-const displayDate = (value) =>
-  Number.isFinite(Date.parse(value))
-    ? dateFormat.format(new Date(value))
-    : "Unknown";
 let personalSeed;
 let store,
   byId = new Map(),
   expanded = new Set(),
   pages = {},
   asOf = Infinity,
-  times = [],
+  timeline = [],
+  timelineByTime = new Map(),
+  liveView = null,
   selected = null,
   currentRecall = null,
   editing = null,
@@ -117,6 +110,7 @@ function reveal(id) {
   ({ expanded, pages } = revealMemory(store, id, { expanded, pages, asOf }));
 }
 function saveView() {
+  if (asOf !== Infinity) return;
   try {
     localStorage.setItem(
       "memory-view",
@@ -143,7 +137,11 @@ function persist() {
 async function sync() {
   refreshIndex();
   await request("init", { store });
-  updateTimeline();
+  timeline = memoryTimeline(store);
+  timelineByTime = new Map(
+    timeline.map((snapshot) => [snapshot.time, snapshot]),
+  );
+  renderTimeline();
   await redraw();
 }
 async function redraw() {
@@ -153,6 +151,10 @@ async function redraw() {
       options: { expanded: [...expanded], pages, asOf },
     });
   if (token !== projectionSerial) return;
+  const changed = new Set(
+    timelineByTime.get(asOf)?.changes.map(({ id }) => id),
+  );
+  for (const node of result.nodes) node.timelineChanged = changed.has(node.id);
   view.setGraph(result, expanded);
   const high = new Set(
     currentRecall?.results.flatMap((r) => [
@@ -177,7 +179,7 @@ async function redraw() {
       ? store.agent.id === "naveen-interests-2026-10"
         ? "A few interests. Many possible connections."
         : "Open a branch. See what grows."
-      : `Memory as it was on ${displayDate(new Date(asOf).toISOString())}.`;
+      : `Dated changes through ${displayDate(asOf)}. Undated records are included for context.`;
   let empty = $(".empty-branches");
   if (!result.nodes.length) {
     if (!empty) {
@@ -201,7 +203,7 @@ function setMenu(open) {
   $("#options-menu").hidden = !open;
   $("#menu-toggle").setAttribute("aria-expanded", String(open));
 }
-function closeInspector() {
+function closeInspector({ restoreFocus = true } = {}) {
   selected = null;
   $("#inspector").hidden = true;
   view.setSelection(
@@ -213,7 +215,8 @@ function closeInspector() {
       ]) || [],
     ),
   );
-  if (lastFocused?.isConnected) lastFocused.focus({ preventScroll: true });
+  if (restoreFocus && lastFocused?.isConnected)
+    lastFocused.focus({ preventScroll: true });
 }
 function openInspector(kind) {
   $("#inspector").hidden = false;
@@ -409,19 +412,29 @@ function renderInspector(n) {
   const original = byId.get(n.id);
   if (original.revisions?.length) {
     sectionTitle(c, "Revision history");
-    addButton(
-      c,
-      `${displayDate(original.created_at)} · Original`,
-      () => jumpRevision(original.created_at, n.id),
-      "revision-link",
-    );
-    for (const r of original.revisions.filter((r) => Date.parse(r.at) <= asOf))
-      addButton(
-        c,
-        `${displayDate(r.at)} · Correction`,
-        () => jumpRevision(r.at, n.id),
-        "revision-link",
-      );
+    for (const entry of [
+      { at: original.created_at, content: original.content, label: "Original" },
+      ...original.revisions
+        .filter((r) => Date.parse(r.at) <= asOf)
+        .map((r) => ({ ...r, label: "Correction" })),
+    ]) {
+      const label = `${displayDate(entry.at)} · ${entry.label}`;
+      if (memoryTimestamp(entry.at) === null) {
+        const details = element("details");
+        details.append(
+          element("summary", "revision-link", label),
+          element("div", "memory-body", entry.content),
+        );
+        c.append(details);
+      } else {
+        addButton(
+          c,
+          label,
+          () => jumpRevision(entry.at, n.id),
+          "revision-link",
+        );
+      }
+    }
   }
   const uses = store.recalls.filter(
     (r) => Date.parse(r.at) <= asOf && r.results.some((x) => x.id === n.id),
@@ -481,48 +494,65 @@ function renderInspector(n) {
     c.append(actions);
   }
 }
-function updateTimeline() {
-  times = [
-    ...new Set(
-      store.nodes
-        .flatMap((n) => [
-          n.created_at,
-          n.valid_to,
-          n.archived_at,
-          ...(n.revisions || []).map((r) => r.at),
-        ])
-        .filter(Boolean)
-        .map((d) => Date.parse(d)),
-    ),
-  ].sort((a, b) => a - b);
-  const s = $("#time-slider");
-  s.max = times.length;
-  s.value =
-    asOf === Infinity
-      ? times.length
-      : Math.max(
-          0,
-          times.findIndex((t) => t === asOf),
-        );
-  $("#time-label").textContent =
-    asOf === Infinity ? "Now" : displayDate(new Date(asOf).toISOString());
-  $("#status-date").textContent =
-    asOf === Infinity
-      ? "Now"
-      : displayDate(new Date(asOf).toISOString()).replace(", 2026", "");
+function renderTimeline() {
+  const now = asOf === Infinity;
+  const after = timeline.findIndex(({ time }) => time > asOf);
+  const index = now
+    ? timeline.length
+    : Math.max(0, (after < 0 ? timeline.length : after) - 1);
+  const date = now ? "Now" : displayDate(asOf);
+  const change = now
+    ? timeline.length
+      ? `${timeline.length} dated ${timeline.length === 1 ? "snapshot" : "snapshots"}`
+      : "No dated changes"
+    : (timelineByTime.get(asOf)?.summary ?? "Historical snapshot");
+  const slider = $("#time-slider");
+  slider.max = timeline.length;
+  slider.value = index;
+  slider.disabled = timeline.length === 0;
+  slider.setAttribute("aria-valuetext", `${date} · ${change}`);
+  $("#time-label").textContent = date;
+  $("#time-change").textContent = change;
+  $("#time-prev").disabled = !timeline.some(({ time }) => time < asOf);
+  $("#time-next").disabled = now;
+  $("#time-now").disabled = now;
+  $("#status-date").textContent = date;
 }
-async function setTime(value) {
+function showSnapshotChange(snapshot) {
+  for (const change of snapshot.changes) {
+    for (let node = byId.get(change.id); node; node = byId.get(node.parent)) {
+      if (!memoryAt(node, asOf)) continue;
+      reveal(node.id);
+      if (node.type === "folder") expanded.add(node.id);
+      view.fit();
+      return;
+    }
+  }
+}
+async function setTime(value, { showChange = false } = {}) {
+  if (value === asOf) return;
+  if (asOf === Infinity) liveView = { expanded, pages };
+  if (value === Infinity && liveView) {
+    ({ expanded, pages } = liveView);
+    liveView = null;
+  } else if (liveView) {
+    expanded = new Set(liveView.expanded);
+    pages = { ...liveView.pages };
+  }
   asOf = value;
+  const snapshot = showChange && timelineByTime.get(value);
+  if (snapshot) showSnapshotChange(snapshot);
   querySerial++;
   if (!$(".search-box").hidden) run(updateSearch);
   currentRecall = null;
   $("#recall-strip").hidden = true;
-  updateTimeline();
+  renderTimeline();
   await redraw();
+  if (value !== asOf) return;
   if (selected) {
     const n = current(selected);
     if (n) renderInspector(n);
-    else closeInspector();
+    else closeInspector({ restoreFocus: false });
   }
 }
 async function jumpRevision(at, id) {
@@ -785,6 +815,7 @@ async function replaceWorkspace(next) {
   expanded = new Set();
   pages = {};
   asOf = Infinity;
+  liveView = null;
   currentRecall = null;
   selected = null;
   $("#recall-strip").hidden = true;
@@ -1030,12 +1061,18 @@ $("#timeline-toggle").onclick = () => {
   $("#timeline-toggle").setAttribute("aria-expanded", String(show));
 };
 $("#status-date").onclick = () => $("#timeline-toggle").click();
-$("#time-slider").oninput = (e) =>
-  run(() =>
-    setTime(
-      +e.target.value === times.length ? Infinity : times[+e.target.value],
-    ),
-  );
+$("#time-slider").oninput = (e) => {
+  const time = timeline[Number(e.target.value)]?.time ?? Infinity;
+  run(() => setTime(time, { showChange: true }));
+};
+$("#time-prev").onclick = () => {
+  const previous = timeline.findLast(({ time }) => time < asOf);
+  if (previous) run(() => setTime(previous.time, { showChange: true }));
+};
+$("#time-next").onclick = () => {
+  const next = timeline.find(({ time }) => time > asOf);
+  run(() => setTime(next?.time ?? Infinity, { showChange: true }));
+};
 $("#time-now").onclick = () => run(() => setTime(Infinity));
 $("#search-toggle").onclick = () => setSearch($(".search-box").hidden);
 $("#search-close").onclick = () => setSearch(false);

@@ -127,6 +127,21 @@ export async function addSiteContent(seed, root) {
       url: site + "/photos",
     });
   }
+  // The outfits page reuses the wardrobe in the uses collection, rather than
+  // maintaining a second list. Only those items are shown on this page.
+  if (pages.includes("outfits.tsx")) {
+    const source = await read(path.join(root, "lib", "uses.ts"));
+    const wardrobe = collectArrays(source).find(
+      (array) => array.name === "usesItems",
+    );
+    if (wardrobe)
+      collections.push({
+        ...wardrobe,
+        items: wardrobe.items.filter((item) => item.category === "Wardrobe"),
+        origin: "lib/uses.ts",
+        url: site + "/outfits",
+      });
+  }
   const seen = new Set();
   for (const { name, items, origin, url } of collections) {
     for (const fields of items) {

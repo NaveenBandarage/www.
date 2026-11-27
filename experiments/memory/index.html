@@ -76,9 +76,9 @@
           </nav>
           <div id="options-menu" class="options-menu" hidden>
             <button id="import-open">
-              Import memory… <span>JSON / Markdown</span></button
+              Import into this browser… <span>JSON / Markdown</span></button
             ><button id="export">Export memory <span>JSON</span></button
-            ><button id="add-open">New memory… <span>⌘ N</span></button>
+            ><button id="add-open">New local memory… <span>⌘ N</span></button>
             <hr />
             <button id="links-toggle" aria-pressed="false">
               Show relationships</button
@@ -91,15 +91,40 @@
           </div>
         </header>
         <div id="timeline" class="timeline" hidden>
-          <label for="time-slider">As of <span id="time-label">Now</span></label
-          ><input
-            id="time-slider"
-            type="range"
-            min="0"
-            max="1"
-            value="1"
-            aria-label="Memory snapshot"
-          /><button id="time-now">Now ↗</button>
+          <div class="timeline-heading">
+            <span id="time-label">Now</span>
+            <span id="time-change">Loading history…</span>
+          </div>
+          <div class="timeline-controls">
+            <button
+              id="time-prev"
+              type="button"
+              aria-label="Previous change"
+              title="Previous change"
+              disabled
+            >
+              ←
+            </button>
+            <input
+              id="time-slider"
+              type="range"
+              min="0"
+              max="0"
+              value="0"
+              aria-label="Memory snapshot"
+              disabled
+            />
+            <button
+              id="time-next"
+              type="button"
+              aria-label="Next change"
+              title="Next change"
+              disabled
+            >
+              →
+            </button>
+            <button id="time-now" type="button" disabled>Now</button>
+          </div>
         </div>
         <div class="work-area">
           <div
@@ -196,7 +221,8 @@
       <h1>Give the branches something to remember.</h1>
       <p class="dialog-copy">
         Import an agent’s JSON export, or turn a Markdown document’s sections
-        into memories. Files stay in this browser.
+        into memories. Your files and edits stay in this browser. The published
+        tree is shared by all visitors.
       </p>
       <label class="file-drop" for="memory-file"
         >Choose a JSON, Markdown, or text file<input
@@ -205,7 +231,7 @@
           accept=".json,.md,.markdown,.txt"
       /></label>
       <p class="dialog-hint">
-        Import replaces the current workspace. Export it first to keep a copy.
+        Import replaces your local workspace. Export it first to keep a copy.
       </p>
       <div id="import-review" hidden>
         <p id="import-summary"></p>
