@@ -83,6 +83,14 @@ export const booksData: Book[] = [
     author: "Charles T. Munger",
     isbn: "9781953953230",
     coverSrc: "/books/poor-charlies-almanack.jpg",
+    readYear: 2026,
+    status: "read",
+  },
+  {
+    id: "crying-in-h-mart",
+    title: "Crying in H Mart",
+    author: "Michelle Zauner",
+    isbn: "9780525657743",
     status: "reading",
   },
   {
