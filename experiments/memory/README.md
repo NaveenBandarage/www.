@@ -43,13 +43,13 @@ When an agent changes public site content, the repository's `AGENTS.md` instruct
 - Use search to find records by title, content, or tags. Results include folder paths and text previews; use ↑/↓ and Enter to open a result. The inspector’s folder path takes you back to its branch. Choose **Recall** to record the actual local text retrieval results and highlight their supporting sources.
 - **Memory options → Recall history** opens local and imported retrieval logs. Locally recorded recalls preserve the retrieved text and source ids, even after corrections.
 - Correct a memory to create a revision with a new source. Pin memories to give matching records a small retrieval preference. Archive a memory to hide it from the present while preserving historical snapshots; the confirmation offers Undo to restore it immediately.
-- The clock opens a timeline of creation, correction, supersession, and archive events. Choose **Now** to return to the current state.
+- The clock opens a scrubber that steps through dated additions, corrections, supersessions, and archives. Each stop describes the change and opens an affected branch. Undated records are included for context and do not create timeline stops. Choose **Now** to restore the current tree and its open branches.
 - Import JSON, Markdown, or text using the menu or drag and drop. Markdown sections become memories; the complete original document becomes their source. Imports replace the current workspace; export first to preserve a copy.
 - Export JSON to back up the workspace, move it between devices, or edit the schema externally. The bundled `public/example-memory.json` is a complete example.
 
 ## Storage and agent connection
 
-Memory is stored locally in IndexedDB on the current browser origin. Expanded folders are stored in localStorage. Files are not uploaded. Clearing browser data removes this local memory. The default tree uses selected summaries from the private October 30, 2026 interest
+Memory is stored locally in IndexedDB on the current browser origin. Expanded folders are stored in localStorage. Imports and edits affect that browser's workspace. The published tree comes from the site build and is shared by all visitors. Clearing browser data removes this local memory. The default tree uses selected summaries from the private October 30, 2026 interest
 profile. The raw profile is not bundled. Source notes are summary-level evidence,
 not original chat transcripts. Connections carry `inferred` status and `may_connect`
 edges; researched media and products are not promoted to favorites or ownership.
@@ -118,6 +118,18 @@ and automatic hints are limited to three per memory.
 `↗ N` on a leaf or folder indicates connections beyond the visible neighborhood.
 Selecting a leaf traces faint routes to the nearest visible destination folder;
 opening that folder moves the route toward the actual endpoint. Fully uncovered
-connections appear automatically. Routes draw in briefly, respecting reduced
-motion, and remain capped at 30. Source evidence stays separate from topic counts.
+connections appear automatically. Routes draw from their source anchor as their labels appear and remain
+capped at 30. Source evidence stays separate from topic counts.
 Choosing a relationship in the inspector is an explicit jump to that memory.
+
+Relationship lines meet each visible label at a small, shared anchor dot. They
+leave the sides horizontally and bend toward the destination, with vertical
+curves for stacked labels. A soft highlight repeats along the continuous stroke.
+A frame study of the supplied
+[reference clip](https://x.com/thenoumenon/status/2109597193699221698) measured an
+approximately 400px wavelength and 1.2s period at its native resolution. The
+renderer uses distance along each curve, so bends and different route lengths
+preserve the flow speed. The green particle branches retain their original look.
+The wave is ambient decoration, not live retrieval or agent activity. Hidden tabs
+pause it; reduced motion keeps a steady cable, including live preference changes.
+Without WebGL, the same routes remain visible as static SVG paths.

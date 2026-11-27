@@ -1,5 +1,16 @@
 import * as THREE from "three";
-const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+import {
+  connectionCurve,
+  connectionCycle,
+  connectionStyle,
+  createConnectionLine,
+} from "./connection-line.js";
+const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+const GROWTH_PER_SECOND = 0.9;
+let reducedMotion = motionPreference.matches;
+motionPreference.addEventListener("change", (event) => {
+  reducedMotion = event.matches;
+});
 function random(seed) {
   return () => {
     seed |= 0;
@@ -34,8 +45,6 @@ const vertexShader = `
  attribute vec3 aColor;
  attribute float aSize;
  attribute float aProgress;
- attribute float aPhase;
- uniform float uTime;
  uniform float uReveal;
  uniform float uPixelRatio;
  uniform float uScale;
@@ -44,10 +53,7 @@ const vertexShader = `
  varying vec3 vColor;
  varying float vAlpha;
  void main(){
-   vec3 p=position;
-   p.y+=sin(p.x*.012+uTime*.58+aPhase*.22)*.65*aProgress;
-   p.z+=sin(uTime*.4+aPhase)*.24;
-   gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);
+   gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
    gl_PointSize=clamp(aSize*uPixelRatio*uScale,.7,5.);
    vColor=aColor;
    vAlpha=smoothstep(aProgress-.025,aProgress+.035,uReveal)*uOpacity;
@@ -68,8 +74,7 @@ function makeBranch(spec, scene) {
     positions = [],
     colors = [],
     sizes = [],
-    progress = [],
-    phases = [];
+    progress = [];
   const curve = new THREE.CatmullRomCurve3(
     spec.points.map(
       ([x, y], i) => new THREE.Vector3(x, y, Math.sin(i * 1.9) * 3),
@@ -80,11 +85,16 @@ function makeBranch(spec, scene) {
   );
   const length = curve.getLength();
   function point(p, color, size, t) {
-    positions.push(p.x, p.y, p.z);
+    // Bake the initial scatter so tiny particles do not shimmer at rest.
+    const phase = rng() * 6.28;
+    positions.push(
+      p.x,
+      p.y + Math.sin(p.x * 0.012 + phase * 0.22) * 0.65 * t,
+      p.z + Math.sin(phase) * 0.24,
+    );
     colors.push(...color);
     sizes.push(size);
     progress.push(t);
-    phases.push(rng() * 6.28);
   }
   function sampleBranch(
     path,
@@ -160,14 +170,12 @@ function makeBranch(spec, scene) {
     "aProgress",
     new THREE.Float32BufferAttribute(progress, 1),
   );
-  geometry.setAttribute("aPhase", new THREE.Float32BufferAttribute(phases, 1));
   const material = new THREE.ShaderMaterial({
     vertexShader,
     fragmentShader,
     transparent: true,
     depthWrite: false,
     uniforms: {
-      uTime: { value: 0 },
       uReveal: { value: 0 },
       uPixelRatio: { value: Math.min(devicePixelRatio, 2) },
       uScale: { value: 1 },
@@ -209,9 +217,19 @@ export class TreeView {
     this.links = false;
     this.projection = null;
     this.lastTime = 0;
+    this.motionTime = 0;
+    this.connectionClock = {
+      uCycle: { value: 0 },
+      uMotion: { value: reducedMotion ? 0 : 1 },
+      uResolution: { value: new THREE.Vector2(1, 1) },
+    };
     this.running = true;
     this.dirty = true;
+    this.labelsFading = false;
+    this.connectionsRevealing = false;
     this.edgePaths = [];
+    this.labelBoxes = new Map();
+    this.connectionPorts = new Map();
     this.leaders = new Map();
     this.edgesGroup = document.createElementNS(
       "http://www.w3.org/2000/svg",
@@ -221,7 +239,11 @@ export class TreeView {
       "http://www.w3.org/2000/svg",
       "g",
     );
-    this.edgesEl.append(this.edgesGroup, this.leaderGroup);
+    this.portGroup = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "g",
+    );
+    this.edgesEl.append(this.edgesGroup, this.leaderGroup, this.portGroup);
     try {
       this.renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -239,7 +261,15 @@ export class TreeView {
     this.observer.observe(viewport);
     this.bindGestures();
     this.resize();
-    this.frame = requestAnimationFrame((t) => this.tick(t));
+    this.onVisibilityChange = () => {
+      if (document.hidden) cancelAnimationFrame(this.frame);
+      else {
+        this.lastTime = performance.now();
+        this.frame = requestAnimationFrame((t) => this.tick(t));
+      }
+    };
+    document.addEventListener("visibilitychange", this.onVisibilityChange);
+    this.onVisibilityChange();
   }
   setGraph(projection, expanded) {
     this.projection = projection;
@@ -274,6 +304,7 @@ export class TreeView {
         el.className = `tree-label ${n.type === "origin" ? "origin" : n.type === "folder" ? "folder" : "leaf"}`;
         el.dataset.id = n.id;
         el.style.opacity = "0";
+        el.style.visibility = "hidden";
         el._opacity = 0;
         el.addEventListener("pointerdown", (e) => e.stopPropagation());
         el.onclick = () => {
@@ -306,6 +337,7 @@ export class TreeView {
         el.append(badge);
       }
       el.classList.toggle("open", this.open.has(n.id));
+      el.classList.toggle("timeline-changed", !!n.timelineChanged);
       el.classList.toggle(
         "is-stale",
         n.status === "superseded" || n.status === "disputed",
@@ -337,7 +369,6 @@ export class TreeView {
         el.setAttribute("aria-expanded", String(this.open.has(n.id)));
     }
     this.setSelection(this.selected, this.highlight);
-    this.buildEdges();
     if (this.autoFit) this.fit();
     this.dirty = true;
   }
@@ -404,44 +435,36 @@ export class TreeView {
       if (!a || !b) continue;
       const key = route + ":" + !!e.partial;
       const existing = previous.get(key);
-      const path =
-        existing?.path ||
-        document.createElementNS("http://www.w3.org/2000/svg", "path");
       previous.delete(key);
-      path.setAttribute("pathLength", "1000");
-      path.setAttribute("fill", "none");
-      path.setAttribute(
-        "stroke",
-        e.type === "supersedes" ? "#b1aa8c" : "#9ab27a",
-      );
-      path.setAttribute("stroke-width", "1");
-      path.setAttribute(
-        "stroke-dasharray",
-        e.partial ? "3 14" : e.type === "supported_by" ? "3 10" : "6 12",
-      );
-      path.setAttribute("opacity", e.partial ? ".24" : ".5");
-      path.classList.toggle("connection-partial", !!e.partial);
-      if (!existing && !reducedMotion) {
-        path.animate(
-          [
-            {
-              strokeDasharray: "1000 1000",
-              strokeDashoffset: 1000,
-              opacity: 0,
-            },
-            {
-              strokeDasharray: "1000 1000",
-              strokeDashoffset: 0,
-              opacity: e.partial ? 0.24 : 0.5,
-            },
-          ],
-          { duration: 550, easing: "ease-out" },
+      const style = connectionStyle(e.type, e.partial);
+      const edge = existing || { key, revealProgress: null };
+      if (this.renderer) {
+        edge.cable ??= createConnectionLine(
+          this.scene,
+          this.connectionClock,
+          key,
         );
+        edge.cable.setColor(style.color);
+      } else {
+        edge.path ??= document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "path",
+        );
+        edge.path.setAttribute("fill", "none");
+        edge.path.setAttribute("stroke", style.color);
+        edge.path.setAttribute("stroke-width", ".85");
+        edge.path.setAttribute("stroke-linecap", "butt");
+        edge.path.setAttribute("pathLength", "1");
+        edge.path.setAttribute("stroke-dasharray", "1 1");
+        this.edgesGroup.append(edge.path);
       }
-      this.edgesGroup.append(path);
-      this.edgePaths.push({ path, a, b, key });
+      Object.assign(edge, { a: a.id, b: b.id, style });
+      this.edgePaths.push(edge);
     }
-    for (const old of previous.values()) old.path.remove();
+    for (const old of previous.values()) {
+      old.path?.remove();
+      old.cable?.dispose();
+    }
     this.dirty = true;
   }
   fit() {
@@ -483,22 +506,36 @@ export class TreeView {
     this.baseScale = Math.min(1.12, this.width / 1040);
     if (this.width < 600) this.baseScale = Math.max(0.5, this.width / 750);
     this.renderer?.setSize(this.width, this.height, false);
+    this.connectionClock.uResolution.value.set(this.width, this.height);
     this.edgesEl.setAttribute("viewBox", `0 0 ${this.width} ${this.height}`);
     if (this.autoFit) this.fit();
     this.dirty = true;
   }
   tick(now) {
-    if (!this.running) return;
+    if (!this.running || document.hidden) return;
     const dt = Math.min((now - this.lastTime) / 1000 || 0.016, 1);
     this.lastTime = now;
+    if (!reducedMotion) this.motionTime += dt;
+    this.connectionClock.uCycle.value = connectionCycle(this.motionTime);
+    const motion = reducedMotion ? 0 : 1;
+    if (motion !== this.connectionClock.uMotion.value) this.dirty = true;
+    this.connectionClock.uMotion.value = motion;
     const ease = reducedMotion ? 1 : 1 - Math.exp(-dt * 5),
       moving =
+        !this.center.equals(this.target) || this.zoom !== this.targetZoom,
+      inTransit =
         this.center.distanceTo(this.target) > 0.02 ||
         Math.abs(this.zoom - this.targetZoom) > 0.0001;
-    this.center.lerp(this.target, ease);
-    this.zoom += (this.targetZoom - this.zoom) * ease;
+    if (inTransit) {
+      this.center.lerp(this.target, ease);
+      this.zoom += (this.targetZoom - this.zoom) * ease;
+    } else if (moving) {
+      this.center.copy(this.target);
+      this.zoom = this.targetZoom;
+    }
     const scale = this.baseScale * this.zoom;
-    if (moving || this.dirty) {
+    const relayout = moving || this.dirty;
+    if (relayout) {
       this.camera.left = -this.width / 2 / scale;
       this.camera.right = this.width / 2 / scale;
       this.camera.top = this.height / 2 / scale;
@@ -508,7 +545,9 @@ export class TreeView {
       this.camera.updateMatrixWorld();
       this.onZoom?.(Math.round(this.zoom * 100));
     }
+    let labelRevealChanged = false;
     for (const [id, b] of this.branches) {
+      const labelWasReady = b.reveal > 0.85;
       if (reducedMotion) b.reveal = b.wanted;
       else if (
         !b.wanted ||
@@ -516,13 +555,12 @@ export class TreeView {
         (this.branches.get(b.parentBranch)?.reveal || 0) > 0.65
       )
         b.reveal = THREE.MathUtils.clamp(
-          b.reveal + dt * (b.wanted ? 0.9 : -2),
+          b.reveal + dt * (b.wanted ? GROWTH_PER_SECOND : -2),
           0,
           1,
         );
       b.mesh.visible = b.reveal > 0.001;
       b.mesh.material.uniforms.uReveal.value = b.reveal * 1.05;
-      b.mesh.material.uniforms.uTime.value = reducedMotion ? 0 : now / 1000;
       b.mesh.material.uniforms.uScale.value = scale;
       b.mesh.material.uniforms.uOpacity.value =
         this.highlight.size && b.owner && !this.activeOwners.has(b.owner)
@@ -531,58 +569,126 @@ export class TreeView {
       b.mesh.material.uniforms.uActive.value = this.activeOwners.has(b.owner)
         ? 1
         : 0;
+      if (labelWasReady !== b.reveal > 0.85) labelRevealChanged = true;
       if (!b.wanted && b.reveal === 0) this.removeBranch(id);
     }
-    this.placeLabels(dt, moving || this.dirty);
-    if (moving || this.dirty)
-      for (const { path, a, b } of this.edgePaths) {
-        const p = this.screen(a),
-          q = this.screen(b),
-          mid = (p.x + q.x) / 2;
-        path.setAttribute(
-          "d",
-          `M${p.x} ${p.y + 18} C${mid} ${p.y - 45} ${mid} ${q.y - 45} ${q.x} ${q.y + 18}`,
-        );
-      }
+    if (relayout) this.layoutLabels();
+    const updateLabels = relayout || labelRevealChanged || this.labelsFading;
+    if (updateLabels) this.fadeLabels(dt);
+    if (updateLabels || this.connectionsRevealing) this.placeConnections(dt);
     this.renderer?.render(this.scene, this.camera);
     this.dirty = false;
     this.frame = requestAnimationFrame((t) => this.tick(t));
   }
-  placeLabels(dt, relayout) {
+  placeConnections(dt) {
+    this.connectionsRevealing = false;
+    const ports = new Map();
+    for (const edge of this.edgePaths) {
+      const from = this.labelBoxes.get(edge.a);
+      const to = this.labelBoxes.get(edge.b);
+      const opacity =
+        edge.style.opacity * Math.min(from?.opacity ?? 0, to?.opacity ?? 0);
+      edge.cable?.setOpacity(opacity);
+      edge.path?.setAttribute("opacity", opacity * 0.36);
+      if (opacity <= 0) continue;
+
+      const progress = reducedMotion
+        ? 1
+        : edge.revealProgress === null
+          ? 0
+          : Math.min(1, edge.revealProgress + dt * GROWTH_PER_SECOND);
+      edge.revealProgress = progress;
+      if (progress < 1) this.connectionsRevealing = true;
+      const reveal = THREE.MathUtils.smoothstep(progress, 0, 1);
+      edge.cable?.setReveal(reveal);
+      edge.path?.setAttribute("stroke-dashoffset", 1 - reveal);
+
+      const old = edge.bounds;
+      if (
+        !old ||
+        old.from.x !== from.x ||
+        old.from.y !== from.y ||
+        old.from.w !== from.w ||
+        old.from.h !== from.h ||
+        old.to.x !== to.x ||
+        old.to.y !== to.y ||
+        old.to.w !== to.w ||
+        old.to.h !== to.h
+      ) {
+        edge.bounds = { from, to };
+        edge.curve = connectionCurve(from, to);
+        edge.cable?.setCurve(edge.curve);
+        if (edge.path) {
+          const [start, first, second, end] = edge.curve;
+          edge.path.setAttribute(
+            "d",
+            `M${start.x} ${start.y} C${first.x} ${first.y} ${second.x} ${second.y} ${end.x} ${end.y}`,
+          );
+        }
+      }
+
+      for (const [id, point, portOpacity] of [
+        [edge.a, edge.curve[0], opacity],
+        [
+          edge.b,
+          edge.curve[3],
+          opacity * THREE.MathUtils.smoothstep(reveal, 0.85, 1),
+        ],
+      ]) {
+        const key = `${id}:${point.side}`;
+        if (portOpacity > (ports.get(key)?.opacity ?? 0))
+          ports.set(key, {
+            ...point,
+            opacity: portOpacity,
+            color: edge.style.color,
+          });
+      }
+    }
+    for (const [key, circle] of this.connectionPorts) {
+      if (ports.has(key)) continue;
+      circle.remove();
+      this.connectionPorts.delete(key);
+    }
+    for (const [key, port] of ports) {
+      let circle = this.connectionPorts.get(key);
+      if (!circle) {
+        circle = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "circle",
+        );
+        circle.setAttribute("r", "1.65");
+        circle.setAttribute("fill", "#fafbf9");
+        circle.setAttribute("stroke-width", ".85");
+        this.portGroup.append(circle);
+        this.connectionPorts.set(key, circle);
+      }
+      circle.setAttribute("cx", port.x);
+      circle.setAttribute("cy", port.y);
+      circle.setAttribute("stroke", port.color);
+      circle.setAttribute("opacity", port.opacity * 0.85);
+    }
+  }
+  layoutLabels() {
+    this.labelBoxes.clear();
     const dimensions = new Map(
       this.nodes.map((n) => {
         const el = this.elements.get(n.id);
         return [n.id, { w: el.offsetWidth || 120, h: el.offsetHeight || 38 }];
       }),
     );
-    const occupied = [],
-      ordered = [...this.nodes].sort(
-        (a, b) =>
-          (b.type === "origin"
-            ? 20
-            : b.id === this.selected
-              ? 10
-              : this.highlight.has(b.id)
-                ? 6
-                : b.type === "folder"
-                  ? 3
-                  : 0) -
-          (a.type === "origin"
-            ? 20
-            : a.id === this.selected
-              ? 10
-              : this.highlight.has(a.id)
-                ? 6
-                : a.type === "folder"
-                  ? 3
-                  : 0),
-      );
-    const branchList = [...this.branches.values()];
+    const priority = (node) => {
+      if (node.type === "origin") return 20;
+      if (node.id === this.selected) return 10;
+      if (node.timelineChanged) return 8;
+      if (this.highlight.has(node.id)) return 6;
+      return node.type === "folder" ? 3 : 0;
+    };
+    const occupied = [];
+    const ordered = [...this.nodes].sort((a, b) => priority(b) - priority(a));
     for (const n of ordered) {
       const el = this.elements.get(n.id),
         anchor = this.screen(n),
-        { w, h } = dimensions.get(n.id),
-        owner = branchList.find((b) => b.id === `branch:${n.id}`);
+        { w, h } = dimensions.get(n.id);
       let x = anchor.x,
         y = anchor.y + (n.type === "origin" ? 18 : 0),
         placed = false;
@@ -619,14 +725,17 @@ export class TreeView {
           break;
         }
       }
-      const wanted = placed && (!owner || owner.reveal > 0.85) ? 1 : 0;
-      el._opacity +=
-        (wanted - el._opacity) * (reducedMotion ? 1 : Math.min(1, dt * 7));
-      el.style.opacity = el._opacity;
-      el.style.visibility = el._opacity < 0.01 ? "hidden" : "visible";
-      el.inert = !wanted;
       el.style.transform = `translate(${x}px,${y}px) translate(-50%,0)`;
       const moved = Math.abs(y - anchor.y) + Math.abs(x - anchor.x) > 10;
+      if (placed)
+        this.labelBoxes.set(n.id, {
+          x,
+          y,
+          w,
+          h,
+          opacity: el._opacity,
+          leader: moved,
+        });
       let leader = this.leaders.get(n.id);
       if (moved && placed) {
         if (!leader) {
@@ -643,8 +752,31 @@ export class TreeView {
         leader.setAttribute("y1", anchor.y + 12);
         leader.setAttribute("x2", x);
         leader.setAttribute("y2", y + h / 2);
-        leader.setAttribute("opacity", el._opacity * 0.7);
-      } else if (leader) leader.setAttribute("opacity", "0");
+      }
+    }
+  }
+  fadeLabels(dt) {
+    this.labelsFading = false;
+    for (const [id, el] of this.elements) {
+      const box = this.labelBoxes.get(id);
+      const owner = this.branches.get(`branch:${id}`);
+      const wanted = box && (!owner || owner.reveal > 0.85) ? 1 : 0;
+      const previous = el._opacity;
+      const next =
+        previous +
+        (wanted - previous) * (reducedMotion ? 1 : Math.min(1, dt * 7));
+      el._opacity = Math.abs(wanted - next) < 0.005 ? wanted : next;
+      if (el._opacity !== wanted) this.labelsFading = true;
+      if (el._opacity !== previous) {
+        el.style.opacity = el._opacity;
+        el.style.visibility = el._opacity < 0.01 ? "hidden" : "visible";
+      }
+      const inert = !wanted;
+      if (el.inert !== inert) el.inert = inert;
+      if (box) box.opacity = el._opacity >= 0.01 ? el._opacity : 0;
+      this.leaders
+        .get(id)
+        ?.setAttribute("opacity", box?.leader ? el._opacity * 0.7 : 0);
     }
   }
   screen(n) {
@@ -746,7 +878,9 @@ export class TreeView {
     this.running = false;
     cancelAnimationFrame(this.frame);
     this.observer.disconnect();
+    document.removeEventListener("visibilitychange", this.onVisibilityChange);
     for (const id of this.branches.keys()) this.removeBranch(id);
+    for (const edge of this.edgePaths) edge.cable?.dispose();
     this.renderer?.dispose();
   }
 }

@@ -95,3 +95,62 @@ test("public pages, experiments and structured collections follow site changes",
     assert.equal(merged.nodes.filter((n) => n.type === "memory" && n.title === "Film tool").length, 1);
   } finally { await rm(dir, { recursive: true, force: true }); }
 });
+
+test("outfits and shared wardrobe pieces follow additions, edits and removals", async () => {
+  const { mkdir } = await import("node:fs/promises");
+  const { addSiteContent } = await import("../../../scripts/memory-site.mjs");
+  const dir = await mkdtemp(path.join(tmpdir(), "memory-outfits-"));
+  try {
+    for (const folder of ["pages", "data", "lib"])
+      await mkdir(path.join(dir, folder));
+    await writeFile(
+      path.join(dir, "pages/outfits.tsx"),
+      'import { outfits } from "../data/outfits"; export default function Outfits() { return <main>Outfits</main>; }',
+    );
+    await writeFile(
+      path.join(dir, "data/outfits.ts"),
+      'export const outfits = [{ id: "look-1", title: "First look", note: "A look" }];',
+    );
+    const uses = (note) =>
+      `export const usesItems = [{ id: "hat", name: "A hat", category: "Wardrobe", note: "${note}" }, { id: "desk", name: "A desk", category: "Desk" }];`;
+    await writeFile(path.join(dir, "lib/uses.ts"), uses("A gray hat"));
+    const first = validateMemory(await addSiteContent(base, dir));
+    const hat = first.nodes.find(
+      (node) => node.type === "memory" && node.title === "A hat",
+    );
+    assert.match(
+      first.nodes.find((node) => node.id === hat.source_ids[0]).content,
+      /naveenbandarage\.com\/outfits/,
+    );
+    assert.ok(
+      first.nodes.some(
+        (node) => node.type === "memory" && node.title === "First look",
+      ),
+    );
+    assert.ok(
+      !first.nodes.some(
+        (node) => node.type === "memory" && node.title === "A desk",
+      ),
+    );
+    await writeFile(path.join(dir, "lib/uses.ts"), uses("A black hat"));
+    await writeFile(
+      path.join(dir, "data/outfits.ts"),
+      "export const outfits = [];",
+    );
+    const merged = initialWorkspace(
+      first,
+      validateMemory(await addSiteContent(base, dir)),
+    );
+    assert.match(
+      merged.nodes.find((node) => node.id === hat.id).content,
+      /A black hat/,
+    );
+    assert.ok(
+      merged.nodes.find(
+        (node) => node.title === "First look" && node.type === "memory",
+      ).archived_at,
+    );
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
