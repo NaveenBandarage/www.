@@ -23,6 +23,39 @@ scores against `lighthouserc.js`. CI uploads these reports as workflow artifacts
 Use `LIGHTHOUSE_BASE_URL` to audit an already-running server or
 `LIGHTHOUSE_RUNS=1` for a quick local check.
 
+## Blog reactions and views
+
+Each published blog post has four reactions and a shared view counter at the
+bottom. Readers can select several reactions and tap again to remove them.
+Counts refresh every minute while the tab is visible and when it regains focus.
+Reaction sounds use the site's existing sound setting, including the mute
+control beside the reactions. Press feedback respects reduced motion.
+
+For production, create a **private Vercel Blob store**, copy its read/write token,
+and set `BLOG_ENGAGEMENT_BLOB_READ_WRITE_TOKEN` in the Vercel project environment
+(and optionally `.env.local`), then redeploy. Keep the existing analytics
+`BLOB_READ_WRITE_TOKEN` unchanged: it uses a separate public store. Never use a
+`NEXT_PUBLIC_` prefix for either token. See [Vercel private storage](https://vercel.com/docs/vercel-blob/private-storage).
+
+The server stores one private document per post, with atomic conditional writes
+and conflict retries. Only totals and the current reader's selected reactions
+are returned to the browser. A random HttpOnly, SameSite cookie remembers a
+browser for one year; only a post-scoped hash is stored. No IP addresses or
+user agents are stored in engagement documents. Views count once per browser
+per post per UTC day, starting when this feature is enabled; historical
+analytics are not imported. Old daily deduplication hashes are replaced on the
+next day's first view. Clearing cookies or using another browser creates a new
+reader. These are browser counts, not verified unique people. The existing API
+rate limiter provides best-effort per-instance abuse protection.
+
+Without the token, `bun run dev` persists preview data in the ignored
+`.cache/blog-engagement/` directory. Production returns an unavailable state
+until storage is configured. Run `bun run test:engagement` for API, persistence,
+deduplication and concurrent-update checks. This storage design is intended for
+this personal blog: each write reads and replaces the post's document, whose
+size grows with reacting browsers. A high-traffic site should move the same
+API to a transactional database.
+
 ## Images in blog posts
 
 Put images in `public/blog/` (a folder per post keeps them organized), then use
