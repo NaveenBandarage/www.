@@ -71,11 +71,14 @@ export default function Home({ latestPosts }) {
 export async function getStaticProps() {
   const allPosts = await getMdxPaths();
 
-  const latestPosts = allPosts.slice(0, 2).map(({ slug, title, date }) => ({
-    slug,
-    title,
-    date,
-  }));
+  const latestPosts = allPosts
+    .slice(0, 2)
+    .map(({ slug, title, description, date }) => ({
+      slug,
+      title,
+      description,
+      date,
+    }));
 
   return {
     props: {
