@@ -8,6 +8,7 @@ import { ClockIcon } from "../Icons";
 export interface YearTabPost {
   slug: string;
   title: string;
+  description?: string;
   date: string;
   readingTime?: string;
 }
@@ -184,6 +185,14 @@ export default function YearTabs({ posts }: YearTabsProps) {
               >
                 <Link
                   href={`/blog/${post.slug}`}
+                  data-preview-title={post.title}
+                  data-preview-description={post.description}
+                  data-preview-meta={[
+                    formatDate(post.date, true),
+                    post.readingTime,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
                   className="group flex items-start justify-between gap-3 py-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400 dark:focus-visible:outline-neutral-500"
                 >
                   <span className="min-w-0">

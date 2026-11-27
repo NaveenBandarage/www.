@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { NoteIcon } from "../Icons";
 import Badge from "../../components/Badge";
+import formatDate from "../../lib/formatDate";
 
 interface Post {
   slug: string;
   title: string;
+  description?: string;
+  date: string;
 }
 
 interface WritingProps {
@@ -34,6 +37,9 @@ export default function Writing({ latestPosts }: WritingProps) {
             <div key={post.slug}>
               <Link
                 href={`/blog/${post.slug}`}
+                data-preview-title={post.title}
+                data-preview-description={post.description}
+                data-preview-meta={formatDate(post.date, true)}
                 className="link inline-flex items-center gap-1"
               >
                 <div className="opacity-20 dark:opacity-30">

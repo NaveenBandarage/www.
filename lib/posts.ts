@@ -5,6 +5,7 @@ import path from "path";
 export interface GetMdxPathsResult {
   slug: string;
   title: string;
+  description: string;
   date: string;
   content?: string;
 }
@@ -26,6 +27,7 @@ export const getMdxPaths = async (): Promise<GetMdxPathsResult[]> => {
         return {
           slug: file.replace(/\.mdx$/, ""),
           title: data.title || "Untitled",
+          description: data.description || "",
           date: data.date || "0",
           content: mdxContent,
         };
