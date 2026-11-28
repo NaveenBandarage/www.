@@ -3,6 +3,7 @@ import { createPaintTrail } from "./paint-trail.js";
 import { relationshipsFor } from "./relationships.js";
 import { initialWorkspace } from "./personal-memory.js";
 import { revealMemory } from "./graph-model.js";
+import { memorySeason } from "./seasons.js";
 import { displayDate, memoryTimeline, memoryTimestamp } from "./timeline.js";
 import { TreeView } from "./tree-view.js";
 import {
@@ -501,6 +502,8 @@ function renderTimeline() {
     ? timeline.length
     : Math.max(0, (after < 0 ? timeline.length : after) - 1);
   const date = now ? "Now" : displayDate(asOf);
+  const season = memorySeason(asOf);
+  view.setSeason(season);
   const change = now
     ? timeline.length
       ? `${timeline.length} dated ${timeline.length === 1 ? "snapshot" : "snapshots"}`
@@ -510,13 +513,15 @@ function renderTimeline() {
   slider.max = timeline.length;
   slider.value = index;
   slider.disabled = timeline.length === 0;
-  slider.setAttribute("aria-valuetext", `${date} · ${change}`);
+  slider.setAttribute("aria-valuetext", `${date} · ${season.name} · ${change}`);
   $("#time-label").textContent = date;
+  $("#time-season").textContent = season.name;
   $("#time-change").textContent = change;
   $("#time-prev").disabled = !timeline.some(({ time }) => time < asOf);
   $("#time-next").disabled = now;
   $("#time-now").disabled = now;
   $("#status-date").textContent = date;
+  $("#status-date").title = `${season.name} in New York · Open memory timeline`;
 }
 function showSnapshotChange(snapshot) {
   for (const change of snapshot.changes) {
@@ -529,6 +534,9 @@ function showSnapshotChange(snapshot) {
     }
   }
 }
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && store && asOf === Infinity) renderTimeline();
+});
 async function setTime(value, { showChange = false } = {}) {
   if (value === asOf) return;
   if (asOf === Infinity) liveView = { expanded, pages };

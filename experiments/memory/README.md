@@ -44,6 +44,7 @@ When an agent changes public site content, the repository's `AGENTS.md` instruct
 - **Memory options → Recall history** opens local and imported retrieval logs. Locally recorded recalls preserve the retrieved text and source ids, even after corrections.
 - Correct a memory to create a revision with a new source. Pin memories to give matching records a small retrieval preference. Archive a memory to hide it from the present while preserving historical snapshots; the confirmation offers Undo to restore it immediately.
 - The clock opens a scrubber that steps through dated additions, corrections, supersessions, and archives. Each stop describes the change and opens an affected branch. Undated records are included for context and do not create timeline stops. Choose **Now** to restore the current tree and its open branches.
+- The foliage follows New York's seasons. The clock shows the season of the selected snapshot, and **Now** uses the current date in New York.
 - Import JSON, Markdown, or text using the menu or drag and drop. Markdown sections become memories; the complete original document becomes their source. Imports replace the current workspace; export first to preserve a copy.
 - Export JSON to back up the workspace, move it between devices, or edit the schema externally. The bundled `public/example-memory.json` is a complete example.
 

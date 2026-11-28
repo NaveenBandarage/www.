@@ -416,6 +416,10 @@ dialog::backdrop {
   flex-shrink: 0;
   font-weight: 600;
 }
+#time-season {
+  flex-shrink: 0;
+  color: #6f7e5e;
+}
 #time-change {
   min-width: 0;
   overflow-wrap: anywhere;
