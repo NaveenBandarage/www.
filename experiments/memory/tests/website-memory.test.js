@@ -137,19 +137,24 @@ test("outfits and shared wardrobe pieces follow additions, edits and removals", 
       path.join(dir, "data/outfits.ts"),
       "export const outfits = [];",
     );
-    const merged = initialWorkspace(
-      first,
-      validateMemory(await addSiteContent(base, dir)),
+    const next = validateMemory(await addSiteContent(base, dir));
+    const merged = initialWorkspace(first, next);
+    const updatedHat = merged.nodes.find((node) => node.id === hat.id);
+    const source = merged.nodes.find((node) => node.id === hat.source_ids[0]);
+    const changedAt = Date.parse(
+      updatedHat.revisions.find((revision) => revision.origin === "website").at,
     );
-    assert.match(
-      merged.nodes.find((node) => node.id === hat.id).content,
-      /A black hat/,
-    );
+    assert.match(updatedHat.content, /A gray hat/);
+    assert.match(memoryAt(updatedHat).content, /A black hat/);
+    assert.match(memoryAt(updatedHat, changedAt - 1).content, /A gray hat/);
+    assert.match(memoryAt(source).content, /A black hat/);
+    assert.match(memoryAt(source, changedAt - 1).content, /A gray hat/);
     assert.ok(
       merged.nodes.find(
         (node) => node.title === "First look" && node.type === "memory",
       ).archived_at,
     );
+    assert.deepEqual(initialWorkspace(merged, next), merged);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
