@@ -7,6 +7,7 @@ import {
 } from "./connection-line.js";
 const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
 const GROWTH_PER_SECOND = 0.9;
+const SEASON_TRANSITION_SECONDS = 0.45;
 let reducedMotion = motionPreference.matches;
 motionPreference.addEventListener("change", (event) => {
   reducedMotion = event.matches;
@@ -50,14 +51,21 @@ const vertexShader = `
  uniform float uScale;
  uniform float uOpacity;
  uniform float uActive;
+ uniform vec3 uFoliageDark;
+ uniform vec3 uFoliageLight;
+ uniform float uSeasonAmount;
  varying vec3 vColor;
  varying float vAlpha;
  void main(){
    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
    gl_PointSize=clamp(aSize*uPixelRatio*uScale,.7,5.);
-   vColor=aColor;
+   // Tint the green canopy while retaining the original bark and scatter.
+   float foliage = smoothstep(.16, .5, aColor.g - aColor.b);
+   float shade = clamp((aColor.g - .62) / .38, 0., 1.);
+   vec3 seasonal = mix(uFoliageDark, uFoliageLight, shade);
+   vColor=mix(aColor,seasonal,foliage*uSeasonAmount);
    vAlpha=smoothstep(aProgress-.025,aProgress+.035,uReveal)*uOpacity;
-   vColor=mix(vColor,vec3(.58,.87,.03),uActive*.3);
+   vColor=mix(vColor,mix(vec3(.58,.87,.03),uFoliageLight,uSeasonAmount),uActive*.3);
  }`;
 const fragmentShader = `
  precision mediump float;
@@ -69,7 +77,7 @@ const fragmentShader = `
    if(max(abs(p.x),abs(p.y))>.48) discard;
    gl_FragColor=vec4(vColor,vAlpha*.9);
  }`;
-function makeBranch(spec, scene) {
+function makeBranch(spec, scene, seasonUniforms) {
   const rng = random(spec.seed),
     positions = [],
     colors = [],
@@ -176,6 +184,7 @@ function makeBranch(spec, scene) {
     transparent: true,
     depthWrite: false,
     uniforms: {
+      ...seasonUniforms,
       uReveal: { value: 0 },
       uPixelRatio: { value: Math.min(devicePixelRatio, 2) },
       uScale: { value: 1 },
@@ -218,6 +227,11 @@ export class TreeView {
     this.projection = null;
     this.lastTime = 0;
     this.motionTime = 0;
+    this.seasonUniforms = {
+      uFoliageDark: { value: new THREE.Vector3() },
+      uFoliageLight: { value: new THREE.Vector3() },
+      uSeasonAmount: { value: 0 },
+    };
     this.connectionClock = {
       uCycle: { value: 0 },
       uMotion: { value: reducedMotion ? 0 : 1 },
@@ -271,6 +285,54 @@ export class TreeView {
     document.addEventListener("visibilitychange", this.onVisibilityChange);
     this.onVisibilityChange();
   }
+  setSeason(palette) {
+    if (this.season === palette) return;
+    const { uFoliageDark, uFoliageLight, uSeasonAmount } = this.seasonUniforms;
+    const dark = new THREE.Vector3(...palette.dark);
+    const light = new THREE.Vector3(...palette.light);
+    if (!this.season || reducedMotion) {
+      uFoliageDark.value.copy(dark);
+      uFoliageLight.value.copy(light);
+      uSeasonAmount.value = palette.amount;
+      this.seasonTransition = null;
+    } else {
+      this.seasonTransition = {
+        dark,
+        light,
+        amount: palette.amount,
+        startDark: uFoliageDark.value.clone(),
+        startLight: uFoliageLight.value.clone(),
+        startAmount: uSeasonAmount.value,
+        elapsed: 0,
+      };
+    }
+    this.season = palette;
+  }
+  updateSeason(dt) {
+    const transition = this.seasonTransition;
+    if (!transition) return;
+    const { uFoliageDark, uFoliageLight, uSeasonAmount } = this.seasonUniforms;
+    transition.elapsed += dt;
+    const mix = reducedMotion
+      ? 1
+      : THREE.MathUtils.smoothstep(
+          transition.elapsed,
+          0,
+          SEASON_TRANSITION_SECONDS,
+        );
+    uFoliageDark.value.lerpVectors(transition.startDark, transition.dark, mix);
+    uFoliageLight.value.lerpVectors(
+      transition.startLight,
+      transition.light,
+      mix,
+    );
+    uSeasonAmount.value = THREE.MathUtils.lerp(
+      transition.startAmount,
+      transition.amount,
+      mix,
+    );
+    if (mix === 1) this.seasonTransition = null;
+  }
   setGraph(projection, expanded) {
     this.projection = projection;
     this.open = new Set(expanded);
@@ -285,7 +347,7 @@ export class TreeView {
         continue;
       }
       if (old) this.removeBranch(spec.id);
-      const b = makeBranch(spec, this.scene);
+      const b = makeBranch(spec, this.scene, this.seasonUniforms);
       b.signature = signature;
       this.branches.set(spec.id, b);
     }
@@ -515,6 +577,7 @@ export class TreeView {
     if (!this.running || document.hidden) return;
     const dt = Math.min((now - this.lastTime) / 1000 || 0.016, 1);
     this.lastTime = now;
+    this.updateSeason(dt);
     if (!reducedMotion) this.motionTime += dt;
     this.connectionClock.uCycle.value = connectionCycle(this.motionTime);
     const motion = reducedMotion ? 0 : 1;
